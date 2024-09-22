@@ -1,0 +1,67 @@
+/* PPWP Sidebar Css */
+
+.ppwp_setting_page {
+    display: flex;
+}
+
+.ppwp_setting_page .ppwp_wrap_subscribe_form {
+    margin-left: 3%;
+    width: 27%;
+}
+
+.ppwp_wrap_al img {
+    width: 100%;
+    border-radius: 0 0 10px 10px;
+}
+
+.ppwp_wrap_al h3 {
+    margin-bottom: 0.5rem;
+    font-size: 1.2em;
+}
+
+.ppwp_wrap_subscribe_form .ppwp_subscribe_hidden {
+    display: none;
+}
+
+.ppwp_subscribe_form {
+    background-color: white;
+    padding: 0 20px 20px 20px;
+    margin-bottom: 20px;
+    border: 1px solid #CCC;
+    border-radius: 0 0 10px 10px;
+}
+
+.ppwp_subscribe_form .input_email {
+    width: 100%;
+}
+
+.ppwp_subscribe_form .ppwp_subscribe_error {
+    color: red;
+    margin-top: 3px;
+    display: none;
+}
+
+/* Dynamic Sideabr*/
+#ppwp_right_column_metaboxes .main_container {
+    background-color: white;
+    padding: 20px 20px 20px 20px;
+    margin-bottom: 20px;
+    border: 1px solid #CCC;
+    border-radius: 0 0 10px 10px;
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#d9dee0',GradientType=0 );
+}
+
+#ppwp_right_column_metaboxes img {
+    max-width: 100%;
+    height: auto;
+}
+
+#ppwp_right_column_metaboxes ul {
+    list-style: inherit;
+    margin-left: 15px;
+}
+
+#ppwp_right_column_metaboxes ul > li > ul {
+    list-style: inside;
+    list-style-type: circle;
+}
