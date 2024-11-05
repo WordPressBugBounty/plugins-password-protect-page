@@ -508,6 +508,14 @@ function ppw_free_valid_pcp_password( $shortcode, $password ) {
 		$default_args['atts']              = $atts;
 	}
 
+	if ( !in_array( $password, $passwords, true ) && ppw_pro_allowed_regex_password() ) {
+		$password_found = apply_filters( PPW_Constants::HOOK_SHORTCODE_WILDCARD_PASSWORDS, $parsed_atts, $password );
+		if( !empty( $password_found ) ){
+			$default_args['is_valid_password'] = true;
+			$default_args['atts']              = $atts;
+		}
+	}
+
 	if ( isset( $parsed_atts['error_msg'] ) ) {
 		$default_args['message'] = wp_kses_post( $parsed_atts['error_msg'] );
 	}

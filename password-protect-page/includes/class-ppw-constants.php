@@ -126,6 +126,12 @@ if ( ! class_exists( 'PPW_Constants' ) ) {
 
 		const HOOK_SHORTCODE_PASSWORDS = 'ppw_shortcode_passwords';
 
+		
+		const HOOK_SHORTCODE_WILDCARD_PASSWORDS = 'ppw_shortcode_wildcard_passwords';
+
+		const HOOK_SHORTCODE_GET_WILDCARD_PASSWORDS = 'ppw_shortcode_get_wildcard_passwords_from_attr';
+
+
 		const HOOK_SHORTCODE_RENDER_CONTENT = 'ppw_shortcode_render_content';
 
 		const HOOK_SHORTCODE_CONTENT_SOURCE = 'ppw_content_shortcode_source';

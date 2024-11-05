@@ -245,6 +245,14 @@ if ( ! class_exists( 'PPW_Shortcode' ) ) {
 				}
 			}
 
+			//check for wildcard too
+			$passwords = apply_filters( PPW_Constants::HOOK_SHORTCODE_GET_WILDCARD_PASSWORDS,  $attrs );
+			foreach ( $passwords as $password ) {
+				if ( $this->is_valid_wildcard_password( $password ) ) {
+					return apply_filters( PPW_Constants::HOOK_SHORTCODE_RENDER_CONTENT, $content, $attrs );
+				}
+			}
+
 			do_action( PPW_Constants::HOOK_SHORT_CODE_AFTER_CHECK_PASSWORD, $content );
 
 			$this->add_scripts();
@@ -439,6 +447,73 @@ if ( ! class_exists( 'PPW_Shortcode' ) ) {
 				}
 			}
 
+			return false;
+		}
+
+		/**
+		 * Check if the wildcard password is valid, comparing with cookie.
+		 *
+		 * @param string $password Password.
+		 *
+		 * @return bool
+		 */
+		private function is_valid_wildcard_password( $password ) {
+
+			$is_valid = apply_filters( 'ppw_shortcode_is_valid_password_with_cookie', false, $password, $_COOKIE );
+
+			if ( $is_valid ) {
+				return apply_filters( 'ppw_shortcode_after_check_is_valid_password_with_cookie', $is_valid, $password, array() );
+			}
+
+			$cookie_name = 'ppw_rc-' . get_the_ID();
+			if ( ! isset( $_COOKIE[ $cookie_name ] ) ) {
+				return false;
+			}
+
+			//global $wp_hasher;
+			$cookie_val = json_decode( wp_unslash( $_COOKIE[ $cookie_name ] ) ); // phpcs:ignore -- Here do not need to sanitize $_COOKIE data, because we use it for comparision.
+			if ( ! is_array( $cookie_val ) ) {
+				return false;
+			}
+
+			foreach ( $cookie_val as $val ) {
+				if ( get_the_ID() !== (int) $val->post_id ) {
+					continue;
+				}
+				foreach ( $val->passwords as $cookie_pass ) {
+					$password_found = $this->get_password_info_by_regex_type( $password, $cookie_pass );
+					if( $password_found ){
+						$password = wp_hash_password( wp_specialchars_decode( $password ) );
+						if ( wp_check_password( $password_found, $password ) ) {
+							return true;
+						}
+					}
+					
+				}
+			}
+
+			return false;
+		}
+
+		/**
+		 * Get Password check.
+		 *
+		 * @param string $item Password. 
+		 * @param string $password Password.
+		 *
+		 * @return bool|string
+		 */
+		private function get_password_info_by_regex_type( $item, $password ) {
+			$keyword = preg_quote( $item, '/' );
+			$keyword = str_replace( '\(\*\)', '.+', $keyword );
+			$pattern  = '/^' . $keyword . '$/';
+			$pattern  = apply_filters( 'ppwp_single_password_pattern', $pattern, $keyword, $item );
+
+			// Valid URL with regex.
+			if ( 1 === @preg_match( $pattern, $password ) ) {
+				return $item;
+			}
+			
 			return false;
 		}
 
