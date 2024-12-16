@@ -508,7 +508,7 @@ function ppw_free_valid_pcp_password( $shortcode, $password ) {
 		$default_args['atts']              = $atts;
 	}
 
-	if ( !in_array( $password, $passwords, true ) && ppw_pro_allowed_regex_password() ) {
+	if ( !in_array( $password, $passwords, true ) && function_exists( 'ppw_pro_allowed_regex_password' ) && ppw_pro_allowed_regex_password() ) {
 		$password_found = apply_filters( PPW_Constants::HOOK_SHORTCODE_WILDCARD_PASSWORDS, $parsed_atts, $password );
 		if( !empty( $password_found ) ){
 			$default_args['is_valid_password'] = true;

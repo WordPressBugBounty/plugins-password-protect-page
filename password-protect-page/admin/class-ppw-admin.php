@@ -1007,7 +1007,116 @@ _end_;
 	    return $result;
 	}
 
-   
+    public function exclude_protected_posts_from_api($args, $request) {
+   		//Get all the protected post ids
+   		if(is_admin() || is_user_logged_in() ){
+   			 return $args;
+   		}
+   		$protected_post_ids = $this->ppwp_get_all_protected_ids();
+   		if(!empty($protected_post_ids)){
+   			if (isset($args['post_type']) && $args['post_type'] === 'post') {
+	        
+		        $args['post__not_in'] = $protected_post_ids;
+		    }	
+   		}
+	    
+
+	    return $args;
+    }
+
+
+	public function ppwp_restrict_rest_api_id($result, $server, $request) {
+		if(is_admin() || is_user_logged_in() ){
+   			 return $result;
+   		}
+	    $route = $request->get_route();
+
+	    if ( preg_match('/^\/wp\/v2\/posts\/(\d+)$/', $route, $matches) || preg_match('/^\/wp\/v2\/pages\/(\d+)$/', $route, $matches) ) {
+	    	
+	        $post_id = (int) $matches[1];
+
+	        $PPW_Password_Services = new PPW_Password_Services();
+	        $is_protected = $PPW_Password_Services->is_protected_content($post_id);
+	  
+	        if ($is_protected) {
+	            return new WP_Error(
+	                'rest_forbidden',
+	                __('The content of this post is restricted and cannot be accessed.', 'password-protect-page'),
+	                array('status' => 403)
+	            );
+	        }
+	    }
+
+	    return $result;
+	}
+
+	public function ppwp_exclude_protected_items_from_qry( $query ) {
+		global $post;
+  
+	    if ( is_admin() || is_user_logged_in() ) {
+	        return;
+	    }
+
+	    $protected_post_ids = $this->ppwp_get_all_protected_ids();
+
+	    if ( ! empty( $protected_post_ids ) ) {
+	       
+	        if ( $query->is_search && $query->is_main_query() ) {
+	            $query->set( 'post__not_in', $protected_post_ids );
+	        }
+
+	     
+	        if ( defined( 'REST_REQUEST' ) && REST_REQUEST ) {
+	            $query->set( 'post__not_in', $protected_post_ids );
+	        }
+	    }
+
+	    if ( ! is_admin() && $query->is_main_query() ) {
+	    	if ( $post && post_password_required( $post->ID ) ) {
+		        $meta_query = array(
+		            array(
+		                'key'     => PPW_Constants::GLOBAL_PASSWORDS,
+		                'compare' => 'NOT EXISTS',
+		            ),
+		        );
+	        	$query->set( 'meta_query', $meta_query );
+	    	}
+	    }
+  
+
+	    if ( defined( 'REST_REQUEST' ) && REST_REQUEST && isset( $query->query_vars['s'] ) ) {
+	        $meta_query = array(
+	            array(
+	                'key'     => PPW_Constants::GLOBAL_PASSWORDS,
+	                'compare' => 'NOT EXISTS',
+	            ),
+	        );
+	      
+	        $query->set( 'meta_query', $meta_query );
+	    }
+	}
+
+
+    public function ppwp_get_all_protected_ids() {
+    	global $wpdb;
+
+		$query = $wpdb->prepare(
+		        "SELECT DISTINCT post_id 
+		         FROM {$wpdb->postmeta} 
+		         WHERE meta_key = %s", 
+		         PPW_Constants::GLOBAL_PASSWORDS
+		    );
+
+		$results = $wpdb->get_col($query);
+		
+		if ($results === null || empty($results)) {
+		  
+		    return [];
+		}
+
+		return $results;
+    }
+
 	/**
 	 * Set post pass cookie to prevent cache.
 	 *

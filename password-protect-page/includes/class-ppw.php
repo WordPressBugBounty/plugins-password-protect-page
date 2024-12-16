@@ -366,6 +366,12 @@ class Password_Protect_Page {
 		$this->loader->add_action( 'ppw_render_content_troubleshooting', $plugin_admin, 'ppw_free_render_content_troubleshooting', 11 );
 		$this->loader->add_action( PPW_Constants::HOOK_RESTRICT_CONTENT_AFTER_VALID_PWD, $plugin_admin, 'set_postpass_cookie_to_prevent_cache', 10, 2 );
 		$this->loader->add_action( 'rest_api_init', $plugin_admin, 'rest_api_init', 10, 2 );
+
+		/* Protected post for site search or rest api search */
+		$this->loader->add_filter( 'rest_post_query', $plugin_admin, 'exclude_protected_posts_from_api', 10, 2 );
+		$this->loader->add_filter( 'rest_pre_dispatch', $plugin_admin, 'ppwp_restrict_rest_api_id', 10, 3 );
+		$this->loader->add_filter( 'pre_get_posts', $plugin_admin, 'ppwp_exclude_protected_items_from_qry', 10,);
+
 		$this->loader->add_filter( 'ppw_content_shortcode_source', $plugin_admin, 'handle_content_shortcode_for_multiple_pages', 11, 3 );
 		PPW_Beaver_Loader::get_instance();
 		$this->loader->add_action( 'wp_ajax_ppw_free_subscribe_request', $plugin_admin, 'handle_subscribe_request' );
