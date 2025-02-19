@@ -705,6 +705,7 @@ class PPW_Admin {
 	 * Update category settings.
 	 */
 	public function ppw_free_update_category_settings() {
+		
 		$nonce_verification = check_ajax_referer( PPW_Constants::GENERAL_FORM_NONCE, 'security_check' );
 		if ( ! $nonce_verification ) {
 			wp_send_json(
@@ -778,8 +779,103 @@ class PPW_Admin {
 				)
 			);
 		}
-		unset( $data_settings['ppwp_categories_password'] );
 
+		if(isset($data_settings['ppwp_protected_categories_selected']) && !empty($data_settings['ppwp_protected_categories_selected'])){
+			//$all_post_ids=[];
+			$ppwp_categories_selected = $data_settings['ppwp_protected_categories_selected'];
+			
+			$previously_selected_categories = get_option('ppwp_previous_protected_categories', array());
+
+    
+    		$unselected_categories = array_diff($previously_selected_categories, $ppwp_categories_selected);
+
+			$args = array(
+			    'category__in' => $ppwp_categories_selected, 
+			    'fields' => 'ids', 
+			    'posts_per_page' => -1, 
+			);
+
+			$query = new WP_Query($args);
+			
+			if ($query->have_posts()) {
+			      $all_post_ids = $query->posts; 
+
+			        foreach ($all_post_ids as $post_id) {
+			        	if (class_exists('PPW_Pro_Password_Services')) {
+			        		$password_pro_service = new PPW_Pro_Password_Services();
+			        		if (!$password_pro_service->is_protected_content($post_id)) {
+				                $password_pro_service->protect_page_post($post_id);
+				            }
+			        	}else{
+			        		if (!$this->free_services->is_protected_content($post_id)) {
+				                $this->free_services->protect_page_post($post_id);
+				            }	
+			        	}
+			            
+			        }
+
+			} else {
+			    echo 'No posts found in the selected categories.';
+			}
+
+
+			 // Unprotect posts in the unselected categories
+		    if (!empty($unselected_categories)) {
+		        $unprotect_args = array(
+		            'category__in' => $unselected_categories, 
+		            'fields' => 'ids', 
+		            'posts_per_page' => -1, 
+		        );
+
+		        $unprotect_query = new WP_Query($unprotect_args);
+		        if ($unprotect_query->have_posts()) {
+		            $unprotect_post_ids = $unprotect_query->posts;
+
+		            foreach ($unprotect_post_ids as $post_id) {
+		            	if (class_exists('PPW_Pro_Password_Services')) {
+			        		$password_pro_service = new PPW_Pro_Password_Services();
+			        		if ($password_pro_service->is_protected_content($post_id)) {
+				                $password_pro_service->un_protect_page_post($post_id);
+				            }
+			        	}else{
+			                if ($this->free_services->is_protected_content($post_id)) {
+			                    $this->free_services->unprotect_page_post($post_id);
+			                }
+		            	}
+		            }
+		        }
+		    }
+
+		    wp_reset_postdata();
+
+		    update_option('ppwp_previous_protected_categories', $ppwp_categories_selected);
+			
+		}
+
+		unset( $data_settings['ppwp_categories_password'] );
+		
+		$category_ids = $data_settings['ppwp_protected_categories_selected'];
+		$get_all_protected = json_decode( get_option( PPW_Category_Service::OPTION_NAME) );
+		$post_ids = [];
+
+		foreach ($category_ids as $category_id) {
+			$posts = get_posts([
+				'category' => $category_id,
+				'fields' => 'ids',  // Only retrieve post IDs
+				'posts_per_page' => -1  // Retrieve all posts
+			]);
+
+			$post_ids = array_merge($post_ids, $posts);
+		}
+
+		// Remove duplicates and format as "id1;id2;id3"
+		$post_ids_str = implode(';', $post_ids);
+		$get_paid_res = "";
+		if ( class_exists('PPW_Pro_Category_Services') ) {
+			$ppw_instance = new PPW_Pro_Category_Services();
+			$from_ppwp_free = true;
+			$get_paid_res = $ppw_instance->update_category_protect($post_ids_str, $from_ppwp_free);
+		}
 		update_option( PPW_Category_Service::OPTION_NAME, wp_json_encode( $data_settings ), 'no' );
 
 		wp_die( true );
@@ -864,6 +960,78 @@ class PPW_Admin {
 				)
 			);
 		}
+
+		if( isset($data_settings['ppwp_protected_tags_selected']) && !empty($data_settings['ppwp_protected_tags_selected']) ){
+			//$all_post_ids=[];
+			$ppwp_tags_selected = $data_settings['ppwp_protected_tags_selected'];
+			
+			$previously_selected_tags = get_option('ppwp_previous_protected_tags', array());
+
+    
+    		$unselected_tags = array_diff($previously_selected_tags, $ppwp_tags_selected);
+
+			$args = array(
+			    'tag__in' => $ppwp_tags_selected, 
+			    'fields' => 'ids', 
+			    'posts_per_page' => -1, 
+			);
+
+			$query = new WP_Query($args);
+			
+			if ($query->have_posts()) {
+			      $all_post_ids = $query->posts; 
+
+			        foreach ($all_post_ids as $post_id) {
+			        	if (class_exists('PPW_Pro_Password_Services')) {
+			        		$password_pro_service = new PPW_Pro_Password_Services();
+			        		if (!$password_pro_service->is_protected_content($post_id)) {
+				                $password_pro_service->protect_page_post($post_id);
+				            }
+			        	}else{
+			        		if (!$this->free_services->is_protected_content($post_id)) {
+				                $this->free_services->protect_page_post($post_id);
+				            }	
+			        	}
+			        }
+
+			} else {
+			    echo 'No posts found in the selected categories.';
+			}
+
+
+			 // Unprotect posts in the unselected categories
+		    if (!empty($unselected_tags)) {
+		        $unprotect_args = array(
+		            'tag__in' => $unselected_tags, 
+		            'fields' => 'ids', 
+		            'posts_per_page' => -1, 
+		        );
+
+		        $unprotect_query = new WP_Query($unprotect_args);
+		        if ($unprotect_query->have_posts()) {
+		            $unprotect_post_ids = $unprotect_query->posts;
+
+		            foreach ($unprotect_post_ids as $post_id) {
+		            	if (class_exists('PPW_Pro_Password_Services')) {
+			        		$password_pro_service = new PPW_Pro_Password_Services();
+			        		if ($password_pro_service->is_protected_content($post_id)) {
+				                $password_pro_service->un_protect_page_post($post_id);
+				            }
+			        	}else{
+			                if ($this->free_services->is_protected_content($post_id)) {
+			                    $this->free_services->unprotect_page_post($post_id);
+			                }
+		            	}
+		            }
+		        }
+		    }
+
+		    wp_reset_postdata();
+
+		    update_option('ppwp_previous_protected_tags', $ppwp_tags_selected);
+			
+		}
+
 		unset( $data_settings['ppwp_tags_password'] );
 
 		update_option( PPW_Tag_Service::OPTION_NAME, wp_json_encode( $data_settings ), 'no' );
@@ -1051,8 +1219,12 @@ _end_;
 	}
 
 	public function ppwp_exclude_protected_items_from_qry( $query ) {
-		global $post;
-  
+	    global $post;
+
+	    if ( ! function_exists( 'is_user_logged_in' ) ) {
+	        require_once ABSPATH . 'wp-includes/pluggable.php';
+	    }
+
 	    if ( is_admin() || is_user_logged_in() ) {
 	        return;
 	    }
@@ -1060,38 +1232,36 @@ _end_;
 	    $protected_post_ids = $this->ppwp_get_all_protected_ids();
 
 	    if ( ! empty( $protected_post_ids ) ) {
-	       
 	        if ( $query->is_search && $query->is_main_query() ) {
 	            $query->set( 'post__not_in', $protected_post_ids );
 	        }
 
-	     
 	        if ( defined( 'REST_REQUEST' ) && REST_REQUEST ) {
 	            $query->set( 'post__not_in', $protected_post_ids );
 	        }
 	    }
 
 	    if ( ! is_admin() && $query->is_main_query() ) {
-	    	if ( $post && post_password_required( $post->ID ) ) {
-		        $meta_query = array(
-		            array(
-		                'key'     => PPW_Constants::GLOBAL_PASSWORDS,
-		                'compare' => 'NOT EXISTS',
-		            ),
-		        );
-	        	$query->set( 'meta_query', $meta_query );
-	    	}
-	    }
-  
+	        if ( $post && post_password_required( $post->ID ) ) {
+	            $meta_query = $query->get( 'meta_query', [] );
 
-	    if ( defined( 'REST_REQUEST' ) && REST_REQUEST && isset( $query->query_vars['s'] ) ) {
-	        $meta_query = array(
-	            array(
+	            $meta_query[] = [
 	                'key'     => PPW_Constants::GLOBAL_PASSWORDS,
 	                'compare' => 'NOT EXISTS',
-	            ),
-	        );
-	      
+	            ];
+
+	            $query->set( 'meta_query', $meta_query );
+	        }
+	    }
+
+	    if ( defined( 'REST_REQUEST' ) && REST_REQUEST && isset( $query->query_vars['s'] ) ) {
+	        $meta_query = $query->get( 'meta_query', [] );
+
+	        $meta_query[] = [
+	            'key'     => PPW_Constants::GLOBAL_PASSWORDS,
+	            'compare' => 'NOT EXISTS',
+	        ];
+
 	        $query->set( 'meta_query', $meta_query );
 	    }
 	}
