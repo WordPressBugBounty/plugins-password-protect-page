@@ -93,7 +93,7 @@ if ( ! class_exists( 'PPW_API' ) ) {
 				'wppp/v1',
 				'master-passwords/status',
 				array(
-					'methods'             => 'PUT',
+					'methods'             => 'POST',
 					'callback'            => array(
 						$this,
 						'change_status',
@@ -441,7 +441,7 @@ if ( ! class_exists( 'PPW_API' ) ) {
 		 *
 		 * @return WP_REST_Response The REST response.
 		 */
-		public function change_status( $request ) {
+		public function change_status( WP_REST_Request $request ) {
 			$id           = $request->get_param( 'id' );
 			$is_activated = $request->get_param( 'is_activated' );
 			$ppwp_repo    = new PPW_Repository_Passwords();
