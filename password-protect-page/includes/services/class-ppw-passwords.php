@@ -161,11 +161,7 @@ if ( ! class_exists( 'PPW_Password_Services' ) ) {
 
 			$cookie  = sanitize_text_field( $_cookie[ $cookie_name . $post_id . COOKIEHASH ] );
 			$hash    = wp_unslash( $cookie );
-			$checked = apply_filters( 'ppw_check_md5_format', true );
-			if ( $checked && 0 !== strpos( $hash, '$P$B' ) ) {
-				return false;
-			}
-
+			
 			$roles = ppw_core_get_current_role();
 			foreach ( $passwords as $password ) {
 				if ( wp_check_password( $password . $post_id, $hash ) ) {

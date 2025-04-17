@@ -16,7 +16,7 @@
  * Plugin Name:       Password Protect WordPress Lite
  * Plugin URI:        https://passwordprotectwp.com?utm_source=user-website&utm_medium=pluginsite_link&utm_campaign=ppwp_lite
  * Description:       Password protect the entire WordPress site, unlimited pages and posts by user roles. This plugin is required for our Pro version to work properly.
- * Version:           1.9.8
+ * Version:           1.9.9
  * Author:            BWPS
  * Author URI:        https://passwordprotectwp.com
  * License:           GPL-2.0+
@@ -35,7 +35,7 @@ if ( ! defined( 'WPINC' ) ) {
  * Start at version 1.1.2 and use SemVer - https://semver.org
  * Rename this for your plugin and update it as you release new versions.
  */
-define( 'PPW_VERSION', '1.9.8' );
+define( 'PPW_VERSION', '1.9.9' );
 
 if ( ! defined( 'PPW_DIR_PATH' ) ) {
 	define( 'PPW_DIR_PATH', plugin_dir_path( __FILE__ ) );
