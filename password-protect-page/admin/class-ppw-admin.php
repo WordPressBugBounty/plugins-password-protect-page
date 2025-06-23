@@ -1148,6 +1148,10 @@ _end_;
 
 	public function ppwp_sitewide_authentication_errors($result) {
 
+		if(is_pro_active_and_valid_license()){
+			return;
+		}
+
 		$request_uri = !empty( $_SERVER['REQUEST_URI'] ) ? $_SERVER['REQUEST_URI'] : '';
 		
 		$validate = false;
@@ -1160,16 +1164,27 @@ _end_;
 
 		$entire_site_service = new PPW_Entire_Site_Services();
 		$is_protect = ppw_core_get_setting_entire_site_type_bool( PPW_Constants::IS_PROTECT_ENTIRE_SITE );
-		if( class_exists( 'PPWP_Pro_SideWide' ) ){
-			$PPWP_Pro_SideWide = new PPWP_Pro_SideWide();
-			$is_should_render = $PPWP_Pro_SideWide->should_render_sc_content();	
-			if( $validate && !$is_should_render && !is_user_logged_in() && $is_protect  ){
-				return new WP_Error('Protected', 'Error: Access denied. This API is protected with sitewide protection.', array('status' => 401));
-			}
-		}else{
-			if( $validate && !is_user_logged_in() && $is_protect && !$entire_site_service->validate_auth_cookie_entire_site() ){
-				return new WP_Error('Protected', 'Error: Access denied. This API is protected with sitewide protection.', array('status' => 401));
-			}		
+
+		if( $validate && !is_user_logged_in() && $is_protect && !$entire_site_service->validate_auth_cookie_entire_site() ){
+			return new WP_Error('Protected', 'Error: Access denied. This API is protected with sitewide protection.', array('status' => 401));
+		}
+		
+		$is_allowed_roles = false;
+	    if (is_user_logged_in()) {
+	        $current_user = wp_get_current_user();
+	        if (!empty($current_user->roles)) {
+	            $allowed_roles = apply_filters('ppwp_sitewide_api_allowed_roles', ['administrator', 'editor','author','contributor']);
+	            foreach ($current_user->roles as $role) {
+	                if (in_array($role, $allowed_roles)) {
+	                    //return $result; // High privilege user allowed
+						$is_allowed_roles = true;
+	                }
+	            }
+	        }
+	    }
+
+		if( $validate && !$is_allowed_roles && !$entire_site_service->validate_auth_cookie_entire_site() ){
+			return new WP_Error('Protected', 'Error: Access denied. This API is protected with sitewide protection.', array('status' => 401));
 		}
 
 	    return $result;
