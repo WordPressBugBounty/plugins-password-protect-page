@@ -423,7 +423,10 @@ if ( ! class_exists( 'PPW_Shortcode' ) ) {
 
 			}
 
-			$cookie_name = 'ppw_rc-' . get_the_ID();
+			
+			$post_id = apply_filters( 'ppw_post_id_change_for_elementor_theme_builder', get_the_ID() );
+			
+			$cookie_name = 'ppw_rc-' . $post_id;
 			if ( ! isset( $_COOKIE[ $cookie_name ] ) ) {
 				return false;
 			}
@@ -435,7 +438,7 @@ if ( ! class_exists( 'PPW_Shortcode' ) ) {
 			}
 
 			foreach ( $cookie_val as $val ) {
-				if ( get_the_ID() !== (int) $val->post_id ) {
+				if ( $post_id !== (int) $val->post_id ) {
 					continue;
 				}
 
@@ -549,8 +552,12 @@ if ( ! class_exists( 'PPW_Shortcode' ) ) {
 				PPW_DIR_PATH . 'includes/views/shortcode/view-ppw-restriced-content-form.php'
 			);
 			
+			wp_reset_postdata();
+
 			$form_template = ob_get_contents();
 			ob_end_clean();
+
+			$post_id = apply_filters( 'ppw_post_id_change_for_elementor_theme_builder', get_the_ID() );
 
 			$className = '' === $attrs['class'] ? $this->get_main_class_name( $attrs ) : $this->get_main_class_name( $attrs ) . ' ' . $attrs['class'];
 
@@ -559,7 +566,7 @@ if ( ! class_exists( 'PPW_Shortcode' ) ) {
 				PPW_Constants::SHORT_CODE_FORM_HEADLINE       => _x( $this->massage_attributes( $attrs['headline'] ), PPW_Constants::CONTEXT_PCP_PASSWORD_FORM, PPW_Constants::DOMAIN ),
 				PPW_Constants::SHORT_CODE_FORM_INSTRUCT       => _x( $this->massage_attributes( $attrs['description'] ), PPW_Constants::CONTEXT_PCP_PASSWORD_FORM, PPW_Constants::DOMAIN ),
 				PPW_Constants::SHORT_CODE_FORM_PLACEHOLDER    => _x( $this->massage_attributes( $attrs['placeholder'] ), PPW_Constants::CONTEXT_PCP_PASSWORD_FORM, PPW_Constants::DOMAIN ),
-				PPW_Constants::SHORT_CODE_FORM_AUTH           => get_the_ID(),
+				PPW_Constants::SHORT_CODE_FORM_AUTH           => $post_id,
 				PPW_Constants::SHORT_CODE_BUTTON              => _x( wp_kses_post( $attrs['button'] ), PPW_Constants::CONTEXT_PCP_PASSWORD_FORM, PPW_Constants::DOMAIN ),
 				PPW_Constants::SHORT_CODE_FORM_CURRENT_URL    => $this->get_the_permalink_without_cache( wp_rand( 0, 100 ) ),
 				PPW_Constants::SHORT_CODE_FORM_ID             => esc_attr( '' === $attrs['id'] ? get_the_ID() . wp_rand( 0, 1000 ) : wp_kses_post( $attrs['id'] ) ),

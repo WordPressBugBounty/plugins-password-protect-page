@@ -3,8 +3,8 @@ Contributors: gaupoit, rexhoang, ppwp, buildwps, yuryonfolio
 Tags: password protect, password, restrict content, sitewide, password protection
 Requires at least: 4.7
 Requires PHP: 5.6
-Tested up to: 6.8.1
-Stable tag: 1.9.10
+Tested up to: 6.8.2
+Stable tag: 1.9.11
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -195,7 +195,6 @@ There are 2 easy ways to install our plugin:
 * Go to the editor page and set a secure password to protect your content
 * Read the documentation to [get started](https://passwordprotectwp.com/docs/password-protect-wordpress-lite/)
 
-
 == Frequently Asked Questions ==
 
 = Why do I get an error message after entering the correct password? =
@@ -280,6 +279,11 @@ Yes, the Pro version enables you to [automatically password protect child pages]
 N/A
 
 == Changelog ==
+= 1.9.11 =
+
+- Added necessary hooks to improve compatibility with third-party page builders.
+- Optimized backend settings page for better performance.
+- Improved REST API protection when Sitewide Password is enabled.
 
 = 1.9.10 =
 

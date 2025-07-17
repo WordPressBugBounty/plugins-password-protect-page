@@ -340,6 +340,8 @@ class Password_Protect_Page {
 			$this->loader->add_action( 'page_row_actions', $plugin_admin, 'ppw_custom_row_action', 10, 2 );
 			$this->loader->add_action( 'wp_ajax_ppw_update_post_status', $plugin_admin, 'handle_update_post_status' );
 
+			
+			
 			$post_types = array( 'post', 'page' );
 			foreach ( $post_types as $post_type ) {
 				$this->loader->add_filter( 'manage_' . $post_type . '_posts_columns', $plugin_admin, 'add_custom_column' );
@@ -383,7 +385,6 @@ class Password_Protect_Page {
 		$this->loader->add_action( 'ppwp_sitewide_hide_password_form', $plugin_admin, 'ppw_sitewide_hide_password_form' );
 		$this->loader->add_action( 'ppwp_countdown_timer_styles', $plugin_admin, 'register_countdown_timer_style' );
 		
-		$this->loader->add_filter( 'rest_authentication_errors', $plugin_admin, 'ppwp_sitewide_authentication_errors', 99, 1 );
 		$this->loader->add_filter( 'plugin_action_links_' . PPW_PLUGIN_BASE_NAME, $plugin_admin, 'handle_plugin_links', 30 );
 		$this->loader->add_filter( 'ppwp_customizer_custom_fields', $plugin_admin, 'ppw_customizer_custom_fields', 11, 2 );
 

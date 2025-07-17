@@ -1146,50 +1146,6 @@ _end_;
 		$api->register_rest_routes();
 	}
 
-	public function ppwp_sitewide_authentication_errors($result) {
-
-		if(is_pro_active_and_valid_license()){
-			return;
-		}
-
-		$request_uri = !empty( $_SERVER['REQUEST_URI'] ) ? $_SERVER['REQUEST_URI'] : '';
-		
-		$validate = false;
-		if (strpos($request_uri, '/wp/v2/pages') !== false || strpos($request_uri, '/wp/v2/posts') !== false) {
-	        $validate = true;
-	    }
-		
-		// Apply a filter to allow bypassing the sitewide authentication check
-    	$validate = apply_filters('ppwp_bypass_sitewide_authentication_check', $validate, $request_uri);
-
-		$entire_site_service = new PPW_Entire_Site_Services();
-		$is_protect = ppw_core_get_setting_entire_site_type_bool( PPW_Constants::IS_PROTECT_ENTIRE_SITE );
-
-		if( $validate && !is_user_logged_in() && $is_protect && !$entire_site_service->validate_auth_cookie_entire_site() ){
-			return new WP_Error('Protected', 'Error: Access denied. This API is protected with sitewide protection.', array('status' => 401));
-		}
-		
-		$is_allowed_roles = false;
-	    if (is_user_logged_in()) {
-	        $current_user = wp_get_current_user();
-	        if (!empty($current_user->roles)) {
-	            $allowed_roles = apply_filters('ppwp_sitewide_api_allowed_roles', ['administrator', 'editor','author','contributor']);
-	            foreach ($current_user->roles as $role) {
-	                if (in_array($role, $allowed_roles)) {
-	                    //return $result; // High privilege user allowed
-						$is_allowed_roles = true;
-	                }
-	            }
-	        }
-	    }
-
-		if( $validate && !$is_allowed_roles && !$entire_site_service->validate_auth_cookie_entire_site() ){
-			return new WP_Error('Protected', 'Error: Access denied. This API is protected with sitewide protection.', array('status' => 401));
-		}
-
-	    return $result;
-	}
-
     public function exclude_protected_posts_from_api($args, $request) {
    		//Get all the protected post ids
    		if(is_admin() || is_user_logged_in() ){
@@ -1208,26 +1164,79 @@ _end_;
     }
 
 
-	public function ppwp_restrict_rest_api_id($result, $server, $request) {
-		if(is_admin() || is_user_logged_in() ){
-   			 return $result;
-   		}
-	    $route = $request->get_route();
+	public function ppwp_restrict_rest_api_id( $result, $server, $request ) {
 
-	    if ( preg_match('/^\/wp\/v2\/posts\/(\d+)$/', $route, $matches) || preg_match('/^\/wp\/v2\/pages\/(\d+)$/', $route, $matches) ) {
-	    	
-	        $post_id = (int) $matches[1];
+	    if ( is_admin() || is_user_logged_in() ) {
+	        return $result;
+	    }
+		
+	    $route = strtolower( $request->get_route() );
+    	
+		$validate = false;
+	    // Check for posts/pages endpoints
+		if (
+			strpos( $route, '/wp/v2/posts' ) !== false ||
+			strpos( $route, '/wp/v2/pages' ) !== false
+		) {
+			$validate = true;
+		}
+    
+		$validate = apply_filters( 'ppwp_should_validate_rest_request', $validate, $route, $request );
 
+	    // Individual post/page check
+	    if (
+	        preg_match( '/^\/wp\/v2\/posts\/(\d+)$/', $route, $matches ) ||
+	        preg_match( '/^\/wp\/v2\/pages\/(\d+)$/', $route, $matches )
+	    ) {
+	        $post_id              = (int) $matches[1];
 	        $PPW_Password_Services = new PPW_Password_Services();
-	        $is_protected = $PPW_Password_Services->is_protected_content($post_id);
-	  
-	        if ($is_protected) {
+	        $is_protected         = $PPW_Password_Services->is_protected_content( $post_id );
+	        $is_protected = apply_filters( 'ppwp_is_rest_protected_post', $is_protected, $post_id, $request );
+
+	        if ( $is_protected ) {
 	            return new WP_Error(
 	                'rest_forbidden',
-	                __('The content of this post is restricted and cannot be accessed.', 'password-protect-page'),
-	                array('status' => 403)
+	                apply_filters(
+	                    'ppwp_rest_protected_post_message',
+	                    __( 'The content of this post is restricted and cannot be accessed.', 'password-protect-page' ),
+	                    $post_id
+	                ),
+	                array( 'status' => 403 )
 	            );
 	        }
+	    }
+
+	    // Sitewide protection
+	    $is_protect = false;
+	    $is_cookie_valid = false;
+
+	    if ( function_exists( 'is_pro_active_and_valid_license' ) && is_pro_active_and_valid_license() ) {
+	        //  Pro license check passed
+	        $is_protect = ppw_pro_get_setting_entire_site_type_bool( PPW_Constants::IS_PROTECT_ENTIRE_SITE );
+
+	        $entire_site_passwords = ppw_pro_get_setting_entire_site_type_array( PPW_Pro_Constants::PPW_PASSWORD_FOR_ENTIRE_SITE );
+	        $passwords = ppw_pro_get_string_key_in_array( $entire_site_passwords );
+
+	        $pro_setting_service = new PPW_Pro_Settings_Services();
+	        $is_cookie_valid     = $pro_setting_service->validate_auth_cookie_entire_site( $passwords );
+	    } else {
+	        //  Free version
+	        $entire_site_service = new PPW_Entire_Site_Services();
+	        $is_protect          = ppw_core_get_setting_entire_site_type_bool( PPW_Constants::IS_PROTECT_ENTIRE_SITE );
+	        $is_cookie_valid     = $entire_site_service->validate_auth_cookie_entire_site();
+	    }
+
+	    $is_protect = apply_filters( 'ppwp_is_rest_sitewide_protected', $is_protect, $request );
+
+	    if ( $validate && $is_protect && ! $is_cookie_valid ) {
+	        return new WP_Error(
+	            'rest_forbidden',
+	            apply_filters(
+	                'ppwp_rest_sitewide_protection_message',
+	                __( 'Access to the REST API is restricted due to sitewide protection.', 'password-protect-page' )
+	            ),
+	            array( 'status' => 401 )
+	        );
 	    }
 
 	    return $result;
