@@ -4,7 +4,7 @@ Tags: password protect, password, restrict content, sitewide, password protectio
 Requires at least: 4.7
 Requires PHP: 5.6
 Tested up to: 6.8.2
-Stable tag: 1.9.11
+Stable tag: 1.9.12
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -279,6 +279,10 @@ Yes, the Pro version enables you to [automatically password protect child pages]
 N/A
 
 == Changelog ==
+= 1.9.12 =
+
+- [BugFix] PHP warning related to undefined array key during shortcode rendering.
+
 = 1.9.11 =
 
 - Added necessary hooks to improve compatibility with third-party page builders.

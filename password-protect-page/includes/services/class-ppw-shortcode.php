@@ -552,8 +552,6 @@ if ( ! class_exists( 'PPW_Shortcode' ) ) {
 				PPW_DIR_PATH . 'includes/views/shortcode/view-ppw-restriced-content-form.php'
 			);
 			
-			wp_reset_postdata();
-
 			$form_template = ob_get_contents();
 			ob_end_clean();
 
