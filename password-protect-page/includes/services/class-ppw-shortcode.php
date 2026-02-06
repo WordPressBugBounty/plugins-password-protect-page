@@ -95,7 +95,7 @@ if ( ! class_exists( 'PPW_Shortcode' ) ) {
 			// Support page builder.
 			add_action( 'the_post', array( $this, 'maybe_remove_ppwp_shortcode' ), 10 );
 			add_action( 'the_post', array( $this, 'maybe_add_ppwp_shortcode' ), 99999 );
-
+			add_filter( PPW_Constants::HOOK_SHORTCODE_RENDER_CONTENT, array( $this, 'ppwp_wrap_restricted_content' ), 99999, 2 );	
 
 			/**
 			 * Need to keep the old Pro version work, because the sidewide shortcode is using global var ppwContentGlobal.
@@ -271,7 +271,21 @@ if ( ! class_exists( 'PPW_Shortcode' ) ) {
 
 			return apply_filters( 'ppw_pcp_password_form', $password_form, $attrs );
 		}
-
+		
+		/**
+		* Wrap PPWP shortcode output inside a single wrapper div.
+		* Prevents duplicate wrapper if already present.
+		* @param array  $attrs   list of attributes including password.
+		 * @param string $content the content inside short code.
+		*/	
+		public function ppwp_wrap_restricted_content( $content, $attrs ) {
+		    // Prevent duplicate wrapping
+		    if ( strpos( $content, 'class="ppw-restricted-content"' ) !== false ) {
+		        return $content;
+		    }
+		    // Apply wrapper only once
+		    return '<div class="ppw-restricted-content">' . $content . '</div>';
+		}	
 		/**
 		 * Show content if user set on_date or off_date attribute.
 		 * $on_date: Date to unlock content

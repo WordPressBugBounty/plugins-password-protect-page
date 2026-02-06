@@ -1,10 +1,18 @@
-<tr class="ppwp_free_version">
+<tr class="ppwp_free_version ppwp-gray-out">
 	<td class="feature-input"><span class="feature-input"></span></td>
 	<td>
 		<p>
-			<label><?php echo esc_html__( 'Form Message', PPW_Constants::DOMAIN ) ?></label>
+			<label><?php echo esc_html__( 'Form Message', PPW_Constants::DOMAIN ) ?>
+				<span class="ppwp_upgrade_advice">
+					<a rel="noopener" target="_blank" href="https://passwordprotectwp.com/pricing/">
+						<span class="ppwp_dashicons dashicons dashicons-lock">
+							<span class="ppwp_upgrade_tooltip"><?php echo esc_html__( 'Upgrade to Gold', 'password-protect-page' ) ?></span>
+						</span>
+					</a>
+				</span>
+			</label>
 			<?php echo _e( 'Customize the message which displays above the password field.<em> Available in Pro version only.</em>', PPW_Constants::DOMAIN ) ?>
 		</p>
-		<input type="text" value="<?php echo esc_html( PPW_Constants::DEFAULT_FORM_MESSAGE ); ?>"/>
+		<input type="text" disabled value="<?php echo esc_html( PPW_Constants::DEFAULT_FORM_MESSAGE ); ?>"/>
 	</td>
 </tr>

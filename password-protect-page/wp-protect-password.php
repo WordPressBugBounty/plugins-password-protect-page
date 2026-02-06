@@ -16,7 +16,7 @@
  * Plugin Name:       Password Protect WordPress Lite
  * Plugin URI:        https://passwordprotectwp.com?utm_source=user-website&utm_medium=pluginsite_link&utm_campaign=ppwp_lite
  * Description:       Password protect the entire WordPress site, unlimited pages and posts by user roles. This plugin is required for our Pro version to work properly.
- * Version:           1.9.12
+ * Version:           1.9.15
  * Author:            BWPS
  * Author URI:        https://passwordprotectwp.com
  * License:           GPL-2.0+
@@ -35,7 +35,7 @@ if ( ! defined( 'WPINC' ) ) {
  * Start at version 1.1.2 and use SemVer - https://semver.org
  * Rename this for your plugin and update it as you release new versions.
  */
-define( 'PPW_VERSION', '1.9.12' );
+define( 'PPW_VERSION', '1.9.15' );
 
 if ( ! defined( 'PPW_DIR_PATH' ) ) {
 	define( 'PPW_DIR_PATH', plugin_dir_path( __FILE__ ) );
@@ -153,3 +153,26 @@ function ppw_fail_wp_version() {
 	$html_message = sprintf( '<div class="error">%s</div>', wpautop( $message ) );
 	echo wp_kses_post( $html_message );
 }
+
+/* Plugin Analytics Data */
+function wpfolio_ppwp_analytics_load() {
+
+    require_once dirname( __FILE__ ) . '/wpfolio-analytics/wpfolio-analytics.php';
+
+    $wpfolio_analytics =  wpfolio_ppwp_anylc_init_module( array(
+                            'id'            => 11,
+                            'file'          => plugin_basename( __FILE__ ),
+                            'name'          => 'Password Protect WordPress',
+                            'slug'          => 'wp_protect_password_options',
+                            'tempslug'      => 'wp_protect_password_options_optin',
+                            'type'          => 'plugin',
+                            'menu'          => 'wp_protect_password_options',
+                            'redirect_page' => 'wp_protect_password_options',
+                            'text_domain'   => 'password-protect-page',
+                        ));
+
+    return $wpfolio_analytics;
+}
+
+// Init Analytics
+wpfolio_ppwp_analytics_load();

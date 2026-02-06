@@ -1,12 +1,24 @@
 <?php
 $all_page_post = ppw_free_get_all_page_post();
 ?>
-<tr class="ppwp_free_version">
-	<td class="feature-input"><span class="feature-input"></span></td>
+<tr class="ppwp_free_version ppwp-gray-out">
+	<td>
+		<label class="pda_switch" for="ppwp_apply_password_for_pages_posts">
+			<input type="checkbox" id="ppwp_apply_password_for_pages_posts" disabled />
+			<span class="pda-slider round"></span>
+		</label>
+	</td>
 	<td>
 		<p>
 			<label>
 				<?php echo esc_html__( 'Password Protect Private Pages', PPW_Constants::DOMAIN ) ?>
+				<span class="ppwp_upgrade_advice">
+					<a rel="noopener" target="_blank" href="https://passwordprotectwp.com/pricing/">
+						<span class="ppwp_dashicons dashicons dashicons-lock">
+							<span class="ppwp_upgrade_tooltip"><?php echo esc_html__( 'Upgrade to Gold', 'password-protect-page' ) ?></span>
+						</span>
+					</a>
+				</span>	
 			</label>
 			<?php echo _e( 'Set the same password to protect the following pages and posts. Available in Pro version.', PPW_Constants::DOMAIN ) ?>
 		</p>

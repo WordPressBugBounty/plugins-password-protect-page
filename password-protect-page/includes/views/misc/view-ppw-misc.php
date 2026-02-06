@@ -16,6 +16,11 @@
 	</p>
 	<table class="ppwp_settings_table" cellpadding="4">
 		<?php include PPW_DIR_PATH . 'includes/views/misc/view-ppw-restore-wp-password.php'; ?>
+		<?php 
+		if ( ! is_pro_active_and_valid_license() ) {
+			include PPW_DIR_PATH . 'includes/advanced/view-ppw-setting.php';
+		}
+		?>
 	</table>
 	<?php do_action('ppw_render_misc_form'); ?>
 

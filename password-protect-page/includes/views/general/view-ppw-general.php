@@ -12,7 +12,8 @@
 		include PPW_DIR_PATH . 'includes/views/general/view-ppw-expired-cookie.php';
 		include PPW_DIR_PATH . 'includes/views/general/view-ppw-whitelist-roles.php';
 		include PPW_DIR_PATH . 'includes/views/general/view-ppw-auto-protect-child-page.php';
-		// include PPW_DIR_PATH . 'includes/views/general/view-ppw-protect-private-pages.php';
+		include PPW_DIR_PATH . 'includes/views/general/view-ppw-protect-private-pages.php';
+		include PPW_DIR_PATH . 'includes/views/general/view-ppw-allowed-regex-password.php';
 		include PPW_DIR_PATH . 'includes/views/general/view-ppw-hide-protected-post.php';
 		?>
 		<tr>
@@ -39,7 +40,7 @@
 				);
 				$form_message       = sprintf(
 					// translators: %s: Link to documentation.
-					esc_html__( 'Customize the default %1$s including headline, description and button under %2$s.', PPW_Constants::DOMAIN ),
+					esc_html__( 'Customize the default %1$s including headline, description and button under %2$s. The following messages will display by default if you haven\'t customized them via WordPress Customizer.', PPW_Constants::DOMAIN ),
 					$link_error_message,
 					$link_customizer
 				);
@@ -48,8 +49,9 @@
 			</td>
 		</tr>
 		<?php
-//		include PPW_DIR_PATH . 'includes/views/general/view-ppw-form-message.php';
-//		include PPW_DIR_PATH . 'includes/views/general/view-ppw-error-message.php';
+     	include PPW_DIR_PATH . 'includes/views/general/view-ppw-form-message.php';
+	    include PPW_DIR_PATH . 'includes/views/general/view-ppw-error-message.php';
+
 		?>
 		<tr>
 			<td colspan="2">
@@ -64,6 +66,7 @@
 		<?php
 		include PPW_DIR_PATH . 'includes/views/general/view-ppw-remove-search-engine.php';
 		include PPW_DIR_PATH . 'includes/views/general/view-ppw-remove-data.php';
+		include PPW_DIR_PATH . 'includes/views/general/view-ppw-debug-log.php';
 		?>
 	</table>
 	<?php

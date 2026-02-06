@@ -3,8 +3,8 @@ Contributors: gaupoit, rexhoang, ppwp, buildwps, yuryonfolio
 Tags: password protect, password, restrict content, sitewide, password protection
 Requires at least: 4.7
 Requires PHP: 5.6
-Tested up to: 6.8.2
-Stable tag: 1.9.12
+Tested up to: 6.9
+Stable tag: 1.9.15
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -279,40 +279,56 @@ Yes, the Pro version enables you to [automatically password protect child pages]
 N/A
 
 == Changelog ==
+
+= 1.9.15 =
+
+* [Bug Fix] Fixed a PHP notice triggered by undefined request data.
+
+= 1.9.14 =
+
+* [Improvement] Updated and refined CSS styling for improved UI/UX.
+
+= 1.9.13 =
+
+* [Feature] Added an onboarding Opt-In/Opt-Out screen on first plugin activation, allowing users to grant or deny analytics consent.
+* [Feature] Introduced GreyLayout for locked premium features, displaying all Gold features in the Free version as disabled/locked with clear labels.
+* [Improvement] Improved the initial setup flow to provide a clearer and more compliant user experience.
+* [Improvement] Refined the UI/UX to better distinguish between Free and Gold features.
+
 = 1.9.12 =
 
-- [BugFix] PHP warning related to undefined array key during shortcode rendering.
+* [BugFix] PHP warning related to undefined array key during shortcode rendering.
 
 = 1.9.11 =
 
-- Added necessary hooks to improve compatibility with third-party page builders.
-- Optimized backend settings page for better performance.
-- Improved REST API protection when Sitewide Password is enabled.
+* Added necessary hooks to improve compatibility with third-party page builders.
+* Optimized backend settings page for better performance.
+* Improved REST API protection when Sitewide Password is enabled.
 
 = 1.9.10 =
 
-- Improved REST API protection when sitewide password is enabled.
+* Improved REST API protection when sitewide password is enabled.
 
 = 1.9.9 =
 
-- Fixed compatibility issue with WP 6.8 password cookies.
+* Fixed compatibility issue with WP 6.8 password cookies.
 
 = 1.9.8 =
 
-- [Bug Fix] API PUT request bug fix.
+* [Bug Fix] API PUT request bug fix.
 
 = 1.9.7 =
 
-- [Improvement] Added synchronization between free and pro protection features in category settings.
-- [Improvement] Enhancement made in Meta Query for faster response.
+* [Improvement] Added synchronization between free and pro protection features in category settings.
+* [Improvement] Enhancement made in Meta Query for faster response.
 
 = 1.9.6 =
 
-- [Bug Fix] Fixed an API issue to ensure seamless functionality and improved site security.
+* [Bug Fix] Fixed an API issue to ensure seamless functionality and improved site security.
 
 = 1.9.5 =
 
-- [Security Enhancement] Improved password encryption to further safeguard user credentials and enhance overall security.
+* [Security Enhancement] Improved password encryption to further safeguard user credentials and enhance overall security.
 
 = 1.9.4 =
 

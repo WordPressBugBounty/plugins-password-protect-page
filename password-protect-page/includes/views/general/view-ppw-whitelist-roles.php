@@ -16,6 +16,7 @@ $roles = get_editable_roles();
 			<option disabled value="author"><?php echo esc_html__( 'The post\'s author', PPW_Constants::DOMAIN ) ?></option>
 			<option disabled value="logged_users"><?php echo esc_html__( 'Logged-in users', PPW_Constants::DOMAIN ) ?></option>
 			<option disabled value="custom_roles"><?php echo esc_html__( 'Choose custom roles', PPW_Constants::DOMAIN ) ?></option>
+			<option disabled value="usernames"><?php echo esc_html__( 'Choose username', PPW_Constants::DOMAIN ) ?></option>
 		</select>
 	</td>
 </tr>
