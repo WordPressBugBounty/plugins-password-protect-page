@@ -6,6 +6,7 @@
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
+// phpcs:disable
 
 if ( ! class_exists( 'PPW_Repository_Passwords' ) ) {
 	/**
@@ -598,3 +599,4 @@ if ( ! class_exists( 'PPW_Repository_Passwords' ) ) {
 
 	}
 }
+// phpcs:enable

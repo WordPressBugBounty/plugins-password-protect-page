@@ -1,3 +1,8 @@
+<?php 
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+?>
 <tr class="ppwp-gray-out">
 	<td>
 		<label class="pda_switch" for="ppwp_allowed_regex_password">
@@ -8,7 +13,7 @@
 	</td>
 	<td>
 		<p>
-			<label><?php echo esc_html__( 'Wildcard Passwords', PPW_Constants::DOMAIN ) ?>
+			<label><?php echo esc_html__( 'Wildcard Passwords', 'password-protect-page' ) ?>
 				<span class="ppwp_upgrade_advice">
 					<a rel="noopener" target="_blank" href="https://passwordprotectwp.com/pricing/">
 						<span class="ppwp_dashicons dashicons dashicons-lock">
@@ -17,9 +22,9 @@
 					</a>
 				</span>	
 			</label>
-			<?php _e( 'Allow users to access your protected content using ', PPW_Constants::DOMAIN ) ?>
+			<?php esc_html_e( 'Allow users to access your protected content using ', 'password-protect-page' ) ?>
 			<a rel="noreferrer noopener" href="https://passwordprotectwp.com/docs/create-wildcard-passwords/?utm_source=user-website&utm_medium=settings-general&utm_campaign=ppwp-pro" target="_blank">
-				wildcard passwords
+				<?php echo esc_html__( 'wildcard passwords', 'password-protect-page' ) ?>
 			</a>
 		</p>
 	</td>

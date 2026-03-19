@@ -1,4 +1,8 @@
 <?php
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+// phpcs:disable WordPress.NamingConventions.PrefixAllGlobals
 /**
  * PPWP General Settings
  */
@@ -6,13 +10,13 @@ $using_recaptcha       = PPW_Recaptcha::get_instance()->using_recaptcha() ? 'che
 $recaptcha_type        = PPW_Recaptcha::get_instance()->get_recaptcha_type();
 $password_types        = PPW_Recaptcha::get_instance()->get_password_types();
 $type_options          = array(
-	PPW_Recaptcha::RECAPTCHA_V3_TYPE          => __( 'reCAPTCHA v3', PPW_Constants::DOMAIN ),
-	PPW_Recaptcha::RECAPTCHA_V2_CHECKBOX_TYPE => __( 'reCAPTCHA v2 - Checkbox', PPW_Constants::DOMAIN ),
+	PPW_Recaptcha::RECAPTCHA_V3_TYPE          => __( 'reCAPTCHA v3', 'password-protect-page' ),
+	PPW_Recaptcha::RECAPTCHA_V2_CHECKBOX_TYPE => __( 'reCAPTCHA v2 - Checkbox', 'password-protect-page' ),
 );
 $password_type_options = array(
-	PPW_Recaptcha::SINGLE_PASSWORD   => __( 'Single password form', PPW_Constants::DOMAIN ),
-	PPW_Recaptcha::SITEWIDE_PASSWORD => __( 'Sitewide login form', PPW_Constants::DOMAIN ),
-	PPW_Recaptcha::PCP_PASSWORD      => __( 'PCP password form', PPW_Constants::DOMAIN ),
+	PPW_Recaptcha::SINGLE_PASSWORD   => __( 'Single password form', 'password-protect-page' ),
+	PPW_Recaptcha::SITEWIDE_PASSWORD => __( 'Sitewide login form', 'password-protect-page' ),
+	PPW_Recaptcha::PCP_PASSWORD      => __( 'PCP password form', 'password-protect-page' ),
 );
 
 ?>
@@ -31,16 +35,16 @@ $password_type_options = array(
 				</td>
 				<td>
 					<p style="margin-bottom: 6px;">
-						<label><?php esc_attr_e( 'Enable Google reCAPTCHA Protection', PPW_Constants::DOMAIN ) ?></label>
+						<label><?php esc_attr_e( 'Enable Google reCAPTCHA Protection', 'password-protect-page' ) ?></label>
 						<a rel="noopener" target="_blank" href="https://passwordprotectwp.com/docs/add-google-recaptcha-wordpress-password-form/?utm_source=user-website&utm_medium=integration-recaptcha&utm_campaign=ppwp-free"><?php echo esc_html__('Protect
-							your password form',PPW_Constants::DOMAIN)?></a>
-							<?php echo esc_html__('from abuse and spam while allowing real user access only',PPW_Constants::DOMAIN);?>
+							your password form','password-protect-page')?></a>
+							<?php echo esc_html__('from abuse and spam while allowing real user access only','password-protect-page');?>
 					</p>
 					<div
 						<?php echo $using_recaptcha ? '' : 'style="display: none"'; ?>
 						id="wpp_recaptcha_options">
 						<div>
-							<p><?php esc_attr_e( 'Choose reCAPTCHA type', PPW_Constants::DOMAIN ); ?></p>
+							<p><?php esc_attr_e( 'Choose reCAPTCHA type', 'password-protect-page' ); ?></p>
 							<select
 								class="ppw_main_container select"
 								id="wpp_recaptcha_type">
@@ -51,11 +55,11 @@ $password_type_options = array(
 								}
 								?>
 								<option value="recaptcha_v2_invisible"
-								        disabled><?php echo esc_html__( 'reCAPTCHA v2 - Invisible', PPW_Constants::DOMAIN ); ?></option>
+								        disabled><?php echo esc_html__( 'reCAPTCHA v2 - Invisible', 'password-protect-page' ); ?></option>
 							</select>
 						</div>
 						<div style="max-width: 25rem;">
-							<p><?php esc_attr_e( 'Choose which password form to apply reCAPTCHA', PPW_Constants::DOMAIN ); ?></p>
+							<p><?php esc_attr_e( 'Choose which password form to apply reCAPTCHA', 'password-protect-page' ); ?></p>
 							<select id="wpp_recaptcha_password_types" class="ppw_main_container select ppw_select_types" required multiple="multiple">
 								<?php
 								foreach ( $password_type_options as $key => $value ) {

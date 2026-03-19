@@ -7,7 +7,7 @@
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
-
+// phpcs:disable WordPress.NamingConventions.PrefixAllGlobals
 // Exit if WP_Customize_Control does not exsist.
 if ( ! class_exists( 'WP_Customize_Control' ) ) {
 	return null;
@@ -51,11 +51,12 @@ class PPW_Datetime_Control extends WP_Customize_Control {
 	 */
 	public function to_json() {
 		parent::to_json();
-
+		// phpcs:disable
 		// The setting value.
 		$this->json['id']           = $this->id;
 		$this->json['value']        = $this->value();
 		$this->json['min']          = date('Y-m-d\TH:i', current_time( 'timestamp' ));
+		// phpcs:enable
 	}
 
 	/**

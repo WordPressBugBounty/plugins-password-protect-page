@@ -1,22 +1,24 @@
 <?php
-
-
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+// phpcs:ignoreFile WordPress.NamingConventions.PrefixAllGlobals
 $shortcode = '[ppwp passwords="' . $settings->ppwp_passwords . '"';
 
 if ( ! empty( $settings->ppwp_headline ) ) {
-	$shortcode .= ' headline="' . esc_html__($settings->ppwp_headline) . '"';
+	$shortcode .= ' headline="' . esc_attr($settings->ppwp_headline) . '"';
 }
 
 if ( ! empty( $settings->ppwp_description ) ) {
-	$shortcode .= ' description="' . esc_html__( $settings->ppwp_description ) . '"';
+	$shortcode .= ' description="' . esc_attr( $settings->ppwp_description ) . '"';
 }
 
 if ( ! empty( $settings->ppwp_placeholder ) ) {
-	$shortcode .= ' placeholder="' . esc_html__( $settings->ppwp_placeholder ) . '"';
+	$shortcode .= ' placeholder="' . esc_attr( $settings->ppwp_placeholder ) . '"';
 }
 
 if ( ! empty( $settings->ppwp_button ) ) {
-	$shortcode .= ' button="' . esc_html__( $settings->ppwp_button ) . '"';
+	$shortcode .= ' button="' . esc_attr( $settings->ppwp_button ) . '"';
 }
 
 if ( ! empty( $settings->ppwp_cookie ) ) {

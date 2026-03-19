@@ -3,8 +3,8 @@ Contributors: gaupoit, rexhoang, ppwp, buildwps, yuryonfolio
 Tags: password protect, password, restrict content, sitewide, password protection
 Requires at least: 4.7
 Requires PHP: 5.6
-Tested up to: 6.9
-Stable tag: 1.9.15
+Tested up to: 6.9.4
+Stable tag: 1.9.16
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -280,9 +280,15 @@ N/A
 
 == Changelog ==
 
+= 1.9.16 =
+
+* [BugFix] Fixed REST API vulnerability related to master password.
+* [Improvement] Fixed WordPress Coding Standards issues.
+* [Improvement] Enhanced overall code quality and security.
+
 = 1.9.15 =
 
-* [Bug Fix] Fixed a PHP notice triggered by undefined request data.
+* [BugFix] Fixed a PHP notice triggered by undefined request data.
 
 = 1.9.14 =
 

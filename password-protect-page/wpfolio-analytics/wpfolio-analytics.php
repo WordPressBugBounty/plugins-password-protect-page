@@ -57,7 +57,7 @@ final class WPFolio_Ppwp_Analytics {
 	 */
 	public function __clone() {
 		// Cloning instances of the class is forbidden.
-		_doing_it_wrong( __FUNCTION__, __( 'Cheatin&#8217; huh?', 'pwpc' ), '1.0' );
+		_doing_it_wrong( __FUNCTION__, esc_html__( 'Cheatin&#8217; huh?', 'password-protect-page' ), '1.0' );
 	}
 
 	/**
@@ -69,7 +69,7 @@ final class WPFolio_Ppwp_Analytics {
 	 */
 	public function __wakeup() {
 		// Unserializing instances of the class is forbidden.
-		_doing_it_wrong( __FUNCTION__, __( 'Cheatin&#8217; huh?', 'pwpc' ), '1.0' );
+		_doing_it_wrong( __FUNCTION__, esc_html__( 'Cheatin&#8217; huh?', 'password-protect-page' ), '1.0' );
 	}
 
 	/**
@@ -89,6 +89,7 @@ final class WPFolio_Ppwp_Analytics {
 	 * @param  string|bool $value
 	 */
 	public function define( $name, $value ) {
+		// phpcs:disable
 		if ( ! defined( $name ) ) {
 			define( $name, $value );
 		}

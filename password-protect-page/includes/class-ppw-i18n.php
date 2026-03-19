@@ -33,11 +33,11 @@ class PPW_i18n {
 	 * @since    1.0.0
 	 */
 	public function load_plugin_textdomain() {
-
+		// phpcs:disable
 		load_plugin_textdomain(
 			'password-protect-page',
 			false,
-			dirname( dirname( plugin_basename( __FILE__ ) ) ) . '/languages/'
+			dirname( dirname( plugin_basename( __FILE__ ) ) ) . '/languages/' 
 		);
 
 	}

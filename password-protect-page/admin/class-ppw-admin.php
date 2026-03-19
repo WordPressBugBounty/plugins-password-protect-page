@@ -1,5 +1,7 @@
 <?php
-
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
 /**
  * The admin-specific functionality of the plugin.
  *
@@ -96,6 +98,7 @@ class PPW_Admin {
 		 * class.
 		 */
 		if ( function_exists( 'get_current_screen' ) ) {
+			// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.DynamicHooknameFound
 			$is_pro_activated = apply_filters( PPW_Constants::HOOK_IS_PRO_ACTIVATE, false );
 			$screen           = get_current_screen();
 			$assert_services  = new PPW_Asset_Services( $screen->id, $_GET ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- We no need to verify nonce for enqueue assets
@@ -141,6 +144,10 @@ class PPW_Admin {
 			);
 			wp_die();
 		}
+		// phpcs:disable WordPress.Security.NonceVerification.Recommended
+		// phpcs:disable WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+		// phpcs:disable WordPress.Security.ValidatedSanitizedInput.MissingUnslash
+
 		if ( ! isset( $_REQUEST['settings'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- We handle nonce verification above.
 			wp_send_json(
 				array(
@@ -152,8 +159,9 @@ class PPW_Admin {
 
 			wp_die();
 		}
+		
+	    $data_settings = wp_unslash( $_REQUEST['settings'] );
 
-		$data_settings        = $_REQUEST['settings']; // phpcs:ignore WordPress.Security.NonceVerification.Recommended, WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- We no need to verify nonce for enqueue assets, Don't need use wp_unslash(), and no need to sanitize settings params.
 		$new_role_password    = $data_settings['save_password'];
 		$id                   = $data_settings['id_page_post'];
 		$role_selected        = $data_settings['is_role_selected'];
@@ -285,7 +293,7 @@ class PPW_Admin {
 			$setting_page,
 			'render_ui'
 		), PPW_DIR_URL . 'admin/images/ppw-icon-20x20.png' );
-		add_submenu_page( PPW_Constants::MENU_NAME, __( 'PPWP › Settings', PPW_Constants::DOMAIN ), __( 'Settings', PPW_Constants::DOMAIN ), ppw_get_allowed_capability(), PPW_Constants::MENU_NAME );
+		add_submenu_page( PPW_Constants::MENU_NAME, __( 'PPWP › Settings', 'password-protect-page' ), __( 'Settings', 'password-protect-page' ), ppw_get_allowed_capability(), PPW_Constants::MENU_NAME );
 		$this->partial_protection_submenu();
 
 		// Hide sitewide when Pro activate.
@@ -302,7 +310,7 @@ class PPW_Admin {
 	public function sitewide_submenu() {
 		$setting_page = new PPW_Sitewide_Settings();
 
-		add_submenu_page( PPW_Constants::MENU_NAME, __( 'PPWP › Sitewide', PPW_Constants::DOMAIN ), __( 'Sitewide Protection', PPW_Constants::DOMAIN ), ppw_get_allowed_capability(), PPW_Constants::SITEWIDE_PAGE_PREFIX, array(
+		add_submenu_page( PPW_Constants::MENU_NAME, __( 'PPWP › Sitewide', 'password-protect-page' ), __( 'Sitewide Protection', 'password-protect-page' ), ppw_get_allowed_capability(), PPW_Constants::SITEWIDE_PAGE_PREFIX, array(
 			$setting_page,
 			'render_ui',
 		) );
@@ -317,8 +325,8 @@ class PPW_Admin {
 
 		add_submenu_page(
 			PPW_Constants::MENU_NAME,
-			__( 'PPWP › Integrations', PPW_Constants::DOMAIN ),
-			__( 'Integrations', PPW_Constants::DOMAIN ),
+			__( 'PPWP › Integrations', 'password-protect-page' ),
+			__( 'Integrations', 'password-protect-page' ),
 			ppw_get_allowed_capability(),
 			PPW_Constants::EXTERNAL_SERVICES_PREFIX,
 			array(
@@ -333,7 +341,7 @@ class PPW_Admin {
 	 */
 	public function partial_protection_submenu() {
 		$setting_page = new PPW_Partial_Protection_Settings();
-		add_submenu_page( PPW_Constants::MENU_NAME, __( 'PPWP › Partial Protection', PPW_Constants::DOMAIN ), __( 'Partial Protection', PPW_Constants::DOMAIN ),
+		add_submenu_page( PPW_Constants::MENU_NAME, __( 'PPWP › Partial Protection','password-protect-page' ), __( 'Partial Protection','password-protect-page' ),
 			ppw_get_allowed_capability(), PPW_Constants::PCP_PAGE_PREFIX, array(
 				$setting_page,
 				'render_ui'
@@ -480,6 +488,7 @@ class PPW_Admin {
 		wp_enqueue_script( 'ppw-master-passwords-js', PPW_DIR_URL . 'includes/views/master-passwords/assets/ppw-master-passwords.js', array( 'jquery' ), PPW_VERSION, true );
 		wp_enqueue_style( 'ppw-master-passwords-css', PPW_DIR_URL . 'includes/views/master-passwords/assets/ppw-master-passwords.css', array(), PPW_VERSION, 'all' );
 		$post_types_selected     = $this->free_services->get_protection_post_types_select();
+		// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound
 		$protection_types        = apply_filters( 'ppw_master_password_protection_types', array() );
 		$allowed_protection_type = ppw_allowed_master_protection_type();
 		wp_localize_script(
@@ -602,7 +611,7 @@ class PPW_Admin {
 			PPW_Constants::RECAPTCHA_TYPE,
 			PPW_Constants::RECAPTCHA_PASSWORD_TYPES,
 		);
-		$settings     = wp_unslash( $_REQUEST['settings'] ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- We handle nonce verification above and no need to sanitize settings params.
+		$settings     = wp_unslash( $_REQUEST['settings'] ); 
 		foreach ( $settings as $key => $value ) {
 			if ( in_array( $key, $setting_keys, true ) ) {
 				$option[ $key ] = $settings[ $key ];
@@ -621,6 +630,7 @@ class PPW_Admin {
 	 * Update settings
 	 */
 	public function ppw_free_update_misc_settings() {
+		// phpcs:disable
 		$setting_keys = apply_filters(
 			PPW_Constants::HOOK_ADVANCED_VALID_INPUT_DATA,
 			array(
@@ -629,7 +639,7 @@ class PPW_Admin {
 				PPW_Constants::NO_RELOAD_PAGE,
 			)
 		);
-		if ( ppw_free_is_setting_data_invalid( $_REQUEST, $setting_keys, false ) ) { // phpcs:ignore WordPress.Security.NonceVerification -- We handle nonce verification in this function.
+		if ( ppw_free_is_setting_data_invalid( $_REQUEST, $setting_keys, false ) ) { 
 			wp_send_json(
 				array(
 					'is_error' => true,
@@ -641,7 +651,7 @@ class PPW_Admin {
 			wp_die();
 		}
 
-		if ( ! isset( $_REQUEST['settings'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- We handle nonce verification above.
+		if ( ! isset( $_REQUEST['settings'] ) ) { 
 			wp_send_json(
 				array(
 					'is_error' => true,
@@ -652,10 +662,10 @@ class PPW_Admin {
 
 			wp_die();
 		}
-		$data_settings = wp_unslash( $_REQUEST['settings'] ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- We handle nonce verification above and no need to sanitize settings params.
+		$data_settings = wp_unslash( $_REQUEST['settings'] ); 
 
 		update_option( PPW_Constants::MISC_OPTIONS, wp_json_encode( $data_settings ), 'no' );
-
+		// phpcs:enable
 		wp_die( true );
 	}
 
@@ -664,6 +674,7 @@ class PPW_Admin {
 	 * Update shortcode settings.
 	 */
 	public function ppw_free_update_shortcode_settings() {
+		// phpcs:disable
 		$setting_keys = apply_filters(
 			'ppw_shortcode_valid_input_data',
 			array(
@@ -682,7 +693,7 @@ class PPW_Admin {
 			wp_die();
 		}
 
-		if ( ! isset( $_REQUEST['settings'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- We handle nonce verification above.
+		if ( ! isset( $_REQUEST['settings'] ) ) { 
 			wp_send_json(
 				array(
 					'is_error' => true,
@@ -694,10 +705,10 @@ class PPW_Admin {
 			wp_die();
 		}
 
-		$data_settings = wp_unslash( $_REQUEST['settings'] ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- We handle nonce verification above and no need to sanitize settings params.
+		$data_settings = wp_unslash( $_REQUEST['settings'] ); 
 
 		update_option( PPW_Constants::SHORTCODE_OPTIONS, wp_json_encode( $data_settings ), 'no' );
-
+		// phpcs:enable
 		wp_die( true );
 	}
 
@@ -707,6 +718,7 @@ class PPW_Admin {
 	public function ppw_free_update_category_settings() {
 		
 		$nonce_verification = check_ajax_referer( PPW_Constants::GENERAL_FORM_NONCE, 'security_check' );
+		// phpcs:disable
 		if ( ! $nonce_verification ) {
 			wp_send_json(
 				array(
@@ -730,7 +742,7 @@ class PPW_Admin {
 
 			return wp_die( true );
 		}
-
+		
 		$setting_keys = apply_filters(
 			'ppw_category_keys',
 			array(
@@ -740,7 +752,8 @@ class PPW_Admin {
 			)
 		);
 
-		$data_settings = apply_filters( 'ppw_category_data_settings', wp_unslash( $_REQUEST['settings'] ), $setting_keys ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- We no need to sanitize settings params.
+		
+		$data_settings = apply_filters( 'ppw_category_data_settings', wp_unslash( $_REQUEST['settings'] ), $setting_keys ); 
 		if ( ppw_free_is_setting_data_invalid( $_REQUEST, $setting_keys, false ) ) {
 			wp_send_json(
 				array(
@@ -815,7 +828,7 @@ class PPW_Admin {
 			        }
 
 			} else {
-			    echo 'No posts found in the selected categories.';
+			    esc_html_e( 'No posts found in the selected categories.', 'password-protect-page' );
 			}
 
 
@@ -877,7 +890,7 @@ class PPW_Admin {
 			$get_paid_res = $ppw_instance->update_category_protect($post_ids_str, $from_ppwp_free);
 		}
 		update_option( PPW_Category_Service::OPTION_NAME, wp_json_encode( $data_settings ), 'no' );
-
+		// phpcs:enable
 		wp_die( true );
 	}
 
@@ -899,6 +912,7 @@ class PPW_Admin {
 
 			wp_die();
 		}
+		// phpcs:disable
 		if ( isset( $_REQUEST['settings'], $_REQUEST['settings']['ppwp_is_protect_tag'] ) && 'false' === $_REQUEST['settings']['ppwp_is_protect_tag'] ) {
 			$data = get_option( PPW_Tag_Service::OPTION_NAME, false );
 			if ( $data ) {
@@ -911,7 +925,7 @@ class PPW_Admin {
 
 			return wp_die( true );
 		}
-
+		
 		$setting_keys = apply_filters(
 			'ppw_tag_keys',
 			array(
@@ -921,7 +935,7 @@ class PPW_Admin {
 			)
 		);
 
-		$data_settings = apply_filters( 'ppw_tag_data_settings', wp_unslash( $_REQUEST['settings'] ), $setting_keys ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- We no need to sanitize settings params.
+		$data_settings = apply_filters( 'ppw_tag_data_settings', wp_unslash( $_REQUEST['settings'] ), $setting_keys ); 
 		if ( ppw_free_is_setting_data_invalid( $_REQUEST, $setting_keys, false ) ) {
 			wp_send_json(
 				array(
@@ -933,7 +947,7 @@ class PPW_Admin {
 
 			wp_die();
 		}
-
+		
 		do_action( 'ppw_before_update_tag_settings', $setting_keys, $data_settings );
 
 		$passwords = PPW_Repository_Passwords::get_instance()->get_all_shared_tags_password();
@@ -995,9 +1009,9 @@ class PPW_Admin {
 			        }
 
 			} else {
-			    echo 'No posts found in the selected categories.';
+			    esc_html_e( 'No posts found in the selected categories.', 'password-protect-page' );
 			}
-
+			
 
 			 // Unprotect posts in the unselected categories
 		    if (!empty($unselected_tags)) {
@@ -1035,7 +1049,7 @@ class PPW_Admin {
 		unset( $data_settings['ppwp_tags_password'] );
 
 		update_option( PPW_Tag_Service::OPTION_NAME, wp_json_encode( $data_settings ), 'no' );
-
+		// phpcs:enable
 		wp_die( true );
 	}
 
@@ -1076,12 +1090,13 @@ class PPW_Admin {
 		if ( ppw_free_has_bypass_sitewide_protection() ) {
 			return;
 		}
-
+		// phpcs:disable WordPress.NamingConventions.PrefixAllGlobals.DynamicHooknameFound
+		// phpcs:disable WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound
 		$is_protect = ppw_core_get_setting_entire_site_type_bool( PPW_Constants::IS_PROTECT_ENTIRE_SITE );
 		if ( ! $is_protect ) {
 			return;
 		}
-
+		// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.DynamicHooknameFound
 		$is_render_form = apply_filters( PPW_Constants::HOOK_BEFORE_RENDER_FORM_ENTIRE_SITE, true );
 		if ( ! $is_render_form ) {
 			return;
@@ -1091,23 +1106,21 @@ class PPW_Admin {
 		if ( $entire_site_service->validate_auth_cookie_entire_site() ) {
 			return;
 		}
-
+		// phpcs:disable WordPress.NamingConventions.PrefixAllGlobals.DynamicHooknameFound
 		$password = ppw_core_get_setting_entire_site_type_string( PPW_Constants::PASSWORD_ENTIRE_SITE );
 		if ( empty( $password ) ) {
 			return;
 		}
-
+		// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound
 		do_action( 'ppw_sitewide_before_validate_password', $password );
 
 		$password_is_valid = $entire_site_service->entire_site_is_valid_password( $password );
 		if ( $password_is_valid ) {
 			$entire_site_service->entire_site_set_password_to_cookie( $password );
-//			$free_cache = new PPW_Cache_Services();
-//			$free_cache->clear_cache_super_cache();
 			$entire_site_service->entire_site_redirect_after_enter_password();
 			die();
 		}
-
+		// phpcs:enable
 		include PPW_DIR_PATH . 'includes/views/entire-site/view-ppw-form-password.php';
 		die();
 	}
@@ -1118,12 +1131,7 @@ class PPW_Admin {
 	 * @return string
 	 */
 	public function handle_content_protect_short_code() {
-		$content = <<<_end_
-		<div>
-			This feature only runs on free
-		</div>
-_end_;
-
+		$content = '<div>' . esc_html__( 'This feature only runs on free', 'password-protect-page' ) . '</div>';
 		return $content;
 	}
 
@@ -1153,8 +1161,9 @@ _end_;
    		}
    		$protected_post_ids = $this->ppwp_get_all_protected_ids();
    		if(!empty($protected_post_ids)){
+   			// phpcs:disable WordPressVIPMinimum.Performance.WPQueryParams.PostNotIn_post__not_in
    			if (isset($args['post_type']) && $args['post_type'] === 'post') {
-	        
+	        	// phpcs:ignore WordPressVIPMinimum.Performance.WPQueryParams.PostNotIn_post__not_in -- Required to exclude protected posts.
 		        $args['post__not_in'] = $protected_post_ids;
 		    }	
    		}
@@ -1244,7 +1253,7 @@ _end_;
 
 	public function ppwp_exclude_protected_items_from_qry( $query ) {
 	    global $post;
-
+	    // phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery
 	    if ( ! function_exists( 'is_user_logged_in' ) ) {
 	        require_once ABSPATH . 'wp-includes/pluggable.php';
 	    }
@@ -1252,15 +1261,17 @@ _end_;
 	    if ( is_admin() || is_user_logged_in() ) {
 	        return;
 	    }
-
+	    // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 	    $protected_post_ids = $this->ppwp_get_all_protected_ids();
 
 	    if ( ! empty( $protected_post_ids ) ) {
 	        if ( $query->is_search && $query->is_main_query() ) {
+	        	// phpcs:ignore WordPressVIPMinimum.Performance.WPQueryParams.PostNotIn_post__not_in -- Needed to exclude protected posts.
 	            $query->set( 'post__not_in', $protected_post_ids );
 	        }
 
 	        if ( defined( 'REST_REQUEST' ) && REST_REQUEST ) {
+	        	// phpcs:ignore WordPressVIPMinimum.Performance.WPQueryParams.PostNotIn_post__not_in -- Needed to exclude protected posts.
 	            $query->set( 'post__not_in', $protected_post_ids );
 	        }
 	    }
@@ -1288,6 +1299,7 @@ _end_;
 
 	        $query->set( 'meta_query', $meta_query );
 	    }
+	    // phpcs:enable
 	}
 
 
@@ -1301,7 +1313,9 @@ _end_;
 		         PPW_Constants::GLOBAL_PASSWORDS
 		    );
 
-		$results = $wpdb->get_col($query);
+		// phpcs:disable
+		$results = $wpdb->get_col( $query );
+		// phpcs:enable
 		
 		if ($results === null || empty($results)) {
 		  
@@ -1520,7 +1534,7 @@ _end_;
 	public function register_plugins_links( $plugin_meta, $plugin_file ) {
 		if ( PPW_PLUGIN_BASE_NAME === $plugin_file ) {
 			$misc_setting = admin_url( 'admin.php?page=wp_protect_password_options&tab=misc' );
-			$plugin_meta[] = '<a href="' . $misc_setting . '">' . __( 'Restore passwords', PPW_Constants::DOMAIN ) . '</span>';
+			$plugin_meta[] = '<a href="' . $misc_setting . '">' . __( 'Restore passwords', 'password-protect-page' ) . '</span>';
 		}
 
 		return $plugin_meta;
@@ -1544,7 +1558,7 @@ _end_;
 
 	public function handle_plugin_links( $links ) {
 		$setting_url = esc_url( admin_url( 'admin.php?page=' . PPW_Constants::MENU_NAME ) );
-		$plugin_link = '<a href="' . $setting_url . '">' . __( 'Settings', PPW_Constants::DOMAIN ) . '</a>';
+		$plugin_link = '<a href="' . $setting_url . '">' . __( 'Settings', 'password-protect-page' ) . '</a>';
 		array_unshift( $links, $plugin_link );
 
 		return $links;
@@ -1584,7 +1598,7 @@ _end_;
 			new PPW_Toggle_Control(
 				$wp_customize,
 				'ppwp_hide_sitewide_password_form_control', array(
-				'label'       => __( 'Disable Password Form', PPW_Constants::DOMAIN ),
+				'label'       => __( 'Disable Password Form', 'password-protect-page' ),
 				'section'     => 'ppwp_pro_form_instructions',
 				'type'        => 'toggle',
 				'settings'    => 'ppwp_hide_sitewide_password_form',
@@ -1597,7 +1611,7 @@ _end_;
 			new PPW_Title_Group_Control(
 				$wp_customize,
 				'ppwp_sitewide_countdown', array(
-				'label'			=> __( 'COUNTDOWN TIMER', PPW_Constants::DOMAIN ),
+				'label'			=> __( 'COUNTDOWN TIMER', 'password-protect-page' ),
 				'section'  		=> 'ppwp_sitewide_countdown',
 				'settings' 		=> 'ppwp_sitewide_countdown',
 				'type'     		=> 'control_title',
@@ -1605,7 +1619,7 @@ _end_;
 		);
 
 		$wp_customize->add_section( 'ppwp_sitewide_countdown', array(
-			'title'    => __( 'Countdown Timer', PPW_Constants::DOMAIN ),
+			'title'    => __( 'Countdown Timer', 'password-protect-page' ),
 			'panel'    => 'ppwp_sitewide',
 			'priority' => 500,
 		) );
@@ -1618,48 +1632,37 @@ _end_;
 			new PPW_Toggle_Control(
 				$wp_customize,
 				'ppwp_sitewide_is_shown_countdown', array(
-				'label'       => __( 'Enable Countdown Timer', PPW_Constants::DOMAIN ),
+				'label'       => __( 'Enable Countdown Timer', 'password-protect-page' ),
 				'section'     => 'ppwp_sitewide_countdown',
 				'type'        => 'toggle',
-				'description'  => __( 'Time zone: '.ppw_get_utc(), PPW_Constants::DOMAIN ),
+				/* translators: %s: timezone value */
+				'description'  => sprintf(__( 'Time zone: %s', 'password-protect-page' ),ppw_get_utc()),
 				'settings'    => 'ppwp_sitewide_is_shown_countdown',
 			))
 		);
 
-		// $wp_customize->add_setting( 'ppwp_sitewide_is_show_day', array(
-		// 	'default' => 0,
-		// ) );
-
-		// $wp_customize->add_control(
-		// 	new PPW_Toggle_Control(
-		// 		$wp_customize,
-		// 		'ppwp_sitewide_is_show_day', array(
-		// 		'label'       => __( 'Show Day in Countdown', PPW_Constants::DOMAIN ),
-		// 		'section'     => 'ppwp_sitewide_countdown',
-		// 		'type'        => 'toggle',
-		// 		'settings'    => 'ppwp_sitewide_is_show_day',
-		// 	))
-		// );
-
 		$date = current_time( 'timestamp' );
 		$wp_customize->add_setting( 'ppwp_sitewide_start_time', array(
 			'default' => '',
+			// phpcs:disable WordPress.DateTime.RestrictedFunctions.date_date
 			'min'     => date('Y-m-d\TH:i', $date),
+			// phpcs:enable WordPress.DateTime.RestrictedFunctions.date_date
 		) );
 
 		$wp_customize->add_control(
 			new PPW_Datetime_Control(
 				$wp_customize,
 				'ppwp_sitewide_start_time', array(
-				'label'       => __( 'Start Time (Optional)', PPW_Constants::DOMAIN ),
+				'label'       => __( 'Start Time (Optional)', 'password-protect-page' ),
 				'section'     => 'ppwp_sitewide_countdown',
 				'type'        => 'datetime',
 				'settings'    => 'ppwp_sitewide_start_time',
 			))
 		);
 
+		// phpcs:disable WordPress.DateTime.RestrictedFunctions.date_date
 		$start_date 		= get_theme_mod( 'ppwp_sitewide_start_time', '' ) ? get_theme_mod( 'ppwp_sitewide_start_time' ) : date('Y-m-d\TH:i', $date);
-
+		// phpcs:enable WordPress.DateTime.RestrictedFunctions.date_date
 		$wp_customize->add_setting( 'ppwp_sitewide_end_time', array(
 			'default' => $start_date,
 			'min'     => $start_date,
@@ -1669,7 +1672,7 @@ _end_;
 			new PPW_Datetime_Control(
 				$wp_customize,
 				'ppwp_sitewide_end_time', array(
-				'label'       => __( 'End Time', PPW_Constants::DOMAIN ),
+				'label'       => __( 'End Time', 'password-protect-page' ),
 				'section'     => 'ppwp_sitewide_countdown',
 				'type'        => 'datetime',
 				'settings'    => 'ppwp_sitewide_end_time',
@@ -1682,7 +1685,7 @@ _end_;
 			new PPW_Title_Group_Control(
 				$wp_customize,
 				'ppwp_countdown_time_unit', array(
-				'label'			=> __( 'COUNTDOWN TIMER STYLES', PPW_Constants::DOMAIN ),
+				'label'			=> __( 'COUNTDOWN TIMER STYLES', 'password-protect-page' ),
 				'section'  		=> 'ppwp_sitewide_countdown',
 				'settings' 		=> 'ppwp_countdown_time_unit',
 				'type'     		=> 'control_title',
@@ -1690,40 +1693,40 @@ _end_;
 		);
 
 		$wp_customize->add_setting( 'ppwp_countdown_day_text', array(
-			'default' => __( 'Days', PPW_Constants::DOMAIN ),
+			'default' => __( 'Days', 'password-protect-page' ),
 		) );
 		$wp_customize->add_control( 'ppwp_countdown_day_text', array(
-			'label'    => __( 'Days Label', PPW_Constants::DOMAIN ),
+			'label'    => __( 'Days Label', 'password-protect-page' ),
 			'section'  => 'ppwp_sitewide_countdown',
 			'settings' => 'ppwp_countdown_day_text',
 			'type'     => 'text',
 		) );
 
 		$wp_customize->add_setting( 'ppwp_countdown_hour_text', array(
-			'default' => __( 'Hours ', PPW_Constants::DOMAIN ),
+			'default' => __( 'Hours ', 'password-protect-page' ),
 		) );
 		$wp_customize->add_control( 'ppwp_countdown_hour_text', array(
-			'label'    => __( 'Hours Label', PPW_Constants::DOMAIN ),
+			'label'    => __( 'Hours Label', 'password-protect-page' ),
 			'section'  => 'ppwp_sitewide_countdown',
 			'settings' => 'ppwp_countdown_hour_text',
 			'type'     => 'text',
 		) );
 
 		$wp_customize->add_setting( 'ppwp_countdown_minute_text', array(
-			'default' => __( 'Minutes', PPW_Constants::DOMAIN ),
+			'default' => __( 'Minutes', 'password-protect-page' ),
 		) );
 		$wp_customize->add_control( 'ppwp_countdown_minute_text', array(
-			'label'    => __( 'Minutes Label', PPW_Constants::DOMAIN ),
+			'label'    => __( 'Minutes Label', 'password-protect-page' ),
 			'section'  => 'ppwp_sitewide_countdown',
 			'settings' => 'ppwp_countdown_minute_text',
 			'type'     => 'text',
 		) );
 
 		$wp_customize->add_setting( 'ppwp_countdown_second_text', array(
-			'default' => __( 'Seconds', PPW_Constants::DOMAIN ),
+			'default' => __( 'Seconds', 'password-protect-page' ),
 		) );
 		$wp_customize->add_control( 'ppwp_countdown_second_text', array(
-			'label'    => __( 'Seconds Label', PPW_Constants::DOMAIN ),
+			'label'    => __( 'Seconds Label', 'password-protect-page' ),
 			'section'  => 'ppwp_sitewide_countdown',
 			'settings' => 'ppwp_countdown_second_text',
 			'type'     => 'text',
@@ -1732,7 +1735,7 @@ _end_;
 		/* coutdown font size */
 		$wp_customize->add_setting( 'ppwp_countdown_font_size' );
 		$wp_customize->add_control( 'ppwp_countdown_font_size_control', array(
-			'label'			=> __( 'Font Size', PPW_Constants::DOMAIN ),
+			'label'			=> __( 'Font Size', 'password-protect-page' ),
 			'section'  		=> 'ppwp_sitewide_countdown',
 			'settings' 		=> 'ppwp_countdown_font_size',
 			'description'	=> 'Font size in px',
@@ -1748,7 +1751,7 @@ _end_;
 			new WP_Customize_Color_Control(
 				$wp_customize,
 				'ppwp_countdown_text_color_control', array(
-				'label'    => __( 'Text Color', PPW_Constants::DOMAIN ),
+				'label'    => __( 'Text Color', 'password-protect-page' ),
 				'section'  => 'ppwp_sitewide_countdown',
 				'settings' => 'ppwp_countdown_text_color',
 			) )
@@ -1760,7 +1763,7 @@ _end_;
 			new PPW_Title_Group_Control(
 				$wp_customize,
 				'ppwp_sitewide_above_countdown_text', array(
-				'label'			=> __( 'DESCRIPTION ABOVE TIMER', PPW_Constants::DOMAIN ),
+				'label'			=> __( 'DESCRIPTION ABOVE TIMER', 'password-protect-page' ),
 				'section'  		=> 'ppwp_sitewide_countdown',
 				'settings' 		=> 'ppwp_sitewide_above_countdown_text',
 				'type'     		=> 'control_title',
@@ -1769,14 +1772,14 @@ _end_;
 
 		/* Text above sitewide */
 		$wp_customize->add_setting( 'ppwp_sitewide_above_countdown', array(
-			'default' => __( '', PPW_Constants::DOMAIN ),
+			  'default' => '',
 		) );
 		$wp_customize->add_control(
 			new PPW_Text_Editor_Custom_Control(
 				$wp_customize,
 				'ppwp_sitewide_above_countdown',
 				array(
-					'label'    => __( 'Description', PPW_Constants::DOMAIN ),
+					'label'    => __( 'Description', 'password-protect-page' ),
 					'section'  => 'ppwp_sitewide_countdown',
 					'settings' => 'ppwp_sitewide_above_countdown',
 					'type'     => 'textarea',
@@ -1787,7 +1790,7 @@ _end_;
 		/* Text below font size */
 		$wp_customize->add_setting( 'ppwp_text_above_font_size' );
 		$wp_customize->add_control( 'ppwp_text_above_font_size_control', array(
-			'label'			=> __( 'Font Size', PPW_Constants::DOMAIN ),
+			'label'			=> __( 'Font Size', 'password-protect-page' ),
 			'section'  		=> 'ppwp_sitewide_countdown',
 			'settings' 		=> 'ppwp_text_above_font_size',
 			'description'	=> 'Font size in px',
@@ -1803,7 +1806,7 @@ _end_;
 			new WP_Customize_Color_Control(
 				$wp_customize,
 				'ppwp_text_above_color_control', array(
-				'label'    => __( 'Text Color', PPW_Constants::DOMAIN ),
+				'label'    => __( 'Text Color', 'password-protect-page' ),
 				'section'  => 'ppwp_sitewide_countdown',
 				'settings' => 'ppwp_text_above_color',
 			) )
@@ -1815,7 +1818,7 @@ _end_;
 			new PPW_Title_Group_Control(
 				$wp_customize,
 				'ppwp_sitewide_below_countdown_text', array(
-				'label'			=> __( 'DESCRIPTION BELOW TIMER', PPW_Constants::DOMAIN ),
+				'label'			=> __( 'DESCRIPTION BELOW TIMER', 'password-protect-page' ),
 				'section'  		=> 'ppwp_sitewide_countdown',
 				'settings' 		=> 'ppwp_sitewide_below_countdown_text',
 				'type'     		=> 'control_title',
@@ -1824,14 +1827,14 @@ _end_;
 
 		/* Text below sitewide */
 		$wp_customize->add_setting( 'ppwp_sitewide_below_countdown', array(
-			'default' => __( '', PPW_Constants::DOMAIN ),
+			'default' => '',
 		) );
 		$wp_customize->add_control(
 			new PPW_Text_Editor_Custom_Control(
 				$wp_customize,
 				'ppwp_sitewide_below_countdown',
 				array(
-					'label'    => __( 'Description', PPW_Constants::DOMAIN ),
+					'label'    => __( 'Description', 'password-protect-page' ),
 					'section'  => 'ppwp_sitewide_countdown',
 					'settings' => 'ppwp_sitewide_below_countdown',
 					'type'     => 'textarea',
@@ -1842,7 +1845,7 @@ _end_;
 		/* Text below font size */
 		$wp_customize->add_setting( 'ppwp_text_below_font_size' );
 		$wp_customize->add_control( 'ppwp_text_below_font_size_control', array(
-			'label'			=> __( 'Font Size', PPW_Constants::DOMAIN ),
+			'label'			=> __( 'Font Size', 'password-protect-page' ),
 			'section'  		=> 'ppwp_sitewide_countdown',
 			'settings' 		=> 'ppwp_text_below_font_size',
 			'description'	=> 'Font size in px',
@@ -1858,7 +1861,7 @@ _end_;
 			new WP_Customize_Color_Control(
 				$wp_customize,
 				'ppwp_text_below_color_control', array(
-				'label'    => __( 'Text Color', PPW_Constants::DOMAIN ),
+				'label'    => __( 'Text Color', 'password-protect-page' ),
 				'section'  => 'ppwp_sitewide_countdown',
 				'settings' => 'ppwp_text_below_color',
 			) )

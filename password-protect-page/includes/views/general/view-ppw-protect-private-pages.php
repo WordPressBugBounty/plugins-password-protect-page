@@ -1,4 +1,8 @@
 <?php
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+// phpcs:disable WordPress.NamingConventions.PrefixAllGlobals
 $all_page_post = ppw_free_get_all_page_post();
 ?>
 <tr class="ppwp_free_version ppwp-gray-out">
@@ -11,7 +15,7 @@ $all_page_post = ppw_free_get_all_page_post();
 	<td>
 		<p>
 			<label>
-				<?php echo esc_html__( 'Password Protect Private Pages', PPW_Constants::DOMAIN ) ?>
+				<?php echo esc_html__( 'Password Protect Private Pages', 'password-protect-page' ) ?>
 				<span class="ppwp_upgrade_advice">
 					<a rel="noopener" target="_blank" href="https://passwordprotectwp.com/pricing/">
 						<span class="ppwp_dashicons dashicons dashicons-lock">
@@ -20,13 +24,13 @@ $all_page_post = ppw_free_get_all_page_post();
 					</a>
 				</span>	
 			</label>
-			<?php echo _e( 'Set the same password to protect the following pages and posts. Available in Pro version.', PPW_Constants::DOMAIN ) ?>
+			<?php echo esc_html__( 'Set the same password to protect the following pages and posts. Available in Pro version.', 'password-protect-page' ) ?>
 		</p>
 	</td>
 </tr>
 <tr class="ppwp-free-pages-posts-set-password ppwp-hidden-password ppwp_free_version">
 	<td></td>
-	<td><p><?php echo esc_html__( 'Select your private pages or posts', PPW_Constants::DOMAIN ) ?></p>
+	<td><p><?php echo esc_html__( 'Select your private pages or posts', 'password-protect-page' ) ?></p>
 		<select multiple="multiple" class="ppwp_select2">
 			<?php foreach ( $all_page_post as $page ): ?>
 				<option disabled="disabled"><?php echo esc_html( $page->post_title ) ?></option>
@@ -37,7 +41,7 @@ $all_page_post = ppw_free_get_all_page_post();
 <tr class="ppwp-free-pages-posts-set-password ppwp-hidden-password ppwp_free_version">
 	<td></td>
 	<td class="ppwp_wrap_set_new_password_for_pages_posts">
-		<p><?php echo esc_html__( 'Set a password', PPW_Constants::DOMAIN ) ?></p>
+		<p><?php echo esc_html__( 'Set a password', 'password-protect-page' ) ?></p>
 		<input type="text" placeholder="Enter a password"/>
 	</td>
 </tr>

@@ -1,7 +1,11 @@
 <?php
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
 /**
  * PPWP Set Password & Password Protect Entire Site
  */
+// phpcs:disable WordPress.NamingConventions.PrefixAllGlobals
 $password_for_website = ppw_core_get_setting_entire_site_type_string( PPW_Constants::PASSWORD_ENTIRE_SITE );
 $is_protected         = ppw_core_get_setting_entire_site_type_bool( PPW_Constants::IS_PROTECT_ENTIRE_SITE );
 $is_display           = $is_protected ? '' : 'ppwp-hidden-password';
@@ -23,11 +27,11 @@ $is_display           = $is_protected ? '' : 'ppwp-hidden-password';
 	</td>
 	<td>
 		<p>
-			<label><?php echo esc_html__( 'Password Protect Entire Site', PPW_Constants::DOMAIN ) ?></label>
-			<?php echo esc_html__( 'Set passwords to ', PPW_Constants::DOMAIN ); ?>
+			<label><?php echo esc_html__( 'Password Protect Entire Site', 'password-protect-page' ) ?></label>
+			<?php echo esc_html__( 'Set passwords to ', 'password-protect-page' ); ?>
 			<a target="_blank" rel="noopener" href="https://passwordprotectwp.com/docs/password-protect-wordpress-lite/?utm_source=user-website&utm_medium=sitewide-protection-general&utm_campaign=ppwp-free#sitewide">
-				<?php echo esc_html__( 'protect your entire WordPress site', PPW_Constants::DOMAIN ); ?></a>.
-			<?php echo sprintf('%1$s<a href="%2$s">%3$s</a>', esc_html__('Customize password login form using ', PPW_Constants::DOMAIN ), admin_url( 'customize.php?autofocus[panel]=ppwp_sitewide' ), __( 'WordPress Customizer', PPW_Constants::DOMAIN ) ) ?>
+				<?php echo esc_html__( 'protect your entire WordPress site', 'password-protect-page' ); ?></a>.
+			<?php echo sprintf('%1$s<a href="%2$s">%3$s</a>', esc_html__('Customize password login form using ', 'password-protect-page' ),  esc_url(admin_url( 'customize.php?autofocus[panel]=ppwp_sitewide' )), esc_html__( 'WordPress Customizer', 'password-protect-page' ) ) ?>
 		</p>
 	</td>
 </tr>
@@ -35,7 +39,7 @@ $is_display           = $is_protected ? '' : 'ppwp-hidden-password';
 	<tr class="ppwp_logic_show_input_password <?php echo esc_attr( $is_display ) ?>">
 		<td></td>
 		<td class="ppwp_set_height_for_password_entire_site">
-			<p><?php esc_html_e( 'You’ve set a password to protect your site.', PPW_Constants::DOMAIN ); ?></p>
+			<p><?php esc_html_e( 'You’ve set a password to protect your site.', 'password-protect-page' ); ?></p>
 			<div class="ppwp_wrap_new_password_for_entire_site ppwp_wrap_new_password">
 				<label class="pda_switch" for="ppwp_set_new_password_for_entire_site">
 					<input type="checkbox" id="ppwp_set_new_password_for_entire_site"/>
@@ -58,7 +62,7 @@ $is_display           = $is_protected ? '' : 'ppwp-hidden-password';
 	<tr class="ppwp_logic_show_input_password <?php echo esc_attr( $is_display ) ?>">
 		<td></td>
 		<td class="ppwp_text_after_enter_password_succes">
-			<p><?php echo esc_html__( 'Set a password', PPW_Constants::DOMAIN ) ?></p>
+			<p><?php echo esc_html__( 'Set a password', 'password-protect-page' ) ?></p>
 			<input required type="text" autocomplete="off" placeholder="Enter a password"
 			       id="ppwp_password_for_entire_site" name="ppwp_password_for_entire_site">
 		</td>

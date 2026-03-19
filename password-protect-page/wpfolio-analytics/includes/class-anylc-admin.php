@@ -81,7 +81,7 @@ class WPFolio_Ppwp_Anylc_Admin {
 
 
 	    if( !empty( $wpfolio_ppwp_analytics_module ) ) {
-
+	    	// phpcs:disable
 	    	// WP Menu data
 	    	$wpfolio_ppwp_menu_data = wp_list_pluck( $menu, 2 );
 	    	$anylc_page 	= isset( $_GET['page'] ) ? sanitize_text_field( $_GET['page'] ) : null;
@@ -142,6 +142,7 @@ class WPFolio_Ppwp_Anylc_Admin {
 	    		}
 
 	    	} // End of for each
+	    	// phpcs:enable
 	    }
 	}
 
@@ -154,7 +155,7 @@ class WPFolio_Ppwp_Anylc_Admin {
 	function wpfolio_ppwp_anylc_page_html() {
 
 		global $current_user, $wpfolio_ppwp_analytics_product;
-
+		// phpcs:disable
 		$anylc_product_name = !empty( $_GET['page'] ) ? sanitize_text_field( $_GET['page'] ) : '';
 
 		$anylc_product_name = str_replace('_optin','',$anylc_product_name);
@@ -180,6 +181,7 @@ class WPFolio_Ppwp_Anylc_Admin {
 		$skip_url	= wp_nonce_url( $skip_url, 'wpfolio_ppwp_anylc_act' );
 
 	    require_once WPFOLIO_PPWP_ANYLC_DIR .'/templates/analytic.php';
+	    // phpcs:enable
 	}
 
 	/**
@@ -191,8 +193,8 @@ class WPFolio_Ppwp_Anylc_Admin {
 	function wpfolio_ppwp_anylc_offers_html() {
 
 		global $wpfolio_ppwp_analytics_product;
-
-		$anylc_product_name = isset( $_GET['page'] ) ? sanitize_text_field( $_GET['page'] ) : '';
+		// phpcs:disable
+		$anylc_product_name = isset( $_GET['page'] ) ? sanitize_text_field( wp_unslash( $_GET['page'] ) ) : '';
 		$anylc_product_name = str_replace( '-offers', '', $anylc_product_name );
 
 		// if no data is set then return
@@ -251,16 +253,15 @@ class WPFolio_Ppwp_Anylc_Admin {
 	 * @since 1.0
 	 */
 	function wpfolio_ppwp_anylc_admin_init_process() {
-
-		if( isset( $_GET['message'] ) && 'wpfolio-ppwp-anylc-dismiss-notice' == $_GET['message'] && ! empty( $_GET['anylc_id'] )
-			&& isset( $_GET['_wpnonce'] ) && wp_verify_nonce( $_GET['_wpnonce'], 'wpfolio-ppwp-anylc-dismiss-notice-nonce' ) 
-			) {
-				$anylc_id = sanitize_text_field( $_GET['anylc_id'] );
+		// phpcs:disable
+		if( isset( $_GET['message'] ) && 'wpfolio-ppwp-anylc-dismiss-notice' == $_GET['message'] && ! empty( $_GET['anylc_id'] ) && isset( $_GET['_wpnonce'] ) && wp_verify_nonce( wp_unslash( $_GET['_wpnonce'] ), 'wpfolio-ppwp-anylc-dismiss-notice-nonce' ) )
+		{
+				$anylc_id = sanitize_text_field( wp_unslash( $_GET['anylc_id'] ) );
 				set_transient( 'wpfolio_ppwp_anylc_optin_notice_'.$anylc_id, true, 172800 );
 		}
 
 		// Flush the redirect transient
-		if( isset( $_GET['anylc_nonce'] ) && wp_verify_nonce( $_GET['anylc_nonce'], 'wpfolio-ppwp-anylc-redirect-nonce' ) ) {
+		if( isset( $_GET['anylc_nonce'] ) && wp_verify_nonce( wp_unslash( $_GET['anylc_nonce']), 'wpfolio-ppwp-anylc-redirect-nonce' ) ) {
 			update_option( 'wpfolio_ppwp_anylc_redirect', '' );
 		}
 
@@ -272,12 +273,13 @@ class WPFolio_Ppwp_Anylc_Admin {
 			/**
 			 * Little Tweak to avoid the infinite looping.
 			 */
+			// phpcs:disable
 			parse_str( parse_url( $redirect, PHP_URL_QUERY ), $url_data );
-			$nonce_get = isset( $_GET['anylc_nonce'] ) ? sanitize_text_field( $_GET['anylc_nonce'] ) : '';
+			$nonce_get = isset( $_GET['anylc_nonce'] ) ? sanitize_text_field( wp_unslash( $_GET['anylc_nonce']) ) : '';
             if( ! isset( $url_data['anylc_nonce'] ) || ( isset( $url_data['anylc_nonce'] ) && ! wp_verify_nonce( $nonce_get, 'wpfolio-ppwp-anylc-redirect-nonce' ) ) ) {
                 $redirect = add_query_arg( array( 'anylc_nonce' => wp_create_nonce( 'wpfolio-ppwp-anylc-redirect-nonce' ) ), $redirect );
             }
-
+            // phpcs:enable
 			// Redirect to page
 			wp_safe_redirect( $redirect );
 			exit;
@@ -326,21 +328,23 @@ class WPFolio_Ppwp_Anylc_Admin {
 				}
 			}
 		} // End of if
-
+		// phpcs:disable
 		if( isset($_GET['message']) && $_GET['message'] == 'optout_success' ) {
 			echo '<div class="updated notice wpfolio-ppwp-anylc-optin-notice is-dismissible">
-					<p><strong>Sorry to let you go. You are now opted out from the plugin.</strong></p>
-				</div>';
+		        <p><strong>' .
+		        esc_html__( 'Sorry to let you go. You are now opted out from the plugin.', 'password-protect-page' )
+		        . '</strong></p>
+		     </div>';
 		}
 
 		// Process Promotion Data
     	if( !empty($_GET['message']) && $_GET['message'] == 'wpfolio_ppwp_anylc_promotion' && !empty($_GET['wpfolio_ppwp_anylc_pdt']) && !empty($_GET['wpfolio_ppwp_anylc_promo_pdt']) ) {
 
     		$promotion 				= 1;
-    		$wpfolio_ppwp_anylc_promo_pdt	= sanitize_text_field( $_GET['wpfolio_ppwp_anylc_promo_pdt'] );
+    		$wpfolio_ppwp_anylc_promo_pdt	= sanitize_text_field( wp_unslash( $_GET['wpfolio_ppwp_anylc_promo_pdt'] ) );
     		$promotion_pdt			= explode( ',', $wpfolio_ppwp_anylc_promo_pdt );
 
-    		$anylc_pdt 		= sanitize_text_field( $_GET['wpfolio_ppwp_anylc_pdt'] );
+    		$anylc_pdt 		= sanitize_text_field( wp_unslash( $_GET['wpfolio_ppwp_anylc_pdt'] ) ) ;
 			$anylc_pdt_data = isset( $wpfolio_ppwp_analytics_product[ $anylc_pdt ] ) ? $wpfolio_ppwp_analytics_product[ $anylc_pdt ] : false;
 
 			if( !empty($promotion_pdt) ) {
@@ -353,8 +357,12 @@ class WPFolio_Ppwp_Anylc_Admin {
 
 			if( $promotion_pdt_data ) {
 				echo '<div class="updated notice wpfolio-ppwp-anylc-optin-notice is-dismissible" style="display:block !important;">
-						<p><strong>Your Download has been started. In case if it is intrupted then download it from here. '.join(' | ', $promotion_pdt_data).'</strong></p>
-					</div>';
+					<p><strong>' .
+					esc_html__( 'Your download has started. If it was interrupted, you can download it here:', 'password-protect-page' )
+					. ' ' .
+					wp_kses_post( join( ' | ', $promotion_pdt_data ) ) .
+					'</strong></p>
+				</div>';	
 			}
 		}
 	}
@@ -460,12 +468,17 @@ class WPFolio_Ppwp_Anylc_Admin {
 			if( $anylc_pdt_data ) {
 
 				// Process Optin
-				if( $_GET['wpfolio_ppwp_anylc_action'] == 'optin' ) {
+				if ( isset( $_GET['wpfolio_ppwp_anylc_action'] ) && 'optin' === wp_unslash( $_GET['wpfolio_ppwp_anylc_action'] ) ) 
+				{
 
-					// Verify nonce
-					if( ! wp_verify_nonce( $_GET['_wpnonce'], 'wpfolio_ppwp_anylc_act' ) ) {
-						wp_die( __('Sorry, Something happened wrong.', 'wpfolio_ppwp_analytic'), 'wpfolio_ppwp_anylc_err', array('back_link' => true) );
+					if ( ! wp_verify_nonce( wp_unslash( $_GET['_wpnonce'] ), 'wpfolio_ppwp_anylc_act' ) ) {
+						wp_die(
+							esc_html__( 'Sorry, Something happened wrong.', 'password-protect-page' ),
+							'wpfolio_ppwp_anylc_err',
+							array( 'back_link' => true )
+						);
 					}
+
 
 
 					$state_in = isset( $_GET['state'] ) ? sanitize_text_field( wp_unslash( $_GET['state'] ) ) : '';
@@ -503,11 +516,18 @@ class WPFolio_Ppwp_Anylc_Admin {
 
 
 				// Process Skip
-				if( $_GET['wpfolio_ppwp_anylc_action'] == 'skip' ) {
+				if ( isset( $_GET['wpfolio_ppwp_anylc_action'] ) && 'skip' === wp_unslash( $_GET['wpfolio_ppwp_anylc_action'] ) ) 
+				{
 
 					// Verify nonce
-					if( ! wp_verify_nonce( $_GET['_wpnonce'], 'wpfolio_ppwp_anylc_act' ) ) {
-						wp_die( __('Sorry, Something happened wrong.', 'wpfolio_ppwp_analytic'), 'wpfolio_ppwp_anylc_err', array('back_link' => true) );
+					// Verify nonce
+					if ( ! isset( $_GET['_wpnonce'] ) || ! wp_verify_nonce( wp_unslash( $_GET['_wpnonce'] ), 'wpfolio_ppwp_anylc_act' )
+					) {
+						wp_die(
+							esc_html__( 'Sorry, Something happened wrong.', 'password-protect-page' ),
+							'wpfolio_ppwp_anylc_err',
+							array( 'back_link' => true )
+						);
 					}
 
 					$state_in = isset( $_GET['state'] ) ? sanitize_text_field( wp_unslash( $_GET['state'] ) ) : '';
@@ -543,11 +563,15 @@ class WPFolio_Ppwp_Anylc_Admin {
 
 
 				// Process Opt Out
-				if( $_GET['wpfolio_ppwp_anylc_action'] == 'optout' ) {
+				if ( isset( $_GET['wpfolio_ppwp_anylc_action'] ) && 'optout' === wp_unslash( $_GET['wpfolio_ppwp_anylc_action'] ) ) {
 
 					// Verify nonce
-					if( ! wp_verify_nonce( $_GET['_wpnonce'], 'wpfolio_ppwp_anylc_act'.'|'.$_GET['wpfolio_ppwp_anylc_pdt'] ) ) {
-						wp_die( __('Sorry, Something happened wrong.', 'wpfolio_ppwp_analytic'), 'wpfolio_ppwp_anylc_err', array('back_link' => true) );
+					if ( ! wp_verify_nonce(	wp_unslash( $_GET['_wpnonce'] ),'wpfolio_ppwp_anylc_act' . '|' . wp_unslash( $_GET['wpfolio_ppwp_anylc_pdt'] ) ) ) {
+						wp_die(
+							esc_html__( 'Sorry, Something happened wrong.', 'password-protect-page' ),
+							'wpfolio_ppwp_anylc_err',
+							array( 'back_link' => true )
+						);
 					}
 
 

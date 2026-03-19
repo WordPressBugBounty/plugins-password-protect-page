@@ -20,6 +20,7 @@
  * @subpackage Password_Protect_Page/includes
  * @author     BWPS <hello@preventdirectaccess.com>
  */
+// phpcs:disable WordPress.NamingConventions.PrefixAllGlobals
 class PPW_Deactivator {
 
 	/**

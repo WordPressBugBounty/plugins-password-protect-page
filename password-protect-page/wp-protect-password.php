@@ -1,5 +1,4 @@
 <?php
-
 /**
  * The plugin bootstrap file
  *
@@ -16,7 +15,7 @@
  * Plugin Name:       Password Protect WordPress Lite
  * Plugin URI:        https://passwordprotectwp.com?utm_source=user-website&utm_medium=pluginsite_link&utm_campaign=ppwp_lite
  * Description:       Password protect the entire WordPress site, unlimited pages and posts by user roles. This plugin is required for our Pro version to work properly.
- * Version:           1.9.15
+ * Version:           1.9.16
  * Author:            BWPS
  * Author URI:        https://passwordprotectwp.com
  * License:           GPL-2.0+
@@ -35,7 +34,8 @@ if ( ! defined( 'WPINC' ) ) {
  * Start at version 1.1.2 and use SemVer - https://semver.org
  * Rename this for your plugin and update it as you release new versions.
  */
-define( 'PPW_VERSION', '1.9.15' );
+// phpcs:disable WordPress.NamingConventions.PrefixAllGlobals
+define( 'PPW_VERSION', '1.9.16' );
 
 if ( ! defined( 'PPW_DIR_PATH' ) ) {
 	define( 'PPW_DIR_PATH', plugin_dir_path( __FILE__ ) );
@@ -113,12 +113,18 @@ function run_password_protect_page() {
 
 do_action( 'ppw_free/loaded' );
 
-if ( ! version_compare( PHP_VERSION, '5.6', '>=' ) ) {
-	add_action( 'admin_notices', 'ppw_fail_php_version' );
-} elseif ( ! version_compare( get_bloginfo( 'version' ), '4.7', '>=' ) ) {
-	add_action( 'admin_notices', 'ppw_fail_wp_version' );
-}
+add_action( 'plugins_loaded', 'ppw_check_environment_compatibility' );
 
+/**
+ * Check PHP & WordPress version compatibility.
+ */
+function ppw_check_environment_compatibility() {
+	if ( ! version_compare( PHP_VERSION, '5.6', '>=' ) ) {
+		add_action( 'admin_notices', 'ppw_fail_php_version' );
+	} elseif ( ! version_compare( get_bloginfo( 'version' ), '4.7', '>=' ) ) {
+		add_action( 'admin_notices', 'ppw_fail_wp_version' );
+	}
+}
 run_password_protect_page();
 
 
@@ -139,7 +145,7 @@ function ppw_free_load_plugin() {
  */
 function ppw_fail_php_version() {
 	/* translators: %s: PHP version */
-	$message      = sprintf( esc_html__( 'Password Protect WordPress requires PHP version %s+, plugin is currently NOT WORKING.', PPW_Constants::DOMAIN ), '5.6' );
+	$message      = sprintf( esc_html__( 'Password Protect WordPress requires PHP version %s+, plugin is currently NOT WORKING.', 'password-protect-page' ), '5.6' );
 	$html_message = sprintf( '<div class="error">%s</div>', wpautop( $message ) );
 	echo wp_kses_post( $html_message );
 }
@@ -149,7 +155,7 @@ function ppw_fail_php_version() {
  */
 function ppw_fail_wp_version() {
 	/* translators: %s: PHP version */
-	$message      = sprintf( esc_html__( 'Password Protect WordPress requires WordPress version %s+. Because you are using an earlier version, the plugin is currently NOT WORKING.', PPW_Constants::DOMAIN ), '4.7' );
+	$message      = sprintf( esc_html__( 'Password Protect WordPress requires WordPress version %s+. Because you are using an earlier version, the plugin is currently NOT WORKING.', 'password-protect-page' ), '4.7' );
 	$html_message = sprintf( '<div class="error">%s</div>', wpautop( $message ) );
 	echo wp_kses_post( $html_message );
 }

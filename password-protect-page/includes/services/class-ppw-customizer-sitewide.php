@@ -1,5 +1,8 @@
 <?php
-
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+// phpcs:disable WordPress.NamingConventions.PrefixAllGlobals
 if ( ! class_exists( 'PPW_Customizer_Sitewide' ) ) {
     // TODO: need to force PPW_Pro_Customizer_Service extend this class to remove the code duplication.
     class PPW_Customizer_Sitewide {
@@ -34,7 +37,7 @@ if ( ! class_exists( 'PPW_Customizer_Sitewide' ) ) {
 			}
 
 			$wp_customize->add_section( 'ppw_customize_presets', array(
-				'title'    => __( 'Themes', PPW_Constants::DOMAIN ),
+				'title'    => __( 'Themes', 'password-protect-page' ),
 				'panel'    => 'ppwp_sitewide',
 				'priority' => 50,
 			) );
@@ -80,6 +83,7 @@ if ( ! class_exists( 'PPW_Customizer_Sitewide' ) ) {
 		 * @return void
 		 */
 		public function customize_register( $wp_customize ) {
+			// phpcs:disable
 			if ( ! class_exists( 'PPW_Toggle_Control' ) ) {
 				include PPW_DIR_PATH . 'includes/customizers/class-ppw-title-group-control.php';
 			}
@@ -96,13 +100,13 @@ if ( ! class_exists( 'PPW_Customizer_Sitewide' ) ) {
 					'priority'       => 9980,
 					'capability'     => 'edit_theme_options',
 					'theme_supports' => '',
-					'title'          => __( 'PPWP Sitewide Login Form', PPW_Constants::DOMAIN ),
+					'title'          => __( 'PPWP Sitewide Login Form', 'password-protect-page' ),
 				)
 			);
 
 			/* form logo section */
 			$wp_customize->add_section( 'ppwp_pro_form_logo', array(
-				'title'    => __( 'Logo', PPW_Constants::DOMAIN ),
+				'title'    => __( 'Logo', 'password-protect-page' ),
 				'panel'    => 'ppwp_sitewide',
 				'priority' => 100,
 			) );
@@ -113,7 +117,7 @@ if ( ! class_exists( 'PPW_Customizer_Sitewide' ) ) {
 				new PPW_Toggle_Control(
 					$wp_customize,
 					'ppwp_pro_logo_disable_control', array(
-					'label'       => __( 'Disable Logo', PPW_Constants::DOMAIN ),
+					'label'       => __( 'Disable Logo', 'password-protect-page' ),
 					'section'     => 'ppwp_pro_form_logo',
 					'type'        => 'toggle',
 					'settings'    => 'ppwp_pro_logo_disable',
@@ -122,14 +126,14 @@ if ( ! class_exists( 'PPW_Customizer_Sitewide' ) ) {
 
 			/* logo customize */
 			$wp_customize->add_setting( 'ppwp_pro_logo_customize', array(
-				'default' => __( PPW_DIR_URL . 'includes/views/entire-site/assets/ppwp-logo.png', PPW_Constants::DOMAIN ),
+				'default' => __( PPW_DIR_URL . 'includes/views/entire-site/assets/ppwp-logo.png', 'password-protect-page' ),
 			) );
 
 			$wp_customize->add_control(
 				new \WP_Customize_Image_Control(
 					$wp_customize,
 					'ppwp_pro_logo_customize_control', array(
-					'label'    => __( 'Logo Image', PPW_Constants::DOMAIN ),
+					'label'    => __( 'Logo Image', 'password-protect-page' ),
 					'section'  => 'ppwp_pro_form_logo',
 					'settings' => 'ppwp_pro_logo_customize',
 				) )
@@ -138,8 +142,8 @@ if ( ! class_exists( 'PPW_Customizer_Sitewide' ) ) {
 			/* logo width */
 			$wp_customize->add_setting( 'ppwp_pro_logo_customize_width' );
 			$wp_customize->add_control( 'ppwp_pro_logo_customize_width_control', array(
-				'label'       => __( 'Logo Width', PPW_Constants::DOMAIN ),
-				'description' => __( 'Width in px', PPW_Constants::DOMAIN ),
+				'label'       => __( 'Logo Width', 'password-protect-page' ),
+				'description' => __( 'Width in px', 'password-protect-page' ),
 				'section'     => 'ppwp_pro_form_logo',
 				'settings'    => 'ppwp_pro_logo_customize_width',
 				'type'        => 'number',
@@ -148,8 +152,8 @@ if ( ! class_exists( 'PPW_Customizer_Sitewide' ) ) {
 			/* logo height */
 			$wp_customize->add_setting( 'ppwp_pro_logo_customize_height' );
 			$wp_customize->add_control( 'ppwp_pro_logo_customize_height_control', array(
-				'label'       => __( 'Logo Height', PPW_Constants::DOMAIN ),
-				'description' => __( 'Height in px', PPW_Constants::DOMAIN ),
+				'label'       => __( 'Logo Height', 'password-protect-page' ),
+				'description' => __( 'Height in px', 'password-protect-page' ),
 				'section'     => 'ppwp_pro_form_logo',
 				'settings'    => 'ppwp_pro_logo_customize_height',
 				'type'        => 'number',
@@ -158,8 +162,8 @@ if ( ! class_exists( 'PPW_Customizer_Sitewide' ) ) {
 			/* logo border-radius */
 			$wp_customize->add_setting( 'ppwp_pro_logo_customize_border_radius' );
 			$wp_customize->add_control( 'ppwp_pro_logo_customize_border_radius_control', array(
-				'label'       => __( 'Logo Radius', PPW_Constants::DOMAIN ),
-				'description' => __( 'Border Radius in %', PPW_Constants::DOMAIN ),
+				'label'       => __( 'Logo Radius', 'password-protect-page' ),
+				'description' => __( 'Border Radius in %', 'password-protect-page' ),
 				'section'     => 'ppwp_pro_form_logo',
 				'settings'    => 'ppwp_pro_logo_customize_border_radius',
 				'type'        => 'number',
@@ -167,7 +171,7 @@ if ( ! class_exists( 'PPW_Customizer_Sitewide' ) ) {
 
             /* password form section */
 			$wp_customize->add_section( 'ppwp_pro_form_instructions', array(
-				'title'    => __( 'Password Form', PPW_Constants::DOMAIN ),
+				'title'    => __( 'Password Form', 'password-protect-page' ),
 				'panel'    => 'ppwp_sitewide',
 				'priority' => 300,
 			) );
@@ -178,7 +182,7 @@ if ( ! class_exists( 'PPW_Customizer_Sitewide' ) ) {
 				new PPW_Title_Group_Control(
 					$wp_customize,
 					'ppwp_pro_form_section_group', array(
-					'label'			=> __( 'Password Form', PPW_Constants::DOMAIN ),
+					'label'			=> __( 'Password Form', 'password-protect-page' ),
 					'section'  		=> 'ppwp_pro_form_instructions',
 					'settings' 		=> 'ppwp_pro_form_section_group',
 					'type'     		=> 'control_title',
@@ -195,7 +199,7 @@ if ( ! class_exists( 'PPW_Customizer_Sitewide' ) ) {
 				new PPW_Toggle_Control(
 					$wp_customize,
 					'ppwp_pro_form_enable_transparency_control', array(
-					'label'       => __( 'Enable Form Transparency', PPW_Constants::DOMAIN ),
+					'label'       => __( 'Enable Form Transparency', 'password-protect-page' ),
 					'section'     => 'ppwp_pro_form_instructions',
 					'type'        => 'toggle',
 					'settings'    => 'ppwp_pro_form_enable_transparency',
@@ -211,7 +215,7 @@ if ( ! class_exists( 'PPW_Customizer_Sitewide' ) ) {
 				new \WP_Customize_Color_Control(
 					$wp_customize,
 					'ppwp_pro_form_instructions_background_color_control', array(
-					'label'    => __( 'Form Background Color', PPW_Constants::DOMAIN ),
+					'label'    => __( 'Form Background Color', 'password-protect-page' ),
 					'section'  => 'ppwp_pro_form_instructions',
 					'settings' => 'ppwp_pro_form_instructions_background_color',
 				) )
@@ -220,7 +224,7 @@ if ( ! class_exists( 'PPW_Customizer_Sitewide' ) ) {
 			/* password form width */
 			$wp_customize->add_setting( 'ppwp_pro_form_instructions_width' );
 			$wp_customize->add_control( 'ppwp_pro_form_instructions_width_control', array(
-				'label'			=> __( 'Form Width', PPW_Constants::DOMAIN ),
+				'label'			=> __( 'Form Width', 'password-protect-page' ),
 				'section'  		=> 'ppwp_pro_form_instructions',
 				'settings' 		=> 'ppwp_pro_form_instructions_width',
 				'description'	=> 'Width in px',
@@ -230,7 +234,7 @@ if ( ! class_exists( 'PPW_Customizer_Sitewide' ) ) {
 			/* password form border radius */
 			$wp_customize->add_setting( 'ppwp_pro_form_instructions_border_radius' );
 			$wp_customize->add_control( 'ppwp_pro_form_instructions_border_radius_control', array(
-				'label'			=> __( 'Form Border Radius', PPW_Constants::DOMAIN ),
+				'label'			=> __( 'Form Border Radius', 'password-protect-page' ),
 				'section'  		=> 'ppwp_pro_form_instructions',
 				'settings' 		=> 'ppwp_pro_form_instructions_border_radius',
 				'description'	=> 'Border Radius in px',
@@ -243,7 +247,7 @@ if ( ! class_exists( 'PPW_Customizer_Sitewide' ) ) {
 				new PPW_Title_Group_Control(
 					$wp_customize,
 					'ppwp_pro_password_label_group', array(
-					'label'			=> __( 'Password Field', PPW_Constants::DOMAIN ),
+					'label'			=> __( 'Password Field', 'password-protect-page' ),
 					'section'  		=> 'ppwp_pro_form_instructions',
 					'settings' 		=> 'ppwp_pro_password_label_group',
 					'type'     		=> 'control_title',
@@ -253,10 +257,10 @@ if ( ! class_exists( 'PPW_Customizer_Sitewide' ) ) {
 			/* password label font size */
 			$wp_customize->add_setting( 'ppwp_pro_form_instructions_password_label_font_size' );
 			$wp_customize->add_control( 'ppwp_pro_form_instructions_password_label_font_size_control', array(
-				'label'       => __( 'Font Size', PPW_Constants::DOMAIN ),
+				'label'       => __( 'Font Size', 'password-protect-page' ),
 				'section'     => 'ppwp_pro_form_instructions',
 				'settings'    => 'ppwp_pro_form_instructions_password_label_font_size',
-				'description' => __( 'Font size in px', PPW_Constants::DOMAIN ),
+				'description' => __( 'Font size in px', 'password-protect-page' ),
 				'type'        => 'number',
 			) );
 
@@ -266,7 +270,7 @@ if ( ! class_exists( 'PPW_Customizer_Sitewide' ) ) {
 				new \WP_Customize_Color_Control(
 					$wp_customize,
 					'ppwp_pro_form_instructions_password_label_color_control', array(
-					'label'    => __( 'Label Color', PPW_Constants::DOMAIN ),
+					'label'    => __( 'Label Color', 'password-protect-page' ),
 					'section'  => 'ppwp_pro_form_instructions',
 					'settings' => 'ppwp_pro_form_instructions_password_label_color',
 				) )
@@ -275,7 +279,7 @@ if ( ! class_exists( 'PPW_Customizer_Sitewide' ) ) {
 			/* placeholder text */
 			$wp_customize->add_setting( 'ppwp_pro_form_instructions_placeholder' );
 			$wp_customize->add_control( 'ppwp_pro_form_instructions_placeholder_control', array(
-				'label'    => __( 'Placeholder', PPW_Constants::DOMAIN ),
+				'label'    => __( 'Placeholder', 'password-protect-page' ),
 				'section'  => 'ppwp_pro_form_instructions',
 				'settings' => 'ppwp_pro_form_instructions_placeholder',
 				'type'     => 'text',
@@ -283,17 +287,17 @@ if ( ! class_exists( 'PPW_Customizer_Sitewide' ) ) {
 
 			/* form button section */
 			$wp_customize->add_section( 'ppwp_pro_form_button', array(
-				'title'    => __( 'Button', PPW_Constants::DOMAIN ),
+				'title'    => __( 'Button', 'password-protect-page' ),
 				'panel'    => 'ppwp_sitewide',
 				'priority' => 400,
 			) );
 
 			/* button label */
 			$wp_customize->add_setting( 'ppwp_pro_form_button_label', array(
-				'default' => __( 'Enter', PPW_Constants::DOMAIN ),
+				'default' => __( 'Enter', 'password-protect-page' ),
 			) );
 			$wp_customize->add_control( 'ppwp_pro_form_button_label_control', array(
-				'label'    => __( 'Button Label', PPW_Constants::DOMAIN ),
+				'label'    => __( 'Button Label', 'password-protect-page' ),
 				'section'  => 'ppwp_pro_form_button',
 				'settings' => 'ppwp_pro_form_button_label',
 				'type'     => 'text',
@@ -305,7 +309,7 @@ if ( ! class_exists( 'PPW_Customizer_Sitewide' ) ) {
 				new \WP_Customize_Color_Control(
 					$wp_customize,
 					'ppwp_pro_form_button_text_color_control', array(
-					'label'    => __( 'Text Color', PPW_Constants::DOMAIN ),
+					'label'    => __( 'Text Color', 'password-protect-page' ),
 					'section'  => 'ppwp_pro_form_button',
 					'settings' => 'ppwp_pro_form_button_text_color',
 				) )
@@ -317,11 +321,12 @@ if ( ! class_exists( 'PPW_Customizer_Sitewide' ) ) {
 				new \WP_Customize_Color_Control(
 					$wp_customize,
 					'ppwp_pro_form_button_background_color_control', array(
-					'label'    => __( 'Background Color', PPW_Constants::DOMAIN ),
+					'label'    => __( 'Background Color', 'password-protect-page' ),
 					'section'  => 'ppwp_pro_form_button',
 					'settings' => 'ppwp_pro_form_button_background_color',
 				) )
 			);
+
         }
 
 		/**
@@ -364,7 +369,7 @@ if ( ! class_exists( 'PPW_Customizer_Sitewide' ) ) {
 
 			// remove space in $sw_custom_css.
 			$sw_custom_css = $this->optimize_css( $sw_custom_css );
-			echo $sw_custom_css; // phpcs:ignore -- we already escase inside the css
+			echo $sw_custom_css;  // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- CSS already escaped
 		}
 
 		/*
@@ -382,10 +387,10 @@ if ( ! class_exists( 'PPW_Customizer_Sitewide' ) ) {
 	    public function get_templates() {
 		    $free_templates = array();
 		    $themes_name    = array(
-			    __( 'Default', PPW_Constants::DOMAIN ),
-			    __( 'Event', PPW_Constants::DOMAIN ),
-			    __( 'Business', PPW_Constants::DOMAIN ),
-			    __( 'Wedding', PPW_Constants::DOMAIN ),
+			    __( 'Default', 'password-protect-page' ),
+			    __( 'Event', 'password-protect-page' ),
+			    __( 'Business', 'password-protect-page' ),
+			    __( 'Wedding', 'password-protect-page' ),
 		    );
 
 		    foreach ( $themes_name as $index => $theme_name ) {

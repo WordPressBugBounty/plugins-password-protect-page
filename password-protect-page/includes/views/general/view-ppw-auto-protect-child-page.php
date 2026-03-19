@@ -1,4 +1,7 @@
 <?php 
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
 /**
  * Password Protect Child Pages
  */
@@ -8,7 +11,7 @@
 	<td>
 		<p>
 			<label>
-				<?php echo esc_html__( 'Password Protect Child Pages', PPW_Constants::DOMAIN ); ?>
+				<?php echo esc_html__( 'Password Protect Child Pages', 'password-protect-page' ); ?>
 				<span class="ppwp_upgrade_advice">
 					<a rel="noopener" target="_blank" href="https://passwordprotectwp.com/pricing/">
 						<span class="ppwp_dashicons dashicons dashicons-lock">
@@ -17,7 +20,7 @@
 					</a>
 				</span>
 			</label>
-			<?php echo esc_html__( 'Automatically protect all child pages once their parent is protected. Available in Pro version.', PPW_Constants::DOMAIN ); ?>
+			<?php echo esc_html__( 'Automatically protect all child pages once their parent is protected. Available in Pro version.', 'password-protect-page' ); ?>
 		</p>
 	</td>
 </tr>

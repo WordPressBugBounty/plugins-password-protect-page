@@ -1,5 +1,8 @@
 <?php
-
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+// phpcs:disable WordPress.NamingConventions.PrefixAllGlobals
 /**
  *
  * Class PPW_Category
@@ -252,12 +255,12 @@ class PPW_Category_Service {
 		}
 
 		$referer = wp_get_referer();
+		// phpcs:disable
 		if ( $referer ) {
 			$secure = ( 'https' === parse_url( $referer, PHP_URL_SCHEME ) );
 		} else {
 			$secure = false;
 		}
-
 		if ( $password_id ) {
 			$password_hashed = $password_id . '|' . $password_hashed;
 		}

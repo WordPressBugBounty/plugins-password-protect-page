@@ -1,4 +1,8 @@
 <?php
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
 if ( ! class_exists( 'PPW_Password_Subscribe' ) ) {
 	class PPW_Password_Subscribe {
 
@@ -36,7 +40,7 @@ if ( ! class_exists( 'PPW_Password_Subscribe' ) ) {
 				);
 			} else if ( $status_code >= 400 ) {
 				return array(
-					'error_message' => __('Invalid email address', PPW_Constants::DOMAIN),
+					'error_message' => __('Invalid email address', 'password-protect-page'),
 				);
 			} else {
 				update_user_meta( get_current_user_id(), PPW_Constants::USER_SUBSCRIBE, true );

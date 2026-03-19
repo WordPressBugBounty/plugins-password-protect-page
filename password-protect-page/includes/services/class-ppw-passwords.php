@@ -1,11 +1,15 @@
 <?php
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
 /**
  * Created by PhpStorm.
  * User: gaupoit
  * Date: 5/6/19
  * Time: 21:04
  */
-
+// phpcs:disable WordPress.NamingConventions.PrefixAllGlobals
 if ( ! class_exists( 'PPW_Password_Services' ) ) {
 	class PPW_Password_Services implements PPW_Service_Interfaces {
 
@@ -92,12 +96,13 @@ if ( ! class_exists( 'PPW_Password_Services' ) ) {
 			}
 
 			$referer = wp_get_referer();
+			// phpcs:disable
 			if ( $referer ) {
 				$secure = ( 'https' === parse_url( $referer, PHP_URL_SCHEME ) );
 			} else {
 				$secure = false;
 			}
-
+			
 			$expire = apply_filters( 'ppw_cookie_expire', $expire );
 			$expire = apply_filters( 'ppwp_cookie_expiry', $expire );
 			return setcookie( $cookie_name . COOKIEHASH, $password_hashed, $expire, COOKIEPATH, COOKIE_DOMAIN, $secure );
@@ -116,12 +121,13 @@ if ( ! class_exists( 'PPW_Password_Services' ) ) {
 			}
 
 			$referer = wp_get_referer();
+			// phpcs:disable
 			if ( $referer ) {
 				$secure = ( 'https' === parse_url( $referer, PHP_URL_SCHEME ) );
 			} else {
 				$secure = false;
 			}
-
+			
 			$expire = apply_filters( 'ppw_cookie_expire', $expire );
 			$expire = apply_filters( 'ppwp_cookie_expiry', $expire );
 
@@ -528,11 +534,8 @@ if ( ! class_exists( 'PPW_Password_Services' ) ) {
 		 */
 		function migrate_default_password() {
 			$posts = ppw_core_get_posts_password_protected_by_wp();
-			error_log( '[Migrate Default PWD]Things to migrate: ' . wp_json_encode( $posts ) );
-			error_log( sprintf( '[Migrate Default PWD]Total: %d', count( $posts ) ) );
 			foreach ( $posts as $post ) {
 				$post_id = $post->ID;
-				error_log( sprintf( '[Migrate Default PWD]Migrating password for post %d', $post_id ) );
 				$global_password = get_post_meta( $post_id, PPW_Constants::GLOBAL_PASSWORDS, true );
 				$global_password = ! empty( $global_password ) ? $global_password : array();
 				$raw_data        = get_post_meta( $post->ID, PPW_Constants::POST_PROTECTION_ROLES, true );
@@ -725,8 +728,8 @@ if ( ! class_exists( 'PPW_Password_Services' ) ) {
 		public function generate_custom_row_action( $actions, $post ) {
 			$post_id           = $post->ID;
 			$is_protected      = $this->is_protected_content( $post_id );
-			$btn_label         = $is_protected ? __( 'Unprotect', PPW_Constants::DOMAIN ) : __( 'Protect', PPW_Constants::DOMAIN );
-			$title             = $is_protected ? __( 'Unprotect this page', PPW_Constants::DOMAIN ) : __( 'Protect this page', PPW_Constants::DOMAIN );
+			$btn_label         = $is_protected ? __( 'Unprotect', 'password-protect-page' ) : __( 'Protect', 'password-protect-page' );
+			$title             = $is_protected ? __( 'Unprotect this page', 'password-protect-page' ) : __( 'Protect this page', 'password-protect-page' );
 			$protection_status = $is_protected ? PPW_Constants::PROTECTION_STATUS['unprotect'] : PPW_Constants::PROTECTION_STATUS['protect'];
 
 			$actions['ppw_protect'] = '<a style="cursor: pointer" data-ppw-status="' . $protection_status . '" onclick="ppwpRowAction.handleOnClickRowAction(' . $post_id . ')" id="ppw-protect-post_' . $post_id . '" class="ppw-protect-action" title="' . $title . '">' . $btn_label . '</a>';
@@ -764,31 +767,31 @@ if ( ! class_exists( 'PPW_Password_Services' ) ) {
 		 */
 		public function update_post_status( $request ) {
 			if ( ! isset( $request['postId'] ) || ! isset( $request['status'] ) ) {
-				send_json_data_error( __( 'Our server cannot understand the data request!', PPW_Constants::DOMAIN ) );
+				send_json_data_error( __( 'Our server cannot understand the data request!', 'password-protect-page' ) );
 			}
 
 			$post_id       = $request['postId'];
 			$client_status = (int) $request['status'];
 
 			if ( ! in_array( $client_status, array_values( PPW_Constants::PROTECTION_STATUS ), true ) ) {
-				send_json_data_error( __( 'Our server cannot understand the data request!', PPW_Constants::DOMAIN ) );
+				send_json_data_error( __( 'Our server cannot understand the data request!', 'password-protect-page' ) );
 			}
 
 			$server_status  = $client_status;
-			$message        = __( 'Oops! Something went wrong. Please reload the page and try again.', PPW_Constants::DOMAIN );
+			$message        = __( 'Oops! Something went wrong. Please reload the page and try again.', 'password-protect-page' );
 			$status_request = 400;
 			if ( PPW_Constants::PROTECTION_STATUS['protect'] === $client_status ) {
 				if ( ! $this->is_protected_content( $post_id ) ) {
 					$this->protect_page_post( $post_id );
 					$server_status  = PPW_Constants::PROTECTION_STATUS['unprotect'];
-					$message        = __( 'Great! You\'ve successfully protected this page.', PPW_Constants::DOMAIN );
+					$message        = __( 'Great! You\'ve successfully protected this page.', 'password-protect-page' );
 					$status_request = 200;
 				}
 			} else {
 				if ( $this->is_protected_content( $post_id ) ) {
 					$this->unprotect_page_post( $post_id );
 					$server_status  = PPW_Constants::PROTECTION_STATUS['protect'];
-					$message        = __( 'Great! You\'ve successfully unprotected this page.', PPW_Constants::DOMAIN );
+					$message        = __( 'Great! You\'ve successfully unprotected this page.', 'password-protect-page' );
 					$status_request = 200;
 				}
 			}
@@ -1306,7 +1309,7 @@ if ( ! class_exists( 'PPW_Password_Services' ) ) {
 			if ( empty( $protected_ids ) ) {
 				return $posts_args;
 			}
-
+			// phpcs:disable
 			$old_post_not_in = isset( $posts_args['post__not_in'] ) ? $posts_args['post__not_in'] : array();
 			foreach ( $post_types as $post_type ) {
 				$is_hide = ppw_core_get_setting_type_bool( PPW_Constants::HIDE_PROTECTED . $post_type );
@@ -1327,6 +1330,7 @@ if ( ! class_exists( 'PPW_Password_Services' ) ) {
 			$posts_args['post__not_in'] = $old_post_not_in;
 
 			return $posts_args;
+			
 		}
 
 		/**

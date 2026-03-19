@@ -1,10 +1,16 @@
+<?php
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+// phpcs:disable WordPress.NamingConventions.PrefixAllGlobals
+?>
 <form class="ppw_main_container" id="wp_protect_password_general_form">
 	<input type="hidden" id="ppw_general_form_nonce"
 	       value="<?php echo esc_attr( wp_create_nonce( PPW_Constants::GENERAL_FORM_NONCE ) ); ?>"/>
 	<table class="ppwp_settings_table" cellpadding="4">
 		<tr id="pda-password-protection">
 			<td colspan="2">
-				<h3><?php echo esc_html__( 'PASSWORD PROTECTION', PPW_Constants::DOMAIN ); ?></h3>
+				<h3><?php echo esc_html__( 'PASSWORD PROTECTION', 'password-protect-page' ); ?></h3>
 			</td>
 		</tr>
 		<?php
@@ -23,7 +29,7 @@
 		</tr>
 		<tr id="wpp-password-form">
 			<td colspan="2">
-				<h3><?php echo esc_html__( 'PASSWORD FORM CUSTOMIZATION', PPW_Constants::DOMAIN ); ?></h3>
+				<h3><?php echo esc_html__( 'PASSWORD FORM CUSTOMIZATION', 'password-protect-page' ); ?></h3>
 			</td>
 		</tr>
 		<tr>
@@ -40,7 +46,7 @@
 				);
 				$form_message       = sprintf(
 					// translators: %s: Link to documentation.
-					esc_html__( 'Customize the default %1$s including headline, description and button under %2$s. The following messages will display by default if you haven\'t customized them via WordPress Customizer.', PPW_Constants::DOMAIN ),
+					esc_html__( 'Customize the default %1$s including headline, description and button under %2$s. The following messages will display by default if you haven\'t customized them via WordPress Customizer.', 'password-protect-page' ),
 					$link_error_message,
 					$link_customizer
 				);
@@ -60,7 +66,7 @@
 		</tr>
 		<tr id="wpp-password-form">
 			<td colspan="2">
-				<h3><?php echo esc_html__( 'ADVANCED OPTIONS', PPW_Constants::DOMAIN ); ?></h3>
+				<h3><?php echo esc_html__( 'ADVANCED OPTIONS', 'password-protect-page' ); ?></h3>
 			</td>
 		</tr>
 		<?php

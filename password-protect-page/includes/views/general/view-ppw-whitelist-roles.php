@@ -1,4 +1,8 @@
 <?php
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+// phpcs:disable WordPress.NamingConventions.PrefixAllGlobals
 $roles = get_editable_roles();
 ?>
 <tr class="ppwp_free_version">
@@ -6,23 +10,23 @@ $roles = get_editable_roles();
 	<td>
 		<p>
 			<label>
-				<?php echo esc_html__( 'Whitelisted Roles', PPW_Constants::DOMAIN ) ?>
+				<?php echo esc_html__( 'Whitelisted Roles', 'password-protect-page' ) ?>
 			</label>
-			<?php echo _e( 'Select user roles who can access all protected content without having to enter passwords.', PPW_Constants::DOMAIN ) ?>
+			<?php echo esc_html__( 'Select user roles who can access all protected content without having to enter passwords.', 'password-protect-page' ) ?>
 		</p>
 		<select id="wpp_free_whitelist_roles">
-			<option value="blank"><?php echo esc_html__( 'No one', PPW_Constants::DOMAIN ) ?></option>
-			<option disabled value="admin_users"><?php echo esc_html__( 'Admin users', PPW_Constants::DOMAIN ) ?></option>
-			<option disabled value="author"><?php echo esc_html__( 'The post\'s author', PPW_Constants::DOMAIN ) ?></option>
-			<option disabled value="logged_users"><?php echo esc_html__( 'Logged-in users', PPW_Constants::DOMAIN ) ?></option>
-			<option disabled value="custom_roles"><?php echo esc_html__( 'Choose custom roles', PPW_Constants::DOMAIN ) ?></option>
-			<option disabled value="usernames"><?php echo esc_html__( 'Choose username', PPW_Constants::DOMAIN ) ?></option>
+			<option value="blank"><?php echo esc_html__( 'No one', 'password-protect-page' ) ?></option>
+			<option disabled value="admin_users"><?php echo esc_html__( 'Admin users', 'password-protect-page' ); ?></option>
+			<option disabled value="author"><?php echo esc_html__( 'The post\'s author', 'password-protect-page' ); ?></option>
+			<option disabled value="logged_users"><?php echo esc_html__( 'Logged-in users', 'password-protect-page' ); ?></option>
+			<option disabled value="custom_roles"><?php echo esc_html__( 'Choose custom roles', 'password-protect-page' ); ?></option>
+			<option disabled value="usernames"><?php echo esc_html__( 'Choose username', 'password-protect-page' ); ?></option>
 		</select>
 	</td>
 </tr>
 <tr id="wpp_free_roles_access" class="wpp_hide_role_access ppwp_free_version">
 	<td></td>
-	<td><p><?php echo esc_html__( 'Grant access to these user roles only', PPW_Constants::DOMAIN ); ?></p>
+	<td><p><?php echo esc_html__( 'Grant access to these user roles only', 'password-protect-page' ); ?></p>
 		<select multiple="multiple" class="wpp_roles_select ppwp_select2">
 			<?php foreach ( $roles as $role_name => $role_info ) { ?>
 				<option><?php echo esc_html( $role_name ); ?></option>

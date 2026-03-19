@@ -1,3 +1,8 @@
+<?php 
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+?>
 <div class="ppw_main_container wp_misc_tab">
 	<form id="wpp_misc_common_form">
 		<input type="hidden" id="ppw_misc_form_nonce"
@@ -22,6 +27,9 @@
 		}
 		?>
 	</table>
-	<?php do_action('ppw_render_misc_form'); ?>
+	<?php 
+	// phpcs:disable WordPress.NamingConventions.PrefixAllGlobals
+	do_action('ppw_render_misc_form'); 
+	?>
 
 </div>

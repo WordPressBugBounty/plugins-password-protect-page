@@ -1,4 +1,7 @@
 <?php
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
 
 if ( ! class_exists( 'PPW_Customizer_Upsell' ) ) {
 
@@ -44,7 +47,7 @@ if ( ! class_exists( 'PPW_Customizer_Upsell' ) ) {
             $wp_customize->add_section(
                 new PPW_Customize_Link_Section( $wp_customize, 'ppwp_upsell',
                     array(
-                        'ppwp_text'		=> __( 'More options available in PPWP Pro', PPW_Constants::DOMAIN ),
+                        'ppwp_text'		=> __( 'More options available in PPWP Pro', 'password-protect-page' ),
 						'ppwp_url'		=> esc_url( 'https://passwordprotectwp.com/features/lite-vs-pro-version/?utm_source=user-website&utm_medium=wp-customizer&utm_campaign=ppwp-free#sitewide-customizer' ),
 						'capability'	=> 'edit_theme_options',
 						'priority'		=> 9999,

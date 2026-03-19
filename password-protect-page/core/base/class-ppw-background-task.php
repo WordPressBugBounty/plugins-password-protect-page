@@ -67,7 +67,6 @@ if ( ! class_exists( 'PPW_Pro_Background_Task' ) ) {
 		 * @return mixed
 		 */
 		public function get_current_item() {
-			error_log( 'Current item: ' . wp_json_encode( $this->current_item ) );
 			return $this->current_item;
 		}
 
@@ -137,9 +136,11 @@ if ( ! class_exists( 'PPW_Pro_Background_Task' ) ) {
 		}
 
 		public function continue_run() {
+			// phpcs:disable
 			// Used to fire an action added in WP_Background_Process::_construct() that calls WP_Background_Process::handle_cron_healthcheck().
 			// This method will make sure the database updates are executed even if cron is disabled. Nothing will happen if the updates are already running.
 			do_action( $this->cron_hook_identifier );
+			// phpcs:enable
 		}
 
 		protected function task( $item ) {
@@ -233,16 +234,18 @@ if ( ! class_exists( 'PPW_Pro_Background_Task' ) ) {
 		 * @return array
 		 */
 		public function schedule_cron_healthcheck( $schedules ) {
+			// phpcs:disable
 			$interval = apply_filters( $this->identifier . '_cron_interval', 5 );
 
 			// Adds every 5 minutes to the existing schedules.
 			$schedules[ $this->identifier . '_cron_interval' ] = array(
 				'interval' => MINUTE_IN_SECONDS * $interval,
 				/* translators: %d: interval */
-				'display'  => sprintf( __( 'Every %d minutes', PPW_Constants::DOMAIN ), $interval ),
+				'display'  => sprintf( __( 'Every %d minutes', 'password-protect-page' ), $interval ),
 			);
 
 			return $schedules;
+			// phpcs:enable
 		}
 
 		/**
@@ -287,9 +290,7 @@ if ( ! class_exists( 'PPW_Pro_Background_Task' ) ) {
 		 * and data exists in the queue.
 		 */
 		public function handle_cron_healthcheck() {
-			error_log( 'Checking health-check: ' . wp_json_encode( 'Hello World' ) );
 			if ( $this->is_process_running() ) {
-				error_log( 'PPWP - Background process is running' );
 				// Background process already running.
 				return;
 			}

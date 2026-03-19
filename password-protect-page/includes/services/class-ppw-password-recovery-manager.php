@@ -1,4 +1,7 @@
 <?php
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
 
 class PPW_Password_Recovery_Manager extends PPW_Background_Task_Manager {
 	private $completed;
@@ -92,7 +95,7 @@ class PPW_Password_Recovery_Manager extends PPW_Background_Task_Manager {
 	public function admin_notice_upgrade_is_running() {
 		$continue_action = $this->get_continue_action_url();
 		$message         = '<p>'
-		                   . __( 'Password recovery process is running in the background.', PPW_Constants::DOMAIN )
+		                   . __( 'Password recovery process is running in the background.', 'password-protect-page' )
 		                   . '</p>'
 		                   . '<p>'
 		                   . sprintf( 'Taking a while? <a href="%s" class="button-primary">Click here to run it now</a>', $continue_action )
@@ -115,9 +118,9 @@ class PPW_Password_Recovery_Manager extends PPW_Background_Task_Manager {
 	public function get_plugin_name() {
 		return 'ppw';
 	}
-
+	// phpcs:disable
 	public function get_plugin_label() {
-		return __( PPW_PLUGIN_NAME, PPW_Constants::DOMAIN );
+		return __( PPW_PLUGIN_NAME, 'password-protect-page' );
 	}
 
 	public function get_name() {
@@ -125,10 +128,11 @@ class PPW_Password_Recovery_Manager extends PPW_Background_Task_Manager {
 	}
 
 	public function get_success_message() {
-		return '<p>' . sprintf( __( '%s <a href="https://passwordprotectwp.com/docs/password-migration/#backup" target="_blank" rel="noopener noreferrer">Password recovery process</a> is now complete.. Thank you for your patience!', PPW_Constants::DOMAIN ), $this->get_updater_label() ) . '</p>';
+		return '<p>' . sprintf( __( '%s <a href="https://passwordprotectwp.com/docs/password-migration/#backup" target="_blank" rel="noopener noreferrer">Password recovery process</a> is now complete.. Thank you for your patience!', 'password-protect-page' ), $this->get_updater_label() ) . '</p>';
 	}
 
 	public function get_updater_label() {
-		return sprintf( '<strong>%s </strong> &#8211;', __( 'Password Protect WordPress', PPW_Constants::DOMAIN ) );
+		return sprintf( '<strong>%s </strong> &#8211;', __( 'Password Protect WordPress', 'password-protect-page' ) );
 	}
+	// phpcs:enable
 }

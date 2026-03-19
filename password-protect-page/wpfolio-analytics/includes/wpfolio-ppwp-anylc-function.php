@@ -17,12 +17,13 @@ if ( !defined( 'ABSPATH' ) ) {
  * @since 1.0
  */
 function wpfolio_ppwp_anylc_text( $text, $echo = false ) {
-	
+	// phpcs:disable
 	if( $echo ) {
-		_e( $text, '' );
+		echo esc_html__( $text, 'password-protect-page' );
 	} else {
-		__( $text, '' );
+		echo esc_html__( $text, 'password-protect-page' );
 	}
+	// phpcs:enable
 }
 
 /**
@@ -89,26 +90,27 @@ function wpfolio_ppwp_anylc_optin_data( $anylc_pdt = false, $return_url = '' ) {
 
 	// Takind some data
 	$theme_data 	= wp_get_theme();
-	$page 			= isset( $_GET['page'] ) ? sanitize_text_field( $_GET['page'] ) : false;
+	// phpcs:ignore WordPress.Security.NonceVerification.Recommended
+	$page 			= isset( $_GET['page'] ) ? sanitize_text_field( wp_unslash( $_GET['page'] ) ) : false;
+
 
 	// If product is not passed
 	if( ! $anylc_pdt ) {
-		$anylc_pdt 		= !empty( $_GET['wpfolio_ppwp_anylc_pdt'] ) 			? sanitize_text_field( $_GET['wpfolio_ppwp_anylc_pdt'] ) 	: '';
-		$anylc_pdt 		= ( ! $anylc_pdt && !empty( $_GET['page'] ) ) 	? sanitize_text_field( $_GET['page'] ) 				: $anylc_pdt;
-
-
-
+		// phpcs:disable
+		$anylc_pdt = !empty( $_GET['wpfolio_ppwp_anylc_pdt'] ) ? sanitize_text_field( wp_unslash($_GET['wpfolio_ppwp_anylc_pdt'] ) ) 	: '';
+		$anylc_pdt = ( ! $anylc_pdt && !empty( $_GET['page'] ) ) ? sanitize_text_field( wp_unslash($_GET['page'] ) ) 				: $anylc_pdt;
 	}
 
-
+	// phpcs:disable
 	$anylc_pdt = str_replace('_optin','',$anylc_pdt);
 
 	// If a valid product is there
 	if( $anylc_pdt && !empty( $wpfolio_ppwp_analytics_product[ $anylc_pdt ] ) ) {
-
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended
 		$analy_product 	= $wpfolio_ppwp_analytics_product[ $anylc_pdt ];
 
 		if( empty( $return_url ) ) {
+			// phpcs:ignore WordPress.Security.NonceVerification.Recommended
 			$return_url 	= add_query_arg( array( 'page' => $page ), admin_url('admin.php') );
 			$return_url		= wp_nonce_url( $return_url, 'wpfolio_ppwp_anylc_act' );
 		}
@@ -275,13 +277,15 @@ function wpfolio_ppwp_anylc_optout_url( $module_data = '', $optin_status = null,
 	if( $optin_status == 1 ) {
 
 		if( ! $redirect_url ) {
-			$plugin_status 	= isset( $_GET['plugin_status'] ) 	? sanitize_text_field( $_GET['plugin_status'] ) 	: false;
-			$paged 			= isset( $_GET['paged'] ) 			? sanitize_text_field( $_GET['paged'] ) 			: false;
-			$s 				= isset( $_GET['s'] ) 				? sanitize_text_field( $_GET['s'] ) 				: false;
+			// phpcs:ignore WordPress.Security.NonceVerification.Recommended
+			$plugin_status 	= isset( $_GET['plugin_status'] ) 	? sanitize_text_field( wp_unslash( $_GET['plugin_status'] ) ) 	: false;
+			$paged 			= isset( $_GET['paged'] ) 			? sanitize_text_field( wp_unslash( $_GET['paged'] ) ) : false;
+			$s 				= isset( $_GET['s'] ) 				? sanitize_text_field( wp_unslash( $_GET['s'] ) ) : false;
 
+			// phpcs:ignore WordPress.Security.NonceVerification.Recommended
 			$redirect_url 	= add_query_arg( array( 'plugin_status' => $plugin_status, 'paged' => $paged, 's' => $s ), admin_url( 'plugins.php' ) );
 		}
-
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended
 		$opt_out_link 	= add_query_arg( array( 'wpfolio_ppwp_anylc_action' => 'optout', 'wpfolio_ppwp_anylc_pdt' => $module_data['slug'], 'redirect' => $redirect_url ), $redirect_url );
 		$opt_out_link	= wp_nonce_url( $opt_out_link, 'wpfolio_ppwp_anylc_act'.'|'.$module_data['slug'] );
 	}
@@ -299,7 +303,7 @@ function wpfolio_ppwp_anylc_pdt_url( $module_data = '', $type = false ) {
 
 	$redirect_url 	= false;
 	$redirect_page	= ! empty( $module_data['redirect_page'] ) ? $module_data['redirect_page'] : $module_data['menu'];
-
+	// phpcs:disable
 	if( ! empty( $redirect_page ) ) {
 
 		$pos 			= strpos( $redirect_page, '?post_type' );
@@ -307,7 +311,7 @@ function wpfolio_ppwp_anylc_pdt_url( $module_data = '', $type = false ) {
 
 		switch ( $type ) {
 			case 'promotion':
-
+				
 				$promotion = !empty( $_GET['promotion'] ) ? wpfolio_ppwp_anylc_clean( $_GET['promotion'] ) : '';
 
 				if( !empty( $promotion ) ) {

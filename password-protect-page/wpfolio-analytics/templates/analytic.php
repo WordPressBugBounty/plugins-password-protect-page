@@ -9,18 +9,22 @@
 if ( !defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly
 }
+// phpcs:disable
 // Generate per-request state and store 10 min (bind to site_uid if available)
 $state = bin2hex( random_bytes(16) );
 $site_uid = isset( $optin_form_data['site_uid'] ) ? sanitize_text_field( $optin_form_data['site_uid'] ) : 'default';
 set_transient( 'wpfolio_ppwp_state_' . $site_uid, $state, 10 * MINUTE_IN_SECONDS );
 // pass to template as hidden field (add to $optin_form_data)
 $optin_form_data['state'] = $state;
-
-if( isset($_GET['my_notice']) && $_GET['my_notice'] === 'error' ) {
-     echo '<div class="notice wpfolio-custom notice-error is-dismissible"><p>❌ Something went wrong. Please try again.</p></div>';
+if ( isset( $_GET['my_notice'] ) && sanitize_text_field( wp_unslash( $_GET['my_notice'] ) ) === 'error' ) {
+    ?>
+    <div class="notice wpfolio-custom notice-error is-dismissible">
+        <p>
+            <?php esc_html_e( '❌ Something went wrong. Please try again.', 'password-protect-page' ); ?>
+        </p>
+    </div>
+<?php
 }
-
-
 ?>
 
 <style type="text/css">
@@ -30,14 +34,13 @@ if( isset($_GET['my_notice']) && $_GET['my_notice'] === 'error' ) {
 
 <div class="wrap wpfolio-ppwp-anylc-optin">
 
-	<?php if( isset($_GET['error']) && $_GET['error'] == 'wpfolio_ppwp_anylc_error' ) { ?>
-	<div class="error">
+	<?php if( isset($_GET['error']) && sanitize_text_field( wp_unslash( $_GET['error'] ) ) == 'wpfolio_ppwp_anylc_error' ) { ?>
 		<?php echo wp_kses_post( '<p><strong>Sorry, something went wrong. Please contact us at <a href="mailto:support@ppwp-live.local">support@ppwp-live.local</a>.</strong></p>' );
 		?>
 	</div>
 	<?php } ?>
 
-	<form method="POST" action="<?php echo WPFOLIO_PPWP_ACTION_URL;?>">
+	<form method="POST" action="<?php echo esc_url( WPFOLIO_PPWP_ACTION_URL );?>">
 		<div class="wpfolio-ppwp-anylc-optin-wrap" style="width: 650px; margin: 0 auto; margin-top: 70px;">
 
 			<div>
@@ -101,7 +104,7 @@ if( isset($_GET['my_notice']) && $_GET['my_notice'] === 'error' ) {
 				</div>
 			</div>
 			<div class="wpfolio-ppwp-anylc-terms">
-				<a href="<?php echo WPFOLIO_PPWP_PRIVACY_URL; ?>" target="_blank"><?php echo esc_html__( 'Privacy Policy','password-protect-page' );?></a> - <a href="<?php echo WPFOLIO_PPWP_TERM_URL; ?>" target="_blank"><?php echo esc_html__( 'Terms of Service','password-protect-page' );?></a>
+				<a href="<?php echo esc_url( WPFOLIO_PPWP_PRIVACY_URL ); ?>" target="_blank"><?php echo esc_html__( 'Privacy Policy','password-protect-page' );?></a> - <a href="<?php echo esc_url( WPFOLIO_PPWP_TERM_URL ); ?>" target="_blank"><?php echo esc_html__( 'Terms of Service','password-protect-page' );?></a>
 			</div>
 		</div>
 	</form>

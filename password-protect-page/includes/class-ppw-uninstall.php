@@ -2,6 +2,7 @@
 /**
  * PPWP Class for Uninstall plugin 
  */
+// phpcs:disable WordPress.NamingConventions.PrefixAllGlobals
 if ( ! class_exists( 'PPW_Uninstall' ) ) {
 	class PPW_Uninstall {
 		/**

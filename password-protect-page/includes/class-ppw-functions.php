@@ -1,11 +1,14 @@
 <?php
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
 /**
  * Check condition and include plugin.php file
  */
 if ( ! function_exists( 'is_plugin_active' ) ) {
 	include_once( ABSPATH . 'wp-admin/includes/plugin.php' );
 }
-
+// phpcs:disable WordPress.NamingConventions.PrefixAllGlobals
 /**
  * Escape a WP_Error object for passing directly to wp_die().
  *
@@ -632,6 +635,12 @@ function ppw_allow_manage_passwords() {
 	$capability = ppw_get_allowed_capability();
 
 	return current_user_can( $capability ) || current_user_can( 'edit_posts' );
+}
+
+function ppw_allow_manage_master_passwords() {
+    $capability = ppw_get_allowed_capability();
+
+    return current_user_can( $capability );
 }
 
 function ppw_allowed_master_protection_type() {

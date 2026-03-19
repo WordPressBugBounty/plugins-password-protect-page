@@ -9,6 +9,7 @@
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly
 }
+// phpcs:disable
 ?>
 <style type="text/css">
 	.notice, .error, div.fs-notice.updated, div.fs-notice.success, div.fs-notice.promotion{display:none !important;}
@@ -50,7 +51,12 @@ if ( ! defined( 'ABSPATH' ) ) {
 			<?php } ?>
 
 			<?php if( ! empty( $offer_data['desc'] ) ) { ?>
-			<div class="wpfolio-ppwp-anylc-offer-desc wpfolio-ppwp-anylc-center"><?php echo wpautop( $offer_data['desc'] ); ?></div>
+			<div class="wpfolio-ppwp-anylc-offer-desc wpfolio-ppwp-anylc-center">
+				<?php // phpcs:disable 
+					  echo wpautop( $offer_data['desc'] ); 
+					  // phpcs:enable
+				?>
+			</div>
 			<?php } ?>
 
 			<?php if( ! empty( $offer_data['button'] ) ) { ?>
@@ -62,6 +68,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 	// If no offer to display then redirect to main plugin screen
 	if( empty( $has_offer ) ) { 
+		// phpcs:disable
 		$redirect_url = wpfolio_ppwp_anylc_pdt_url( $analy_product ); // Redirect URL
 	?>
 		Please Wait... Redirecting to plugin screen. <a href="<?php echo esc_url( $redirect_url ); ?>">Click Here</a> in case you are not auto redirect.

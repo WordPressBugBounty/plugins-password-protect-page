@@ -33,13 +33,13 @@ if ( ! class_exists( 'PPW_Default_PW_Manager_Services' ) ) {
 		public function get_plugin_name() {
 			return 'ppw';
 		}
-
+		// phpcs:disable
 		public function get_plugin_label() {
-			return __( PPW_PLUGIN_NAME, PPW_Constants::DOMAIN );
+			return __( PPW_PLUGIN_NAME, 'password-protect-page' );
 		}
 
 		public function get_updater_label() {
-			return sprintf( '<strong>%s </strong> &#8211;', __( 'Password Protect WordPress', PPW_Constants::DOMAIN ) );
+			return sprintf( '<strong>%s </strong> &#8211;', __( 'Password Protect WordPress', 'password-protect-page' ) );
 		}
 
 		public function get_query_limit() {
@@ -51,12 +51,12 @@ if ( ! class_exists( 'PPW_Default_PW_Manager_Services' ) ) {
 		}
 
 		public function get_migration_label() {
-			return sprintf( '<strong>%s </strong> &#8211;', __( 'PPWP Data Migration', PPW_Constants::DOMAIN ) );
+			return sprintf( '<strong>%s </strong> &#8211;', __( 'PPWP Data Migration', 'password-protect-page' ) );
 		}
 
 		public function get_success_message() {
-			return '<p>' . sprintf( __( '%s The <a href="https://passwordprotectwp.com/password-migration/" target="_blank" rel="noopener noreferrer">password migration process</a> is now complete. Thank you for your patience!', PPW_Constants::DOMAIN ), $this->get_updater_label() ) . '</p>';
+			return '<p>' . sprintf( __( '%s The <a href="https://passwordprotectwp.com/password-migration/" target="_blank" rel="noopener noreferrer">password migration process</a> is now complete. Thank you for your patience!', 'password-protect-page' ), $this->get_updater_label() ) . '</p>';
 		}
-
+		// phpcs:enable
 	}
 }

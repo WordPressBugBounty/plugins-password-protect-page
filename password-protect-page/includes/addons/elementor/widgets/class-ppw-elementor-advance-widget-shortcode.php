@@ -1,7 +1,9 @@
 <?php
-
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
 use Elementor\Plugin;
-
+// phpcs:ignoreFile WordPress.NamingConventions.PrefixAllGlobals
 if ( ! class_exists( 'PPW_Shortcode_Advance_Widget' ) ) {
 	/**
 	 * Advance Elementor ShortCode Widget

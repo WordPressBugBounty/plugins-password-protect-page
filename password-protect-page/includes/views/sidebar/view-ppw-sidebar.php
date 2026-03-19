@@ -1,10 +1,13 @@
 <?php
+if ( ! defined( 'ABSPATH' ) ) {
+    exit;
+}
 /**
 *
 * Dynamic Sidebar
 *
 */
-
+// phpcs:disable WordPress.NamingConventions.PrefixAllGlobals
 ?>
 <div class="ppw_wrap_subscribe_form" id="ppwp_right_column_metaboxes">
 	<?php 
@@ -26,14 +29,17 @@
 				set_transient( 'ppwp_sidebar_content', $response['body'], DAY_IN_SECONDS * $ppwp_fss_expire );
 
 				if( !empty( $section_1 ) ){
+					// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 					echo '<div class="main_container ppwp-section-1">'.$section_1.'</div>';	
 				}
 
 				if( !empty( $section_2 ) ){
+					// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 					echo '<div class="main_container ppwp-section-2">'.$section_2.'</div>';	
 				}
 
 				if( !empty( $section_3 ) ){
+					// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 					echo '<div class="main_container ppwp-section-3">'.$section_3.'</div>';	
 				}
 			}
@@ -51,14 +57,17 @@
 				$section_3 = !empty( $json->section_3 ) ? stripslashes( $json->section_3 ) : '';
 
 				if( !empty( $section_1 ) ){
+					// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 					echo '<div class="main_container ppwp-section-1">'.$section_1.'</div>';	
 				}
 
 				if( !empty( $section_2 ) ){
+					// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 					echo '<div class="main_container ppwp-section-2">'.$section_2.'</div>';	
 				}
 
 				if( !empty( $section_3 ) ){
+					// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 					echo '<div class="main_container ppwp-section-3">'.$section_3.'</div>';	
 				}
 			}

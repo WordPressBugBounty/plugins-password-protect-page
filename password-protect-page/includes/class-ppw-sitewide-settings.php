@@ -1,21 +1,30 @@
 <?php
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
 /**
  * PPWP Sitewide Settings
  */
-
+// phpcs:disable WordPress.NamingConventions.PrefixAllGlobals
 if ( ! class_exists( 'PPW_Sitewide_Settings' ) ) {
     class PPW_Sitewide_Settings {
 		/**
 		 * Render UI sitewide submenu settings page
 		 */
         public function render_ui() {
+        	// phpcs:disable
 	        $_get       = wp_unslash( $_GET ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- We no need to handle nonce verification for render UI.
 	        $head_title = is_pro_active_and_valid_license() ? 'PPWP Pro' : 'PPWP Lite';
 			?>
 			<div class="wrap">
 				<div id="icon-themes" class="icon32"></div>
 				<h2>
-					<?php echo esc_html__( $head_title . ': Sitewide Protection', PPW_Constants::DOMAIN ); ?>
+					<?php 
+					printf(
+							esc_html__( '%s: Sitewide Protection', 'password-protect-page' ),
+							esc_html( $head_title )
+					);
+					?>
 				</h2>
 				<?php
 				$general_tab   = apply_filters( PPW_Constants::HOOK_SITEWIDE_TAB, 'general' );
@@ -25,6 +34,7 @@ if ( ! class_exists( 'PPW_Sitewide_Settings' ) ) {
 				?>
 			</div>
 			<?php
+			
 		}
 
 		/**
@@ -38,10 +48,11 @@ if ( ! class_exists( 'PPW_Sitewide_Settings' ) ) {
 				array(
 					array(
 						'tab'      => 'general',
-						'tab_name' => 'General',
+						'tab_name' => __( 'General', 'password-protect-page' ),
 					),
 				)
 			);
+			
 			?>
 			<h2 class="ppwp_wrap_tab_title nav-tab-wrapper">
 				<?php
@@ -59,7 +70,7 @@ if ( ! class_exists( 'PPW_Sitewide_Settings' ) ) {
 					}
 					?>
 					<a href="?page=<?php echo esc_html( PPW_Constants::SITEWIDE_PAGE_PREFIX ); ?>&tab=<?php echo esc_attr( $tab['tab'] ); ?>"
-					   class="nav-tab <?php echo $active_tab === $tab['tab'] ? 'nav-tab-active' : ''; ?>"><?php esc_attr_e( $tab['tab_name'], PPW_Constants::DOMAIN ); ?></a>
+					   class="nav-tab <?php echo esc_attr( $active_tab === $tab['tab'] ? 'nav-tab-active' : '' ); ?>"><?php echo esc_attr( $tab['tab_name'] ); ?></a>
 				<?php } ?>
 			</h2>
 			<?php

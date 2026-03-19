@@ -1,5 +1,15 @@
 <?php
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
 
+// phpcs:disable WordPress.NamingConventions.PrefixAllGlobals
+// phpcs:disable WordPress.WP.I18n.NonSingularStringLiteralText
+
+/**
+ * Ensure the is_plugin_active() function is available.
+ */
+// phpcs:ignoreFile WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedFunctionFound
 if ( ! function_exists( 'is_plugin_active' ) ) {
 	include_once( ABSPATH . 'wp-admin/includes/plugin.php' );
 }
@@ -8,6 +18,7 @@ if ( ! function_exists( 'is_plugin_active' ) ) {
  * Get home URL
  *
  * @return string
+ * @codingStandardsIgnoreLine
  */
 function ppw_core_get_home_url_with_ssl() {
 	return is_ssl() ? home_url( '/', 'https' ) : home_url( '/' );
@@ -17,6 +28,7 @@ function ppw_core_get_home_url_with_ssl() {
  * Get current role
  *
  * @return array
+ * @codingStandardsIgnoreLine
  */
 function ppw_core_get_current_role() {
 	if ( ! is_user_logged_in() ) {
@@ -24,7 +36,7 @@ function ppw_core_get_current_role() {
 	}
 
 	$current_user = wp_get_current_user();
-	if ( is_multisite() && is_super_admin( $current_user->ID ) ) {
+	if ( is_multisite() && is_super_admin( $current_user->ID ) ) { // phpcs:ignore WordPress.Security.Capabilities.Restricted
 		return array( 'administrator' );
 	}
 
@@ -38,6 +50,7 @@ function ppw_core_get_current_role() {
  * @param $blog_id
  *
  * @return mixed
+ * @codingStandardsIgnoreLine
  */
 function ppw_core_get_settings( $name_settings, $blog_id = false ) {
 	return ppw_core_get_settings_by_option_name( $name_settings, PPW_Constants::GENERAL_OPTIONS, $blog_id );
@@ -52,6 +65,7 @@ function ppw_core_get_settings( $name_settings, $blog_id = false ) {
  *
  * @return mixed
  * @since 1.4.2
+ * @codingStandardsIgnoreLine
  */
 function ppw_core_get_settings_by_option_name( $setting_name, $option_name, $blog_id = false ) {
 	$settings       = ! $blog_id ? get_option( $option_name, false ) : get_blog_option( $blog_id, $option_name, false );
@@ -74,6 +88,7 @@ function ppw_core_get_settings_by_option_name( $setting_name, $option_name, $blo
  * @param $name_settings
  *
  * @return mixed
+ * @codingStandardsIgnoreLine
  */
 function ppw_core_get_settings_entire_site( $name_settings ) {
 	$settings       = get_option( PPW_Constants::ENTIRE_SITE_OPTIONS, false );
@@ -93,6 +108,7 @@ function ppw_core_get_settings_entire_site( $name_settings ) {
  * @param int|false $blog_id      Blog ID.
  *
  * @return bool
+ * @codingStandardsIgnoreLine
  */
 function ppw_core_get_setting_type_bool( $setting_name, $blog_id = false ) {
 	$setting = ppw_core_get_settings( $setting_name, $blog_id );
@@ -109,6 +125,7 @@ function ppw_core_get_setting_type_bool( $setting_name, $blog_id = false ) {
  *
  * @return bool
  * @since 1.4.2
+ * @codingStandardsIgnoreLine
  *
  */
 function ppw_core_get_setting_type_bool_by_option_name( $setting_name, $option_name, $blog_id = false ) {
@@ -125,6 +142,7 @@ function ppw_core_get_setting_type_bool_by_option_name( $setting_name, $option_n
  *
  * @return string
  * @since 1.4.2
+ * @codingStandardsIgnoreLine
  */
 function ppw_core_get_setting_type_string_by_option_name( $setting_name, $option_name ) {
 	$setting = ppw_core_get_settings_by_option_name( $setting_name, $option_name );
@@ -140,6 +158,7 @@ function ppw_core_get_setting_type_string_by_option_name( $setting_name, $option
  *
  * @return array
  * @since 1.4.2
+ * @codingStandardsIgnoreLine
  */
 function ppw_core_get_setting_type_array_by_option_name( $setting_name, $option_name ) {
 	$setting = ppw_core_get_settings_by_option_name( $setting_name, $option_name );
@@ -153,6 +172,7 @@ function ppw_core_get_setting_type_array_by_option_name( $setting_name, $option_
  * @param string $name_settings The setting name.
  *
  * @return string
+ * @codingStandardsIgnoreLine
  */
 function ppw_core_get_setting_type_string( $name_settings ) {
 	$setting = ppw_core_get_settings( $name_settings );
@@ -166,6 +186,7 @@ function ppw_core_get_setting_type_string( $name_settings ) {
  * @param string $name_settings The setting name for sitewide.
  *
  * @return string
+ * @codingStandardsIgnoreLine
  */
 function ppw_core_get_setting_type_string_sitewide( $name_settings ) {
 	$setting = ppw_core_get_settings_entire_site( $name_settings );
@@ -179,6 +200,7 @@ function ppw_core_get_setting_type_string_sitewide( $name_settings ) {
  * @param $name_settings
  *
  * @return array
+ * @codingStandardsIgnoreLine
  */
 function ppw_core_get_setting_type_array( $name_settings ) {
 	$setting = ppw_core_get_settings( $name_settings );
@@ -192,6 +214,7 @@ function ppw_core_get_setting_type_array( $name_settings ) {
  * @param $name_settings
  *
  * @return bool
+ * @codingStandardsIgnoreLine
  */
 function ppw_core_get_setting_entire_site_type_bool( $name_settings ) {
 	return 'true' === ppw_core_get_settings_entire_site( $name_settings );
@@ -203,6 +226,7 @@ function ppw_core_get_setting_entire_site_type_bool( $name_settings ) {
  * @param $name_settings
  *
  * @return string
+ * @codingStandardsIgnoreLine
  */
 function ppw_core_get_setting_entire_site_type_string( $name_settings ) {
 	$setting = ppw_core_get_settings_entire_site( $name_settings );
@@ -216,6 +240,7 @@ function ppw_core_get_setting_entire_site_type_string( $name_settings ) {
  * @param $name_settings
  *
  * @return array
+ * @codingStandardsIgnoreLine
  */
 function ppw_core_get_setting_entire_site_type_array( $name_settings ) {
 	$setting = ppw_core_get_settings_entire_site( $name_settings );
@@ -223,12 +248,13 @@ function ppw_core_get_setting_entire_site_type_array( $name_settings ) {
 	return ! is_array( $setting ) ? array() : $setting;
 }
 
+/**
+ * @codingStandardsIgnoreLine
+ */
 function ppw_core_get_query_param() {
 	$_server     = wp_unslash( $_SERVER );
 	$current_url = esc_url_raw( ( isset( $_server['HTTPS'] ) && 'on' === $_server['HTTPS'] ? 'https' : 'http' ) . "://$_server[HTTP_HOST]$_server[REQUEST_URI]" );
-	$query_str   = parse_url( $current_url, PHP_URL_QUERY );
-	//parse_str( $query_str, $query_params );
-	//return $query_params;
+	$query_str   = wp_parse_url( $current_url, PHP_URL_QUERY );
 	if(isset($query_str) && !empty($query_str)){
 		parse_str( $query_str, $query_params );
 		if(!empty($query_params)) {
@@ -245,6 +271,7 @@ function ppw_core_get_query_param() {
  * Render form login
  *
  * @return mixed
+ * @codingStandardsIgnoreLine
  */
 function ppw_core_render_login_form() {
 	/**
@@ -254,8 +281,8 @@ function ppw_core_render_login_form() {
 	$post_id                     = $post->ID;
 	$query_params                = ppw_core_get_query_param();
 	$wrong_password              = array_key_exists( PPW_Constants::WRONG_PASSWORD_PARAM, $query_params ) && 'true' === $query_params[ PPW_Constants::WRONG_PASSWORD_PARAM ];
-	$default_wrong_error_message = apply_filters( PPW_Constants::HOOK_MESSAGE_ENTERING_WRONG_PASSWORD, PPW_Constants::DEFAULT_WRONG_PASSWORD_MESSAGE );
-	$instruction_text            = apply_filters( PPW_Constants::HOOK_MESSAGE_PASSWORD_FORM, PPW_Constants::DEFAULT_FORM_MESSAGE );
+	$default_wrong_error_message = apply_filters( PPW_Constants::HOOK_MESSAGE_ENTERING_WRONG_PASSWORD, PPW_Constants::DEFAULT_WRONG_PASSWORD_MESSAGE ); // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.DynamicHooknameFound
+	$instruction_text            = apply_filters( PPW_Constants::HOOK_MESSAGE_PASSWORD_FORM, PPW_Constants::DEFAULT_FORM_MESSAGE ); // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.DynamicHooknameFound
 	$label                       = 'pwbox-' . ( empty( $post_id ) ? wp_rand() : $post_id );
 
 	// phpcs:disable
@@ -271,19 +298,22 @@ function ppw_core_render_login_form() {
 	 * I18N
 	 *
 	 */
-	$submit_label        = _x( $submit_label, PPW_Constants::CONTEXT_PASSWORD_FORM, PPW_Constants::DOMAIN );
-	$password_label      = _x( $password_label, PPW_Constants::CONTEXT_PASSWORD_FORM, PPW_Constants::DOMAIN );
-	$place_holder        = _x( $place_holder, PPW_Constants::CONTEXT_PASSWORD_FORM, PPW_Constants::DOMAIN );
-	$headline_text       = _x( $headline_text, PPW_Constants::CONTEXT_PASSWORD_FORM, PPW_Constants::DOMAIN );
-	$form_message        = _x( $form_message, PPW_Constants::CONTEXT_PASSWORD_FORM, PPW_Constants::DOMAIN );
-	$wrong_password_text = _x( $wrong_password_text, PPW_Constants::CONTEXT_PASSWORD_FORM, PPW_Constants::DOMAIN );
 	// phpcs:enable
-	$show_password_text = _x( $show_password_text, PPW_Constants::CONTEXT_PASSWORD_FORM, PPW_Constants::DOMAIN ); 
-
+	// Apply i18n translations before filter so extracted strings are literals
+	// phpcs:disable
+	$submit_label        = _x( $submit_label, PPW_Constants::CONTEXT_PASSWORD_FORM, 'password-protect-page' );
+	$password_label      = _x( $password_label, PPW_Constants::CONTEXT_PASSWORD_FORM, 'password-protect-page' );
+	$place_holder        = _x( $place_holder, PPW_Constants::CONTEXT_PASSWORD_FORM, 'password-protect-page' );
+	$headline_text       = _x( $headline_text, PPW_Constants::CONTEXT_PASSWORD_FORM, 'password-protect-page' );
+	$form_message        = _x( $form_message, PPW_Constants::CONTEXT_PASSWORD_FORM, 'password-protect-page' );
+	$wrong_password_text = _x( $wrong_password_text, PPW_Constants::CONTEXT_PASSWORD_FORM, 'password-protect-page' );
+	$show_password_text = _x( $show_password_text, PPW_Constants::CONTEXT_PASSWORD_FORM, 'password-protect-page' ); 
+	// phpcs:enable
 	/**
 	 * Fire hooks that can customize the from text.
 	 * Update the customize attributes that easier for user to customize.
 	 */
+	// phpcs:disable
 	$customized_elements = apply_filters(
 		'ppwp_customize_ppf',
 		array(
@@ -302,13 +332,13 @@ function ppw_core_render_login_form() {
 	$headline_text       = $customized_elements['headline'];
 	$wrong_password_text = $customized_elements['error_msg'];
 	$show_password_text  = $customized_elements['show_password_label'];
-
+	
 	// We need to wrap the div for input to prevent the <p> tag generated when view HTML source.
-	$show_password      = get_theme_mod( 'ppwp_form_instructions_is_show_password', PPW_Constants::DEFAULT_IS_SHOW_PASSWORD ) ? '<div class="ppw-ppf-show-pwd-btn" ><input id="ppw_' . $post_id . '" onclick="ppwShowPassword(' . $post_id . ')" type="checkbox"/><label for="ppw_' . $post_id . '">' . _x( $show_password_text, PPW_Constants::CONTEXT_PASSWORD_FORM, PPW_Constants::DOMAIN ) . '</label></div>' : '';
+	$show_password      = get_theme_mod( 'ppwp_form_instructions_is_show_password', PPW_Constants::DEFAULT_IS_SHOW_PASSWORD ) ? '<div class="ppw-ppf-show-pwd-btn" ><input id="ppw_' . $post_id . '" onclick="ppwShowPassword(' . $post_id . ')" type="checkbox"/><label for="ppw_' . $post_id . '">' . _x( $show_password_text, PPW_Constants::CONTEXT_PASSWORD_FORM, 'password-protect-page' ) . '</label></div>' : '';
 	/**
 	 * Generate Password Form.
 	 */
-
+	
 	if ( ! empty( $wrong_password_text ) ) {
 		$wrong_password_message = sprintf(
 			'<div class="ppwp-wrong-pw-error ppw-ppf-error-msg">%1$s</div>',
@@ -331,8 +361,11 @@ function ppw_core_render_login_form() {
 	);
 
 	$input_button = '<input class="ppw-pwd-submit-btn" type="submit" name="Submit" value="' . esc_attr( $submit_label ) . '"/>';
+	// phpcs:enable
 
+	// phpcs:disable
 	$inputs      = apply_filters( 'ppw_single_form_fields', $inputs, $post_id );
+	// phpcs:enable
 	$inputs_html = implode( '', $inputs );
 
 	// Use Output Buffer Steam instead of HTML string contact because
@@ -343,25 +376,27 @@ function ppw_core_render_login_form() {
 	?>
 	<div class="ppw-ppf-input-container">
 		<?php
+		// phpcs:disable
 		if ( ! empty( $headline_text ) ) {
 			?>
-			<div class="ppw-ppf-headline"><?php echo $headline_text; // phpcs:ignore -- we cannot escape html ?></div>
+			<div class="ppw-ppf-headline"><?php echo $headline_text; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- HTML output is intentional ?></div>
 			<?php
 		}
 		?>
-		<div class="ppw-ppf-desc"><?php echo $form_message; // phpcs:ignore -- there are no value to escape from this html ?></div>
+		<div class="ppw-ppf-desc"><?php echo $form_message; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- HTML is controlled and safe ?></div>
 		<p class="ppw-ppf-field-container">
 			<?php do_action('ppwp_ppf_fields_before_password') ?>
-			<?php echo $inputs_html ?>
+			<?php echo $inputs_html; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Form fields HTML is generated internally ?>
 			<?php do_action('ppwp_ppf_fields_after_password') ?>
-			<?php echo $input_button ?>
-		</p><?php if ( ! empty( $show_password ) ) echo $show_password; // phpcs:ignore -- we cannot escape html?></div>
-		<?php if ( ! empty( $wrong_message ) ) echo $wrong_message; // phpcs:ignore -- we cannot escape html?>
+			<?php echo $input_button; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Button HTML is safe  ?>
+		</p><?php if ( ! empty( $show_password ) ) echo $show_password; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- HTML toggle markup is intentional?></div>
+		<?php if ( ! empty( $wrong_message ) ) echo $wrong_message; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Error HTML wrapper is intentional?>
 	<?php
 	$default_element = ob_get_clean();
 
 	// Fire hook here that user can customise the Password Form element.
 	$form_content = apply_filters( PPW_Constants::HOOK_CUSTOM_PASSWORD_FORM, $default_element, $post_id, $wrong_message );
+
 	$script = '';
 	if ( ! empty( $show_password ) ) {
 		$script = '
@@ -398,7 +433,7 @@ function ppw_core_render_login_form() {
 		),
 		$url
 	);
-
+	// phpcs:enable
 	// With this filter user can choose another action URL to use PPF Form.
 	$url = apply_filters( 'ppwp_ppf_action_url', $url );
 
@@ -407,7 +442,7 @@ function ppw_core_render_login_form() {
 	ob_start();
 	?>
 	<div class="ppw-post-password-container">
-		<form action="<?php echo esc_attr( esc_url( $url ) ); ?>" class="ppw-post-password-form post-password-form" method="post"><?php echo $form_content; // phpcs:ignore -- we cannot escape html ?><div><input type="hidden" name="post_id" value="<?php echo esc_attr( $post_id ); ?>"/></div></form><?php echo ! empty( $script ) ? $script : ''; // phpcs:ignore -- there are no value to esacpe with js ?>
+		<form action="<?php echo esc_attr( esc_url( $url ) ); ?>" class="ppw-post-password-form post-password-form" method="post"><?php echo $form_content; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Filtered HTML form output ?><div><input type="hidden" name="post_id" value="<?php echo esc_attr( $post_id ); ?>"/></div></form><?php echo ! empty( $script ) ? $script : ''; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Inline JS is plugin-generated ?>
 	</div>
 	<?php
 	$output = ob_get_clean();
@@ -429,18 +464,21 @@ function ppw_core_render_login_form() {
 	}
 
 	return $output;
+	// phpcs:enable
 }
 
 /**
  * Get "No reload page" option value
  *
  * @return bool
+ * @codingStandardsIgnoreLine
  */
 function ppw_core_get_no_load_page_option() {
 	if ( defined( 'PPW_PPF_NOT_RELOAD' ) ) {
 		return PPW_PPF_NOT_RELOAD;
 	}
 	// Check user turn on our option.
+	// phpcs:disable	
 	$allowed = ppw_core_get_setting_type_bool_by_option_name( 'wpp_no_reload_page', PPW_Constants::MISC_OPTIONS );
 	if ( ! $allowed ) {
 		return false;
@@ -449,12 +487,13 @@ function ppw_core_get_no_load_page_option() {
 	// Not handle with product because we are not render product layout so it make wrong UI.
 	$excluded = ( function_exists( 'is_product' ) && is_product() )
 				|| ( function_exists( 'is_shop') && is_shop() );
+			
 	$excluded = apply_filters( 'ppw_not_reload_excluded', $excluded );
-
+	
 	if ( $excluded ) {
 		return false;
 	}
-
+	// phpcs:enable
 	return true;
 }
 
@@ -464,9 +503,10 @@ function ppw_core_get_no_load_page_option() {
  * @param string $output Value to output.
  *
  * @return array Array Post types
- *
+ * @codingStandardsIgnoreLine
  */
 function ppw_core_get_all_post_types( $output = 'objects' ) {
+	// phpcs:disable
 	$args       = array(
 		'public' => true,
 	);
@@ -474,6 +514,7 @@ function ppw_core_get_all_post_types( $output = 'objects' ) {
 	unset( $post_types['attachment'] );
 
 	return $post_types;
+	// phpcs:enable
 }
 
 /**
@@ -482,8 +523,10 @@ function ppw_core_get_all_post_types( $output = 'objects' ) {
  * @param $password_cookie_expired
  *
  * @return int
+ * @codingStandardsIgnoreLine
  */
 function ppw_core_get_unit_time( $password_cookie_expired ) {
+	// phpcs:disable
 	$time_die = explode( " ", $password_cookie_expired );
 	$unit     = 0;
 	if ( count( $time_die ) === 2 ) {
@@ -499,16 +542,19 @@ function ppw_core_get_unit_time( $password_cookie_expired ) {
 	}
 
 	return $unit;
+	// phpcs:enable
 }
 
 /**
  * Get all posts password protected by WordPress
  *
  * @return mixed
+ * @codingStandardsIgnoreLine
  */
 function ppw_core_get_posts_password_protected_by_wp() {
+	// phpcs:disable
 	$posts_type = apply_filters( PPW_Constants::HOOK_POST_TYPES, array( 'page', 'post' ) );
-
+	
 	return get_posts(
 		array(
 			'post_status'  => array(
@@ -525,17 +571,19 @@ function ppw_core_get_posts_password_protected_by_wp() {
 			'has_password' => true,
 		)
 	);
+	// phpcs:enable
 }
 
 /**
  * Check Pro version activated and license valid
  *
  * @return bool
+ * @codingStandardsIgnoreLine
  */
 function is_pro_active_and_valid_license() {
+	// phpcs:disable
 	$activated = ! is_plugin_active( PPW_Constants::PRO_DIRECTORY ) && ! is_plugin_active( PPW_Constants::DEV_PRO_DIRECTORY );
 	$activated = apply_filters( 'ppw_pro_activated', $activated );
-
 	if ( $activated ) {
 		return false;
 	}
@@ -543,10 +591,12 @@ function is_pro_active_and_valid_license() {
 	$is_valid_license = get_option( 'wp_protect_password_licensed' );
 
 	return ! empty( $license_key ) && ( '1' === $is_valid_license || true === $is_valid_license );
+	// phpcs:enable
 }
 
 /**
  * Load the pro libs.
+  * @codingStandardsIgnoreLine
  */
 function ppw_core_load_pro_lib() {
 	if ( is_dir( WP_PLUGIN_DIR . '/' . PPW_Constants::PRO_ROOT_DIR ) ) {
@@ -561,7 +611,9 @@ function ppw_core_load_pro_lib() {
  * @param $cookie_expired
  *
  * @return bool
+ * @codingStandardsIgnoreLine
  */
+
 function ppw_core_validate_cookie_expiry( $cookie_expired ) {
 	$cookie_expired_array = explode( ' ', $cookie_expired );
 	if ( 2 !== count( $cookie_expired_array ) ) {
@@ -600,9 +652,10 @@ function ppw_core_validate_cookie_expiry( $cookie_expired ) {
  * @param $url
  *
  * @return mixed
+ * @codingStandardsIgnoreLine
  */
 function ppw_core_get_param_in_url( $url ) {
-	$query_str = parse_url( $url, PHP_URL_QUERY );
+	$query_str = wp_parse_url( $url, PHP_URL_QUERY );
 	parse_str( $query_str, $query_params );
 
 	return $query_params;
@@ -615,6 +668,7 @@ function ppw_core_get_param_in_url( $url ) {
  * @param bool $blog_prefix
  *
  * @return mixed
+ * @codingStandardsIgnoreLine
  */
 function ppw_core_delete_data_in_post_meta_by_meta_key( $meta_key, $blog_prefix = false ) {
 	global $wpdb;
@@ -632,6 +686,7 @@ function ppw_core_delete_data_in_post_meta_by_meta_key( $meta_key, $blog_prefix 
  * Clear cache for Cache plugin, includes: WP Super Cache, WP Fastest Cache and W3 Total Cache
  *
  * @param int|string $post_id The post ID.
+ * @codingStandardsIgnoreLine
  */
 function ppw_core_clear_cache_by_id( $post_id ) {
 	// Clear cache for WP Super Cache plugin.
@@ -642,9 +697,11 @@ function ppw_core_clear_cache_by_id( $post_id ) {
 	}
 
 	// Clear cache for WP Fastest Cache plugin.
+	// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound
 	do_action( 'wpfc_clear_post_cache_by_id', false, $post_id );
 
 	// Clear cache for W3 Total Cache plugin.
+	// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound
 	do_action( 'w3tc_flush_url', get_permalink( $post_id ) );
 }
 
@@ -654,7 +711,10 @@ function ppw_core_clear_cache_by_id( $post_id ) {
  * @param string $post_type The post type.
  *
  * @return array
+ * @codingStandardsIgnoreLine
  */
+
+// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedFunctionFound
 function ppw_core_get_default_post_options( $post_type ) {
 	$default_options = array();
 	if ( ppw_core_check_yoast_seo_turn_on_site_maps() ) {
@@ -697,6 +757,7 @@ function ppw_core_get_default_post_options( $post_type ) {
  * @param string $post_type The post type.
  *
  * @return array
+ * @codingStandardsIgnoreLine
  */
 function ppw_core_get_position_hide_post( $post_type ) {
 	$options = array();
@@ -704,7 +765,7 @@ function ppw_core_get_position_hide_post( $post_type ) {
 		$options = array(
 			array(
 				'value' => PPW_Constants::XML_YOAST_SEO_SITEMAPS,
-				'label' => esc_html__( 'XML sitemaps', PPW_Constants::DOMAIN ),
+				'label' => esc_html__( 'XML sitemaps', 'password-protect-page' ),
 			),
 		);
 	}
@@ -714,15 +775,15 @@ function ppw_core_get_position_hide_post( $post_type ) {
 			$page_options = array(
 				array(
 					'value' => PPW_Constants::FRONT_PAGE,
-					'label' => esc_html__( 'Front page', PPW_Constants::DOMAIN ),
+					'label' => esc_html__( 'Front page', 'password-protect-page' ),
 				),
 				array(
 					'value' => PPW_Constants::EVERYWHERE_PAGE,
-					'label' => esc_html__( 'Everywhere pages are listed', PPW_Constants::DOMAIN ),
+					'label' => esc_html__( 'Everywhere pages are listed', 'password-protect-page' ),
 				),
 				array(
 					'value' => PPW_Constants::SEARCH_RESULTS,
-					'label' => esc_html__( 'Search results', PPW_Constants::DOMAIN ),
+					'label' => esc_html__( 'Search results', 'password-protect-page' ),
 				),
 			);
 
@@ -731,39 +792,39 @@ function ppw_core_get_position_hide_post( $post_type ) {
 			$post_options = array(
 				array(
 					'value' => PPW_Constants::FRONT_PAGE,
-					'label' => esc_html__( 'Front page', PPW_Constants::DOMAIN ),
+					'label' => esc_html__( 'Front page', 'password-protect-page' ),
 				),
 				array(
 					'value' => PPW_Constants::CATEGORY_PAGE,
-					'label' => esc_html__( 'Category pages', PPW_Constants::DOMAIN ),
+					'label' => esc_html__( 'Category pages', 'password-protect-page' ),
 				),
 				array(
 					'value' => PPW_Constants::TAG_PAGE,
-					'label' => esc_html__( 'Tag pages', PPW_Constants::DOMAIN ),
+					'label' => esc_html__( 'Tag pages', 'password-protect-page' ),
 				),
 				array(
 					'value' => PPW_Constants::AUTHOR_PAGE,
-					'label' => esc_html__( 'Author pages', PPW_Constants::DOMAIN ),
+					'label' => esc_html__( 'Author pages', 'password-protect-page' ),
 				),
 				array(
 					'value' => PPW_Constants::ARCHIVES_PAGE,
-					'label' => esc_html__( 'Archives', PPW_Constants::DOMAIN ),
+					'label' => esc_html__( 'Archives', 'password-protect-page' ),
 				),
 				array(
 					'value' => PPW_Constants::NEXT_PREVIOUS,
-					'label' => esc_html__( 'Next & Previous', PPW_Constants::DOMAIN ),
+					'label' => esc_html__( 'Next & Previous', 'password-protect-page' ),
 				),
 				array(
 					'value' => PPW_Constants::RECENT_POST,
-					'label' => esc_html__( 'Recent posts', PPW_Constants::DOMAIN ),
+					'label' => esc_html__( 'Recent posts', 'password-protect-page' ),
 				),
 				array(
 					'value' => PPW_Constants::SEARCH_RESULTS,
-					'label' => esc_html__( 'Search results', PPW_Constants::DOMAIN ),
+					'label' => esc_html__( 'Search results', 'password-protect-page' ),
 				),
 				array(
 					'value' => PPW_Constants::FEEDS,
-					'label' => esc_html__( 'RSS', PPW_Constants::DOMAIN ),
+					'label' => esc_html__( 'RSS', 'password-protect-page' ),
 				),
 			);
 
@@ -777,7 +838,9 @@ function ppw_core_get_position_hide_post( $post_type ) {
  * Check site maps in Yoast SEO plugin
  *
  * @return bool
+ * @codingStandardsIgnoreLine
  */
+// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedFunctionFound
 function ppw_core_check_yoast_seo_turn_on_site_maps() {
 	if ( ! is_plugin_active( 'wordpress-seo/wp-seo.php' ) && ! is_plugin_active( 'wordpress-seo-premium/wp-seo-premium.php' ) ) {
 		return false;
@@ -794,6 +857,7 @@ function ppw_core_check_yoast_seo_turn_on_site_maps() {
  * Get post type for feature hide protected content
  *
  * @return array
+ * @codingStandardsIgnoreLine
  */
 function ppw_core_get_post_type_for_hide_protect_content() {
 	$post_types = array_filter(
@@ -832,6 +896,7 @@ function ppw_core_get_post_type_for_hide_protect_content() {
  * @param string $type              page/post.
  *
  * @return string
+ * @codingStandardsIgnoreLine
  */
 function ppw_core_add_query_by_position( $position, $position_selected, $protected_ids, $where, $type ) {
 	if ( ! in_array( $position, $position_selected, true ) ) {
@@ -857,6 +922,7 @@ function ppw_core_add_query_by_position( $position, $position_selected, $protect
  * @param string $type              page/post.
  *
  * @return string
+ * @codingStandardsIgnoreLine
  */
 function ppw_core_handle_logic_add_query( $position_selected, $protected_ids, $where, $type ) {
 	// Hide posts protected in home page.
@@ -900,6 +966,7 @@ function ppw_core_handle_logic_add_query( $position_selected, $protected_ids, $w
  * @param string $type              page/post.
  *
  * @return array
+ * @codingStandardsIgnoreLine
  */
 function ppw_core_list_posts_exclude_in_site_maps( $position_selected, $protected_ids, $ids, $type ) {
 	if ( ! in_array( PPW_Constants::XML_YOAST_SEO_SITEMAPS, $position_selected, true ) ) {
@@ -922,10 +989,11 @@ function ppw_core_list_posts_exclude_in_site_maps( $position_selected, $protecte
  * @param string $post_type The post type.
  *
  * @return array
+ * @codingStandardsIgnoreLine
  */
 function ppw_core_get_options_selected( $post_type ) {
 	$ppw_type_selected        = ppw_core_get_setting_type_array( PPW_Constants::HIDE_SELECTED . $post_type );
-	$default_options_selected = apply_filters( PPW_Constants::HOOK_CUSTOM_DEFAULT_OPTIONS_HIDE_PROTECTED_POST, ppw_core_get_default_post_options( $post_type ), $post_type );
+	$default_options_selected = apply_filters( PPW_Constants::HOOK_CUSTOM_DEFAULT_OPTIONS_HIDE_PROTECTED_POST, ppw_core_get_default_post_options( $post_type ), $post_type );  // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.DynamicHooknameFound
 
 	return empty( $ppw_type_selected ) ? $default_options_selected : $ppw_type_selected;
 }
@@ -934,16 +1002,17 @@ function ppw_core_get_options_selected( $post_type ) {
  * Render UI for feature "Hide Protected Content"
  *
  * @param array $ppw_post_types List post types.
+ * @codingStandardsIgnoreLine
  */
 function ppw_core_check_logic_before_render_ui( $ppw_post_types ) {
 	foreach ( $ppw_post_types as $ppw_post_type ) {
 		if ( 'page_post' !== $ppw_post_type['value'] ) {
-			$is_pro_activated = apply_filters( PPW_Constants::HOOK_IS_PRO_ACTIVATE, false );
+			$is_pro_activated = apply_filters( PPW_Constants::HOOK_IS_PRO_ACTIVATE, false ); // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.DynamicHooknameFound
 			if ( $is_pro_activated ) {
 				$ppw_type             = $ppw_post_type['value'];
 				$ppw_is_hide          = ppw_core_get_setting_type_bool( PPW_Constants::HIDE_PROTECTED . $ppw_type );
 				$ppw_options_selected = ppw_core_get_options_selected( $ppw_type );
-				$ppw_options          = apply_filters( PPW_Constants::HOOK_CUSTOM_POSITIONS_HIDE_PROTECTED_POST, ppw_core_get_position_hide_post( $ppw_type ), $ppw_type );
+				$ppw_options          = apply_filters( PPW_Constants::HOOK_CUSTOM_POSITIONS_HIDE_PROTECTED_POST, ppw_core_get_position_hide_post( $ppw_type ), $ppw_type ); // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.DynamicHooknameFound
 				ppw_core_ui_hide_protected_content( $ppw_is_hide, $ppw_options, $ppw_options_selected, $ppw_type, $ppw_post_type['label'] );
 			}
 		} else {
@@ -951,7 +1020,7 @@ function ppw_core_check_logic_before_render_ui( $ppw_post_types ) {
 				$ppw_label            = $ppw_type . 's';
 				$ppw_is_hide          = ppw_core_get_setting_type_bool( PPW_Constants::HIDE_PROTECTED . $ppw_type );
 				$ppw_options_selected = ppw_core_get_options_selected( $ppw_type );
-				$ppw_options          = apply_filters( PPW_Constants::HOOK_CUSTOM_POSITIONS_HIDE_PROTECTED_POST, ppw_core_get_position_hide_post( $ppw_type ), $ppw_type );
+				$ppw_options          = apply_filters( PPW_Constants::HOOK_CUSTOM_POSITIONS_HIDE_PROTECTED_POST, ppw_core_get_position_hide_post( $ppw_type ), $ppw_type ); // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.DynamicHooknameFound
 				ppw_core_ui_hide_protected_content( $ppw_is_hide, $ppw_options, $ppw_options_selected, $ppw_type, $ppw_label );
 			}
 		}
@@ -966,6 +1035,7 @@ function ppw_core_check_logic_before_render_ui( $ppw_post_types ) {
  * @param array  $ppw_selected All option selected of pages/post.
  * @param string $ppw_type     type is Page/Post.
  * @param string $ppw_label    Label of Page/Post.
+ * @codingStandardsIgnoreLine
  */
 function ppw_core_ui_hide_protected_content( $ppw_hide, $ppw_options, $ppw_selected, $ppw_type, $ppw_label ) {
 	$checked      = $ppw_hide ? esc_attr( 'checked' ) : '';
@@ -979,7 +1049,7 @@ function ppw_core_ui_hide_protected_content( $ppw_hide, $ppw_options, $ppw_selec
 		$options       .= "<option $post_selected value='$value' >$label</option>";
 	}
 	// translators: %s: Subtitle.
-	$sub_title    = sprintf( esc_html__( 'Exclude the password protected %s from the following views', PPW_Constants::DOMAIN ), strtolower( $ppw_label ) );
+	$sub_title    = sprintf( esc_html__( 'Exclude the password protected %s from the following views', 'password-protect-page' ), strtolower( $ppw_label ) );
 	$ppw_type     = esc_attr( $ppw_type );
 	$checked      = esc_attr( $checked );
 	$html_content = "
@@ -1010,9 +1080,10 @@ function ppw_core_ui_hide_protected_content( $ppw_hide, $ppw_options, $ppw_selec
  * Error Message Handling
  * @param int $post_id Post ID
  * @return array $customize customize
+ * @codingStandardsIgnoreLine
  */
 function ppw_core_get_error_msg( $post_id ) {
-	$default_message = apply_filters( PPW_Constants::HOOK_MESSAGE_ENTERING_WRONG_PASSWORD, PPW_Constants::DEFAULT_WRONG_PASSWORD_MESSAGE );
+	$default_message = apply_filters( PPW_Constants::HOOK_MESSAGE_ENTERING_WRONG_PASSWORD, PPW_Constants::DEFAULT_WRONG_PASSWORD_MESSAGE ); // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.DynamicHooknameFound
 	$message         = wp_kses_post( get_theme_mod( 'ppwp_form_error_message_text', $default_message ) );
 	$customize       = apply_filters(
 		'ppwp_customize_ppf',

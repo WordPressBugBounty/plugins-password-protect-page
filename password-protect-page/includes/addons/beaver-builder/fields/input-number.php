@@ -1,3 +1,8 @@
+<?php 
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+?>
 <div class="fl-compound-field-setting fl-animation-field-delay" style="width: 40%">
 	<div class="fl-unit-field-inputs">
 		<div class="fl-unit-field-input">

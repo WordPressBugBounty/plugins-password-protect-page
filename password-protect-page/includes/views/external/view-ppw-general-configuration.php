@@ -1,4 +1,8 @@
 <?php
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+// phpcs:disable WordPress.NamingConventions.PrefixAllGlobals
 /**
  * General Configuration Settings
  */
@@ -14,8 +18,8 @@ $score         = PPW_Recaptcha::get_instance()->get_limit_score();
 		<td colspan="2">
 			<div style="margin-bottom: 1rem">
 				<h3 style="text-transform: none; margin-bottom: 0.5rem">
-				<?php echo esc_html__('Configure reCAPTCHA key',PPW_Constants::DOMAIN); ?></h3>
-				<a rel="noopener" target="_blank" href="https://g.co/recaptcha/v3"><?php echo esc_html__('Get the Site Key and Secret Key',PPW_Constants::DOMAIN);?></a><?php echo esc_html__('from Google',PPW_Constants::DOMAIN)?> 
+				<?php echo esc_html__('Configure reCAPTCHA key','password-protect-page'); ?></h3>
+				<a rel="noopener" target="_blank" href="https://g.co/recaptcha/v3"><?php echo esc_html__('Get the Site Key and Secret Key','password-protect-page');?></a><?php echo esc_html__('from Google','password-protect-page')?> 
 			</div>
 		</td>
 	</table>
@@ -29,11 +33,11 @@ $score         = PPW_Recaptcha::get_instance()->get_limit_score();
 				</td> 
 				<td>
 					<p>
-						<label><?php echo esc_html__( 'reCAPTCHA v3', PPW_Constants::DOMAIN ) ?></label>
+						<label><?php echo esc_html__( 'reCAPTCHA v3', 'password-protect-page' ) ?></label>
 					</p>
 					<span>
 					<p>
-						<label><?php echo esc_html__( 'Site Key', PPW_Constants::DOMAIN ) ?></label>
+						<label><?php echo esc_html__( 'Site Key', 'password-protect-page' ) ?></label>
 					</p>
 					<span class="ppwp-recaptcha-input">
                         <input id="<?php echo esc_attr( PPW_Constants::RECAPTCHA_API_KEY ); ?>" type="text"
@@ -41,7 +45,7 @@ $score         = PPW_Recaptcha::get_instance()->get_limit_score();
 							   <div id="ppwp-error-require-v3-key" style="display: none; color: red; position: absolute; font-size: 12px;">This field is required.</div>
 					</span>
 					<p>
-						<label class="ppwp-title"><?php echo esc_html__( 'Secret Key', PPW_Constants::DOMAIN ) ?></label>
+						<label class="ppwp-title"><?php echo esc_html__( 'Secret Key', 'password-protect-page' ) ?></label>
 					</p>
 					<span class="ppwp-recaptcha-input">
                         <input id="<?php echo esc_attr( PPW_Constants::RECAPTCHA_API_SECRET ); ?>" type="text"
@@ -49,7 +53,7 @@ $score         = PPW_Recaptcha::get_instance()->get_limit_score();
 					</span>
 					<div id="ppwp-error-require-v3-secret" style="display: none; color: red; position: absolute; font-size: 12px;">This field is required.</div>
 					<p id="recaptcha-score-container">
-						<label class="ppwp-title"><?php echo esc_html__( 'Threshold', PPW_Constants::DOMAIN ) ?></label>
+						<label class="ppwp-title"><?php echo esc_html__( 'Threshold', 'password-protect-page' ) ?></label>
 							Define users' score that will pass reCAPTCHA protection
 						<span class="ppw-recaptcha-score">
 							<select class="ppw_main_container select"
@@ -83,25 +87,25 @@ $score         = PPW_Recaptcha::get_instance()->get_limit_score();
 				</td>
 				<td>
 					<p>
-						<label><?php echo esc_html__( 'reCAPTCHA v2 - Checkbox', PPW_Constants::DOMAIN ); ?></label>
+						<label><?php echo esc_html__( 'reCAPTCHA v2 - Checkbox', 'password-protect-page' ); ?></label>
 					</p>
 					<span>
 					<p>
-						<label><?php echo esc_html__( 'Site Key', PPW_Constants::DOMAIN ) ?></label>
+						<label><?php echo esc_html__( 'Site Key', 'password-protect-page' ) ?></label>
 					</p>
 					<span class="ppwp-recaptcha-input">
                         <input id="<?php echo esc_attr( PPW_Constants::RECAPTCHA_V2_CHECKBOX_API_KEY ); ?>" type="text"
                                value="<?php echo esc_attr( $api_key_v2 ); ?>"/>
 					</span>
-					<div id="ppwp-error-require-v2-key" style="display: none; color: red; position: absolute; font-size: 12px;"><?php echo esc_html__('This field is required.',PPW_Constants::DOMAIN);?> </div>
+					<div id="ppwp-error-require-v2-key" style="display: none; color: red; position: absolute; font-size: 12px;"><?php echo esc_html__('This field is required.','password-protect-page');?> </div>
 					<p>
-						<label class="ppwp-title"><?php echo esc_html__( 'Secret Key', PPW_Constants::DOMAIN ) ?></label>
+						<label class="ppwp-title"><?php echo esc_html__( 'Secret Key', 'password-protect-page' ) ?></label>
 					</p>
 					<span class="ppwp-recaptcha-input">
                         <input id="<?php echo esc_attr( PPW_Constants::RECAPTCHA_V2_CHECKBOX_API_SECRET ); ?>" type="text"
                                value="<?php echo esc_attr( $api_secret_v2 ); ?>"/>
 					</span>
-					<div id="ppwp-error-require-v2-secret" style="display: none; color: red; position: absolute; font-size: 12px;"><?php echo esc_html__('This field is required.',PPW_Constants::DOMAIN);?></div>
+					<div id="ppwp-error-require-v2-secret" style="display: none; color: red; position: absolute; font-size: 12px;"><?php echo esc_html__('This field is required.','password-protect-page');?></div>
 				</td>
 			</tr>
 			<tr>

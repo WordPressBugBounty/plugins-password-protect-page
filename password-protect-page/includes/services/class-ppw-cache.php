@@ -1,7 +1,9 @@
 <?php
-
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
 use W3TC\Dispatcher;
-
+// phpcs:disable WordPress.NamingConventions.PrefixAllGlobals
 if ( ! class_exists( 'PPW_Cache_Services' ) ) {
 	/**
 	 * Class PPW_Free_Handle_Cache
@@ -133,7 +135,7 @@ if ( ! class_exists( 'PPW_Cache_Services' ) ) {
 		 */
 		function get_uri_by_post_id( $post_id ) {
 			$permalink = get_permalink( $post_id );
-			$parse_url = parse_url( $permalink );
+			$parse_url = wp_parse_url( $permalink );
 			$uri       = $parse_url['path'];
 			$uri       = explode( '/', $uri );
 			$uri       = ! empty( $uri[ count( $uri ) - 1 ] ) ? $uri[ count( $uri ) - 1 ] : $uri[ count( $uri ) - 2 ];
@@ -233,7 +235,7 @@ if ( ! class_exists( 'PPW_Cache_Services' ) ) {
 					'type'    => 'cookie'
 				) );
 
-				add_option( "WpFastestCacheExclude", json_encode( $ppwp_cookie ), null, "yes" );
+				add_option( "WpFastestCacheExclude", json_encode( $ppwp_cookie ), '', "yes" );
 				$fastest_cache->modify_htaccess_for_exclude();
 			}
 		}

@@ -1,7 +1,12 @@
 <?php
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
 /**
  * PPWP Settings
  */
+// phpcs:disable WordPress.NamingConventions.PrefixAllGlobals
+// phpcs:disable
 if ( ! class_exists( "PPW_Settings" ) ) {
 	class PPW_Settings {
 		/**
@@ -9,16 +14,20 @@ if ( ! class_exists( "PPW_Settings" ) ) {
 		 */
 		public function render_ui() {
 			$_get        = wp_unslash( $_GET ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- We no need to handle nonce verification for render UI.
-			$plugin_info = apply_filters( PPW_Constants::HOOK_PLUGIN_INFO, array(
-				'name'    =>  __('Password Protect WordPress - PPWP'),
-				'version' => PPW_VERSION,
-			) );
+			$plugin_info = apply_filters(
+				PPW_Constants::HOOK_PLUGIN_INFO,
+				array(
+					'name'    => __( 'Password Protect WordPress - PPWP', 'password-protect-page' ),
+					'version' => PPW_VERSION,
+				)
+			);
+
 			?>
 			<div class="wrap">
 				<div id="icon-themes" class="icon32"></div>
 				<h2>
-					<?php esc_html_e( $plugin_info['name'], PPW_Constants::DOMAIN ); ?>
-					<span class="ppwp_version"><?php esc_html_e( $plugin_info['version'] ) ?></span>
+					<?php echo esc_html( $plugin_info['name'] ); ?>
+					<span class="ppwp_version"><?php echo esc_html( $plugin_info['version'] ); ?></span>
 				</h2>
 				<?php
 				$default_tab  = apply_filters( PPW_Constants::HOOK_DEFAULT_TAB, 'general' );
@@ -27,7 +36,7 @@ if ( ! class_exists( "PPW_Settings" ) ) {
 				$this->render_content( $activate_tab );
 				?>
 			</div>
-			<?php
+			<?php			
 		}
 
 		/**
@@ -41,30 +50,33 @@ if ( ! class_exists( "PPW_Settings" ) ) {
 				array(
 					array(
 						'tab'      => 'general',
-						'tab_name' => 'General',
+						'tab_name' => __( 'General', 'password-protect-page' ),
 					),
 					array(
 						'tab'      => 'misc',
-						'tab_name' => 'Advanced',
+						'tab_name' => __( 'Advanced', 'password-protect-page' ),
 					),
 					array(
 						'tab'      => 'entire_site',
-						'tab_name' => 'Sitewide',
+						'tab_name' => __( 'Sitewide', 'password-protect-page' ),
 					),
 					array(
 						'tab'      => 'shortcodes',
-						'tab_name' => 'Shortcodes',
+						'tab_name' => __( 'Shortcodes', 'password-protect-page' ),
 					),
 					array(
 						'tab'      => 'master_passwords',
-						'tab_name' => 'Master Passwords',
+						'tab_name' => __( 'Master Passwords', 'password-protect-page' ),
 					),
 					array(
 						'tab'      => 'troubleshooting',
-						'tab_name' => 'Troubleshooting',
-					)
+						'tab_name' => __( 'Troubleshooting', 'password-protect-page' ),
+					),
 				)
 			);
+
+
+
 			?>
 			<h2 class="ppwp_wrap_tab_title nav-tab-wrapper">
 				<?php
@@ -82,7 +94,7 @@ if ( ! class_exists( "PPW_Settings" ) ) {
 					}
 					?>
 					<a href="?page=<?php echo esc_html( PPW_Constants::MENU_NAME ); ?>&tab=<?php echo esc_attr( $tab['tab'] ); ?>"
-					   class="nav-tab <?php echo $active_tab === $tab['tab'] ? 'nav-tab-active' : ''; ?>"><?php esc_html_e( $tab['tab_name'], PPW_Constants::DOMAIN ); ?></a>
+					   class="nav-tab <?php echo esc_attr( $active_tab === $tab['tab'] ? 'nav-tab-active' : '' ); ?>"><?php echo esc_html( $tab['tab_name'] ); ?></a>
 				<?php } ?>
 			</h2>
 			<?php

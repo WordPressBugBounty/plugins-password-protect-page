@@ -1,10 +1,14 @@
 <?php
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
 /**
  * Created by PhpStorm.
  * User: gaupoit
  * Date: 7/24/19
  * Time: 15:00
  */
+// phpcs:disable WordPress.NamingConventions.PrefixAllGlobals
 if ( ! class_exists( 'PPW_Asset_Services' ) ) {
 
 	class PPW_Asset_Services {

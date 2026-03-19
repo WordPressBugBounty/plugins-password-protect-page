@@ -1,5 +1,7 @@
 <?php
-
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
 if ( ! class_exists( 'PPW_Elementor' ) ) {
 	class PPW_Elementor {
 		/**

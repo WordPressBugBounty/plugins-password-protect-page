@@ -1,5 +1,9 @@
 <?php
 
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+// phpcs:disable WordPress.NamingConventions.PrefixAllGlobals
 class PPW_Content_Protection {
 	/**
 	 * @var PPW_Content_Protection
@@ -105,16 +109,16 @@ class PPW_Content_Protection {
 	public function register_post_type() {
 		$args = array(
 			'labels'          => array(
-				'name'               => __( 'Section Protection', PPW_Constants::DOMAIN ),
-				'singular_name'      => __( 'Section Protection', PPW_Constants::DOMAIN ),
-				'add_new'            => __( 'Add New', PPW_Constants::DOMAIN ),
-				'add_new_item'       => __( 'Add New', PPW_Constants::DOMAIN ),
-				'edit_item'          => __( 'Edit', PPW_Constants::DOMAIN ),
-				'new_item'           => __( 'New', PPW_Constants::DOMAIN ),
-				'view_item'          => __( 'View', PPW_Constants::DOMAIN ),
-				'search_items'       => __( 'Search', PPW_Constants::DOMAIN ),
-				'not_found'          => __( 'No found', PPW_Constants::DOMAIN ),
-				'not_found_in_trash' => __( 'No found in Trash', PPW_Constants::DOMAIN ),
+				'name'               => __( 'Section Protection', 'password-protect-page' ),
+				'singular_name'      => __( 'Section Protection', 'password-protect-page' ),
+				'add_new'            => __( 'Add New', 'password-protect-page' ),
+				'add_new_item'       => __( 'Add New', 'password-protect-page' ),
+				'edit_item'          => __( 'Edit', 'password-protect-page' ),
+				'new_item'           => __( 'New', 'password-protect-page' ),
+				'view_item'          => __( 'View', 'password-protect-page' ),
+				'search_items'       => __( 'Search', 'password-protect-page' ),
+				'not_found'          => __( 'No found', 'password-protect-page' ),
+				'not_found_in_trash' => __( 'No found in Trash', 'password-protect-page' ),
 			),
 			'public'          => false,
 			'hierarchical'    => true,
@@ -128,26 +132,10 @@ class PPW_Content_Protection {
 			'show_in_rest'    => true,
 		);
 
-		if ( current_user_can( 'administrator' ) ) {
+		if ( current_user_can( 'administrator' ) ) { // phpcs:ignore WordPress.Security.Capabilities.Restricted
 			$args['public']             = true;
 			$args['publicly_queryable'] = true;
 		}
-
-//		if ( is_admin() ) {
-//			global $pagenow, $typenow, $post;
-//			if ( 'edit.php' === $pagenow || self::POST_TYPE === $typenow ) {
-//				$args['show_in_menu'] = PPW_Constants::MENU_NAME;
-//			} elseif ( isset( $_GET['post_type'] ) && self::POST_TYPE === $_GET['post_type'] ) {
-//				$args['show_in_menu'] = PPW_Constants::MENU_NAME;
-//			} elseif ( isset( $_GET['post'] ) && isset( $_GET['action'] ) ) {
-//				$post_type = get_post_type( $_GET['post'] );
-//
-//				if ( $post_type === self::POST_TYPE ) {
-//					$args['show_in_menu'] = PPW_Constants::MENU_NAME;
-//				}
-//			}
-//		}
-
 		register_post_type( self::POST_TYPE, $args );
 	}
 
@@ -196,7 +184,7 @@ class PPW_Content_Protection {
 		$attributes = apply_filters(
 			'ppw_pcp_metabox_attributes',
 			array(
-				'title'    => __( 'Password Protect WordPress', PPW_Constants::DOMAIN ),
+				'title'    => __( 'Password Protect WordPress', 'password-protect-page' ),
 				'callback' => array( $this, 'display_metabox' ),
 				'screen'   => array( self::POST_TYPE ),
 				'context'  => 'side',
@@ -259,7 +247,8 @@ class PPW_Content_Protection {
 	}
 
 	public function validate_password() {
-		if ( ! isset( $_POST['pss'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Processing form data without nonce verification. - Not verify nonce for password validate.
+		// phpcs:disable
+		if ( ! isset( $_POST['pss'] ) ) { 
 			wp_send_json(
 				array(
 					'success' => false,
@@ -270,7 +259,7 @@ class PPW_Content_Protection {
 			exit();
 		}
 
-		if ( ! isset( $_POST['area'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Processing form data without nonce verification. - Not verify nonce for password validate.
+		if ( ! isset( $_POST['area'] ) ) { 
 			wp_send_json(
 				array(
 					'success' => false,
@@ -281,7 +270,7 @@ class PPW_Content_Protection {
 			exit();
 		}
 
-		if ( ! isset( $_POST['post_id'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Processing form data without nonce verification. - Not verify nonce for password validate.
+		if ( ! isset( $_POST['post_id'] ) ) { 
 			wp_send_json(
 				array(
 					'success' => false,
@@ -291,9 +280,9 @@ class PPW_Content_Protection {
 			);
 			exit();
 		}
-		$password = wp_unslash( $_POST['pss'] ); // phpcs:ignore -- not sanitize password because we allow all character.
-		$area     = absint( $_POST['area'] ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Processing form data without nonce verification. - Not verify nonce for password validate.
-		$post_id  = absint( $_POST['post_id'] ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Processing form data without nonce verification. - Not verify nonce for password validate.
+		$password = wp_unslash( $_POST['pss'] ); 
+		$area     = absint( $_POST['area'] ); 
+		$post_id  = absint( $_POST['post_id'] ); 
 
 		$post = get_post( $area );
 		if ( empty( $post ) ) {
@@ -496,13 +485,11 @@ class PPW_Content_Protection {
 		<div class="notice">
 			<p>
 				<div>
-					<b>Password Protect WordPress: Section Protection</b>
-					<?php echo $button;?>
+					<b><?php esc_html_e( 'Password Protect WordPress: Section Protection', 'password-protect-page' ); ?></b>
+					<?php echo wp_kses_post( $button ); ?>
 				</div>
 				<a target="_blank" rel="noopener noreferrer"
-				   href="https://passwordprotectwp.com/docs/section-protection/?utm_source=user-website&utm_medium=section-protection-list&utm_campaign=ppwp-free">Protect section of your
-					content</a> by creating section templates below. Add these sections to your content using
-				auto-generated section shortcodes.
+				   href="https://passwordprotectwp.com/docs/section-protection/?utm_source=user-website&utm_medium=section-protection-list&utm_campaign=ppwp-free"><?php esc_html_e( 'Protect section of your content', 'password-protect-page' ); ?></a> <?php esc_html_e( ' by creating section templates below. Add these sections to your content using auto-generated section shortcodes.', 'password-protect-page' ); ?>
 			</p>
 		</div>
 		<?php

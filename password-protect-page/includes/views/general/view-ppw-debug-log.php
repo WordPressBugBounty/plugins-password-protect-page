@@ -1,3 +1,8 @@
+<?php 
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+?>
 <tr class="ppwp-gray-out">
 	<td>
 		<label class="pda_switch" for="ppwp_debug_log_enabled">
@@ -8,7 +13,7 @@
 	</td>
 	<td>
 		<p>
-			<label><?php echo esc_html__( 'Enable Debug Logs', PPW_Constants::DOMAIN ); ?>
+			<label><?php echo esc_html__( 'Enable Debug Logs', 'password-protect-page' ); ?>
 				<span class="ppwp_upgrade_advice">
 					<a rel="noopener" target="_blank" href="https://passwordprotectwp.com/pricing/">
 						<span class="ppwp_dashicons dashicons dashicons-lock">
@@ -17,7 +22,7 @@
 					</a>
 				</span>
 			</label>
-			<?php echo _e( 'Log (fatal) errors of your entire website which speeds up the troubleshooting process when problems occur', PPW_Constants::DOMAIN ); ?>
+			<?php echo esc_html__( 'Log (fatal) errors of your entire website which speeds up the troubleshooting process when problems occur', 'password-protect-page' ); ?>
 		</p>
 	</td>
 </tr>

@@ -1,11 +1,15 @@
 <?php
+if ( ! defined( 'ABSPATH' ) ) {
+    exit;
+}
+// phpcs:disable WordPress.NamingConventions.PrefixAllGlobals
 $html_link         = sprintf(
 	'<a target="_blank" rel="noopener" href="%s">lock parts of your content</a>',
 	'https://passwordprotectwp.com/docs/password-protect-wordpress-content-sections/'
 );
 $desc              = sprintf(
 // translators: %s: Link to documentation.
-	esc_html__( 'Use the following shortcode to %s. Set as many passwords as you’d like to.', PPW_Constants::DOMAIN ),
+	esc_html__( 'Use the following shortcode to %s. Set as many passwords as you’d like to.', 'password-protect-page' ),
 	$html_link
 );
 $link_shortcode    = sprintf(
@@ -14,7 +18,7 @@ $link_shortcode    = sprintf(
 );
 $message_shortcode = sprintf(
 // translators: %s: Link to documentation.
-	__( '%s instead if you\'re using popular page builders, e.g. Elementor and Beaver Builder.', PPW_Constants::DOMAIN ),
+	__( '%s instead if you\'re using popular page builders, e.g. Elementor and Beaver Builder.', 'password-protect-page' ),
 	$link_shortcode
 );
 $_get = wp_unslash( $_GET ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- We no need to handle nonce verification for render UI.
@@ -29,18 +33,18 @@ if ( ! is_pro_active_and_valid_license() ) {
 	$link_pcp = sprintf(
 		'<a target="_blank" rel="noopener" href="%s">%s</a>',
 		'https://passwordprotectwp.com/docs/manage-shortcode-global-passwords/',
-		__( 'PCP global passwords', PPW_Constants::DOMAIN )
+		__( 'PCP global passwords', 'password-protect-page' )
 	);
 
 	$link_stats_addon = sprintf(
 		'<a target="_blank" rel="noopener" href="%s">%s</a>',
 		'https://passwordprotectwp.com/extensions/password-statistics/',
-		__( 'Statistics addon', PPW_Constants::DOMAIN )
+		__( 'Statistics addon', 'password-protect-page' )
 	);
 
 	$message_shortcode_desc = sprintf(
 		/* translators: %1$s: Statistics link*/
-		__( 'To track Partial Content Protection (PCP) password usage, please get %1$s and use %2$s instead.', PPW_Constants::DOMAIN ),
+		__( 'To track Partial Content Protection (PCP) password usage, please get %1$s and use %2$s instead.', 'password-protect-page' ),
 		$link_stats_addon,
 		$link_pcp
 	);

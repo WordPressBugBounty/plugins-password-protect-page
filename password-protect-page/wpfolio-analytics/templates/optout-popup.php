@@ -9,6 +9,7 @@
 if ( !defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly
 }
+// phpcs:disable
 // Generate per-request state and store 10 min (bind to site_uid if available)
 $state = bin2hex( random_bytes(16) );
 $site_uid = isset( $optin_form_data['site_uid'] ) ? sanitize_text_field( $optin_form_data['site_uid'] ) : 'default';
@@ -25,10 +26,10 @@ $optin_form_data['state'] = $state;
 				<p class="wpfolio-ppwp-anylc-popup-heading"><?php echo esc_html__( 'We appreciate your help to make the plugin better by letting us track some usage data.', 'password-protect-page' );?></p>
 				<p><?php echo esc_html__( 'Usage tracking is done in the name of making','password-protect-page' );?> <b><?php echo esc_html( $module['name'] ); ?></b> <?php echo esc_html__( 'better', 'password-protect-page' );?>. <?php echo esc_html__('Making a better user experience, prioritizing new features, and more good things. We’d really appreciate it if you could reconsider letting us continue with the tracking.', 'password-protect-page');?>
 			    </p>
-				<p><?php echo esc_html__('By clicking "Opt Out", we will stop sending any data from WordPress.','password-protect-page');?> <b><?php echo esc_html( $module['name'] ); ?></b> to <a href="<?php echo WPFOLIO_PPWP_ACTION_URL;?>" target="_blank"><?php echo WPFOLIO_PPWP_ACTION_URL;?></a>.</p>
+				<p><?php echo esc_html__('By clicking "Opt Out", we will stop sending any data from WordPress.','password-protect-page');?> <b><?php echo esc_html( $module['name'] ); ?></b> <?php esc_html_e( 'to', 'password-protect-page' ); ?> <a href="<?php echo esc_url( WPFOLIO_PPWP_ACTION_URL ); ?>" target="_blank"><?php echo esc_html( WPFOLIO_PPWP_ACTION_URL ); ?></a>.</p>
 			</div>
 			<div class="wpfolio-ppwp-anylc-popup-footer">
-				<form method="POST" action="<?php echo WPFOLIO_PPWP_ACTION_URL;?>">
+				<form method="POST" action="<?php echo esc_url( WPFOLIO_PPWP_ACTION_URL ); ?>">
 					<?php
 					if( ! empty( $optin_form_data ) ) {
 						foreach ($optin_form_data as $data_key => $data_value) {

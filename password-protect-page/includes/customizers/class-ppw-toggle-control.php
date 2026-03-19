@@ -7,7 +7,7 @@
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
-
+// phpcs:disable WordPress.NamingConventions.PrefixAllGlobals
 // Exit if WP_Customize_Control does not exsist.
 if ( ! class_exists( 'WP_Customize_Control' ) ) {
 	return null;

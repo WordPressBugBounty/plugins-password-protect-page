@@ -1,17 +1,22 @@
 <?php
+if ( ! defined( 'ABSPATH' ) ) {
+    exit;
+}
 /**
  * PPWP Countdown
  */
+// phpcs:disable WordPress.Security.EscapeOutput.OutputNotEscaped
+// phpcs:disable WordPress.NamingConventions.PrefixAllGlobals
 $text_above             = get_theme_mod('ppwp_sitewide_above_countdown');
 $text_below             = get_theme_mod('ppwp_sitewide_below_countdown');
 $start_date             = get_theme_mod('ppwp_sitewide_start_time');
 $end_date               = get_theme_mod('ppwp_sitewide_end_time');
 $is_date_countdown      = get_theme_mod('ppwp_sitewide_is_show_day');
 $time_unit 				= get_theme_mod( 'ppwp_sitewide_time_unit_countdown', 'default');
-$day_of_countdown 		= strip_tags(get_theme_mod( 'ppwp_countdown_day_text', 'Days' ));
-$hour_of_countdown	 	= strip_tags(get_theme_mod( 'ppwp_countdown_hour_text', 'Hours' ));
-$minute_of_countdown	= strip_tags(get_theme_mod( 'ppwp_countdown_minute_text', 'Mimutes' ));
-$second_of_countdown	= strip_tags(get_theme_mod( 'ppwp_countdown_second_text', 'Seconds' ));
+$day_of_countdown 		= wp_strip_all_tags(get_theme_mod( 'ppwp_countdown_day_text', 'Days' ));
+$hour_of_countdown	 	= wp_strip_all_tags(get_theme_mod( 'ppwp_countdown_hour_text', 'Hours' ));
+$minute_of_countdown	= wp_strip_all_tags(get_theme_mod( 'ppwp_countdown_minute_text', 'Mimutes' ));
+$second_of_countdown	= wp_strip_all_tags(get_theme_mod( 'ppwp_countdown_second_text', 'Seconds' ));
 ?>
 <div class="ppwp-countdown-container">
     <div id="ppwp_desc_above_countdown"><?php echo wp_kses_post( $text_above ); ?></div>

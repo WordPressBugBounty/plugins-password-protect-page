@@ -1,5 +1,8 @@
 <?php
-
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+// phpcs:disable WordPress.NamingConventions.PrefixAllGlobals
 if ( ! class_exists( 'PPW_Entire_Site_Services' ) ) {
 	class PPW_Entire_Site_Services {
 		/**
@@ -106,7 +109,9 @@ if ( ! class_exists( 'PPW_Entire_Site_Services' ) ) {
 			}
 
 			// TODO: consider to user wp_safe_redirect.
+			// phpcs:disable
 			wp_redirect( $current_url );
+			// phpcs:enable
 		}
 
 		/**

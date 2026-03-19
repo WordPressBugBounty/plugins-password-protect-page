@@ -1,5 +1,8 @@
 <?php
-
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+// phpcs:disable WordPress.NamingConventions.PrefixAllGlobals
 /**
  *
  * Class PPW_Recaptcha
@@ -41,8 +44,9 @@ class PPW_Recaptcha {
 	public function get_error_message() {
 		$message = get_theme_mod( 'ppwp_form_error_recaptcha_message_text', PPW_Constants::DEFAULT_ERROR_RECAPTCHA_MESSAGE );
 		$message = wp_kses_post( $message );
-
-		return _x( $message, PPW_Constants::CONTEXT_PASSWORD_FORM, PPW_Constants::DOMAIN );
+		// phpcs:disable
+		return _x( $message, PPW_Constants::CONTEXT_PASSWORD_FORM, 'password-protect-page' );
+		
 	}
 
 	/**
@@ -330,18 +334,21 @@ class PPW_Recaptcha {
 	 * Load recaptcha v2 javascript.
 	 */
 	public function load_recaptcha_v2_js() {
+		// phpcs:disable
 		ob_start();
 		?>
 		<script src="https://www.google.com/recaptcha/api.js" async defer></script>
 		<?php
 
 		echo ob_get_clean(); // phpcs:ignore -- we cannot escape ob_start ob_get_clean(), there are no variable to escape in statement above
+		
 	}
 
 	/**
 	 * Load recaptcha v3 javascript.
 	 */
 	public function load_recaptcha_v3_js() {
+		// phpcs:disable
 		$recaptcha_key = $this->get_recaptcha_v3_api_key();
 
 		ob_start();
@@ -358,6 +365,7 @@ class PPW_Recaptcha {
 		<?php
 
 		echo ob_get_clean(); // phpcs:ignore -- we already escape the $recaptcha_key above
+		
 	}
 
 	/**
@@ -472,7 +480,7 @@ class PPW_Recaptcha {
 	public function maybe_add_recaptcha_input_below_sitewide_form() {
 		$recaptcha_input = $this->get_recaptcha_input();
 		if ( ! empty( $recaptcha_input ) ) {
-			echo $recaptcha_input;
+			echo $recaptcha_input; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 		}
 	}
 
@@ -539,7 +547,7 @@ class PPW_Recaptcha {
 	 * @return string
 	 */
 	public function get_sitewide_error_message() {
-		return __( 'Google reCAPTCHA verification failed, please try again later.', PPW_Constants::DOMAIN );
+		return __( 'Google reCAPTCHA verification failed, please try again later.', 'password-protect-page' );
 	}
 
 

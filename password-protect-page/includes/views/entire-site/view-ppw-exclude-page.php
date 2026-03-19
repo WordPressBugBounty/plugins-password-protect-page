@@ -1,8 +1,11 @@
 <?php
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
 /**
  * PPWP Exclude Protected page
  */
-
+// phpcs:disable WordPress.NamingConventions.PrefixAllGlobals
 $all_page_post = ppw_free_get_all_page_post();
 ?>
 <tr class="ppwp_free_version ppwp_logic_show_input_password <?php echo esc_attr( $is_display ); ?>">

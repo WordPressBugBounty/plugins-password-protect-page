@@ -1,4 +1,7 @@
 <?php
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
 
 if ( ! class_exists( 'PPW_Customizer_Service' ) ) {
 	class PPW_Customizer_Service {
@@ -78,7 +81,7 @@ if ( ! class_exists( 'PPW_Customizer_Service' ) ) {
 					$wp_customize,
 					'ppwp_form_instructions_description_below_title',
 					array(
-						'label'    => __( 'Description Below Form', PPW_Constants::DOMAIN ),
+						'label'    => __( 'Description Below Form', 'password-protect-page' ),
 						'section'  => 'ppwp_form_instructions',
 						'settings' => 'ppwp_form_instructions_description_below_title',
 						'type'     => 'control_title',
@@ -94,7 +97,7 @@ if ( ! class_exists( 'PPW_Customizer_Service' ) ) {
 					$wp_customize,
 					'ppwp_form_instructions_below_text',
 					array(
-						'label'    => __( 'Description', PPW_Constants::DOMAIN ),
+						'label'    => __( 'Description', 'password-protect-page' ),
 						'section'  => 'ppwp_form_instructions',
 						'settings' => 'ppwp_form_instructions_below_text',
 						'type'     => 'textarea',
@@ -108,8 +111,8 @@ if ( ! class_exists( 'PPW_Customizer_Service' ) ) {
 			$wp_customize->add_control(
 				'ppwp_form_instructions_below_text_font_size_control',
 				array(
-					'label'       => __( 'Font Size', PPW_Constants::DOMAIN ),
-					'description' => __( 'Font size in px', PPW_Constants::DOMAIN ),
+					'label'       => __( 'Font Size', 'password-protect-page' ),
+					'description' => __( 'Font size in px', 'password-protect-page' ),
 					'section'     => 'ppwp_form_instructions',
 					'settings'    => 'ppwp_form_instructions_below_text_font_size',
 					'type'        => 'number',
@@ -121,7 +124,7 @@ if ( ! class_exists( 'PPW_Customizer_Service' ) ) {
 			$wp_customize->add_control(
 				'ppwp_form_instructions_below_text_font_weight_control',
 				array(
-					'label'    => __( 'Font Weight', PPW_Constants::DOMAIN ),
+					'label'    => __( 'Font Weight', 'password-protect-page' ),
 					'section'  => 'ppwp_form_instructions',
 					'settings' => 'ppwp_form_instructions_below_text_font_weight',
 					'type'     => 'number',
@@ -135,7 +138,7 @@ if ( ! class_exists( 'PPW_Customizer_Service' ) ) {
 					$wp_customize,
 					'ppwp_form_instructions_below_text_color_control',
 					array(
-						'label'    => __( 'Text Color', PPW_Constants::DOMAIN ),
+						'label'    => __( 'Text Color', 'password-protect-page' ),
 						'section'  => 'ppwp_form_instructions',
 						'settings' => 'ppwp_form_instructions_below_text_color',
 					)
@@ -151,6 +154,7 @@ if ( ! class_exists( 'PPW_Customizer_Service' ) ) {
 		 * @return void
 		 */
 		public function customize_register( $wp_customize ) {
+			// phpcs:disable
 			if ( ! class_exists( 'PPW_Title_Group_Control' ) ) {
 				include PPW_DIR_PATH . 'includes/customizers/class-ppw-title-group-control.php';
 			}
@@ -171,13 +175,13 @@ if ( ! class_exists( 'PPW_Customizer_Service' ) ) {
 					'priority'       => 9970,
 					'capability'     => 'edit_theme_options',
 					'theme_supports' => '',
-					'title'          => __( 'PPWP Single Password Form', PPW_Constants::DOMAIN ),
+					'title'          => __( 'PPWP Single Password Form', 'password-protect-page' ),
 				)
 			);
 
 			/* form instructions section */
 			$wp_customize->add_section( 'ppwp_form_instructions', array(
-				'title'    => __( 'Password Form', PPW_Constants::DOMAIN ),
+				'title'    => __( 'Password Form', 'password-protect-page' ),
 				'panel'    => 'ppwp',
 				'priority' => 100,
 			) );
@@ -188,7 +192,7 @@ if ( ! class_exists( 'PPW_Customizer_Service' ) ) {
 				new PPW_Title_Group_Control(
 					$wp_customize,
 					'ppwp_form_instructions_background_title', array(
-					'label'			=> __( 'Background', PPW_Constants::DOMAIN ),
+					'label'			=> __( 'Background', 'password-protect-page' ),
 					'section'  		=> 'ppwp_form_instructions',
 					'settings' 		=> 'ppwp_form_instructions_background_title',
 					'type'     		=> 'control_title',
@@ -204,7 +208,7 @@ if ( ! class_exists( 'PPW_Customizer_Service' ) ) {
 				new \WP_Customize_Color_Control(
 					$wp_customize,
 					'ppwp_form_instructions_background_color_control', array(
-					'label'    => __( 'Background Color', PPW_Constants::DOMAIN ),
+					'label'    => __( 'Background Color', 'password-protect-page' ),
 					'section'  => 'ppwp_form_instructions',
 					'settings' => 'ppwp_form_instructions_background_color',
 				) )
@@ -215,7 +219,7 @@ if ( ! class_exists( 'PPW_Customizer_Service' ) ) {
 				'default' => PPW_Constants::DEFAULT_FORM_PADDING,
 			) );
 			$wp_customize->add_control( 'ppwp_form_instructions_padding_control', array(
-				'label'			=> __( 'Padding', PPW_Constants::DOMAIN ),
+				'label'			=> __( 'Padding', 'password-protect-page' ),
 				'section'  		=> 'ppwp_form_instructions',
 				'description' 	=> 'Padding in px',
 				'settings' 		=> 'ppwp_form_instructions_padding',
@@ -227,7 +231,7 @@ if ( ! class_exists( 'PPW_Customizer_Service' ) ) {
 				'default' => PPW_Constants::DEFAULT_FORM_BORDER_RADIUS,
 			) );
 			$wp_customize->add_control( 'ppwp_form_instructions_border_radius_control', array(
-				'label'    => __( 'Border Radius', PPW_Constants::DOMAIN ),
+				'label'    => __( 'Border Radius', 'password-protect-page' ),
 				'section'  => 'ppwp_form_instructions',
 				'description' => 'Border Radius in px',
 				'settings' => 'ppwp_form_instructions_border_radius',
@@ -240,7 +244,7 @@ if ( ! class_exists( 'PPW_Customizer_Service' ) ) {
 				new PPW_Title_Group_Control(
 					$wp_customize,
 					'ppwp_form_instructions_headline_title', array(
-					'label'			=> __( 'Headline', PPW_Constants::DOMAIN ),
+					'label'			=> __( 'Headline', 'password-protect-page' ),
 					'section'  		=> 'ppwp_form_instructions',
 					'settings' 		=> 'ppwp_form_instructions_headline_title',
 					'type'     		=> 'control_title',
@@ -249,14 +253,14 @@ if ( ! class_exists( 'PPW_Customizer_Service' ) ) {
 
 			/* instructions headline */
 			$wp_customize->add_setting( 'ppwp_form_instructions_headline', array(
-				'default' => __( PPW_Constants::DEFAULT_HEADLINE_TEXT, PPW_Constants::DOMAIN ),
+				'default' => __( PPW_Constants::DEFAULT_HEADLINE_TEXT, 'password-protect-page' ),
 			) );
 			$wp_customize->add_control(
 				new PPW_Text_Editor_Custom_Control(
 					$wp_customize,
 					'ppwp_form_instructions_headline',
 					array(
-						'label'    => __( 'Headline', PPW_Constants::DOMAIN ),
+						'label'    => __( 'Headline', 'password-protect-page' ),
 						'section'  => 'ppwp_form_instructions',
 						'settings' => 'ppwp_form_instructions_headline',
 						'type'     => 'textarea',
@@ -269,8 +273,8 @@ if ( ! class_exists( 'PPW_Customizer_Service' ) ) {
 				'default' => PPW_Constants::DEFAULT_HEADLINE_FONT_SIZE,
 			) );
 			$wp_customize->add_control( 'ppwp_form_instructions_headline_font_size_control', array(
-				'label'       => __( 'Font Size', PPW_Constants::DOMAIN ),
-				'description' => __( 'Font size in px', PPW_Constants::DOMAIN ),
+				'label'       => __( 'Font Size', 'password-protect-page' ),
+				'description' => __( 'Font size in px', 'password-protect-page' ),
 				'section'     => 'ppwp_form_instructions',
 				'settings'    => 'ppwp_form_instructions_headline_font_size',
 				'type'        => 'number',
@@ -281,7 +285,7 @@ if ( ! class_exists( 'PPW_Customizer_Service' ) ) {
 				'default' => PPW_Constants::DEFAULT_HEADLINE_FONT_WEIGHT,
 			) );
 			$wp_customize->add_control( 'ppwp_form_instructions_headline_font_weight_control', array(
-				'label'    => __( 'Font Weight', PPW_Constants::DOMAIN ),
+				'label'    => __( 'Font Weight', 'password-protect-page' ),
 				'section'  => 'ppwp_form_instructions',
 				'settings' => 'ppwp_form_instructions_headline_font_weight',
 				'type'     => 'number',
@@ -296,7 +300,7 @@ if ( ! class_exists( 'PPW_Customizer_Service' ) ) {
 				new \WP_Customize_Color_Control(
 					$wp_customize,
 					'ppwp_form_instructions_headline_color_control', array(
-					'label'    => __( 'Text Color', PPW_Constants::DOMAIN ),
+					'label'    => __( 'Text Color', 'password-protect-page' ),
 					'section'  => 'ppwp_form_instructions',
 					'settings' => 'ppwp_form_instructions_headline_color',
 				) )
@@ -308,7 +312,7 @@ if ( ! class_exists( 'PPW_Customizer_Service' ) ) {
 				new PPW_Title_Group_Control(
 					$wp_customize,
 					'ppwp_form_instructions_description_title', array(
-					'label'			=> __( 'Description Above Form', PPW_Constants::DOMAIN ),
+					'label'			=> __( 'Description Above Form', 'password-protect-page' ),
 					'section'  		=> 'ppwp_form_instructions',
 					'settings' 		=> 'ppwp_form_instructions_description_title',
 					'type'     		=> 'control_title',
@@ -317,7 +321,7 @@ if ( ! class_exists( 'PPW_Customizer_Service' ) ) {
 
 			/* instructions text */
 			$wp_customize->add_setting( 'ppwp_form_instructions_text', array(
-				'default' => __( apply_filters( PPW_Constants::HOOK_MESSAGE_PASSWORD_FORM, PPW_Constants::DEFAULT_FORM_MESSAGE ), PPW_Constants::DOMAIN ),
+				'default' => __( apply_filters( PPW_Constants::HOOK_MESSAGE_PASSWORD_FORM, PPW_Constants::DEFAULT_FORM_MESSAGE ), 'password-protect-page' ),
 			) );
 
 			$wp_customize->add_control(
@@ -325,7 +329,7 @@ if ( ! class_exists( 'PPW_Customizer_Service' ) ) {
 					$wp_customize,
 					'ppwp_form_instructions_text',
 					array(
-						'label'    => __( 'Description', PPW_Constants::DOMAIN ),
+						'label'    => __( 'Description', 'password-protect-page' ),
 						'section'  => 'ppwp_form_instructions',
 						'settings' => 'ppwp_form_instructions_text',
 						'type'     => 'textarea',
@@ -338,8 +342,8 @@ if ( ! class_exists( 'PPW_Customizer_Service' ) ) {
 				'default' => PPW_Constants::DEFAULT_TEXT_FONT_SIZE,
 			) );
 			$wp_customize->add_control( 'ppwp_form_instructions_text_font_size_control', array(
-				'label'       => __( 'Font Size', PPW_Constants::DOMAIN ),
-				'description' => __( 'Font size in px', PPW_Constants::DOMAIN ),
+				'label'       => __( 'Font Size', 'password-protect-page' ),
+				'description' => __( 'Font size in px', 'password-protect-page' ),
 				'section'     => 'ppwp_form_instructions',
 				'settings'    => 'ppwp_form_instructions_text_font_size',
 				'type'        => 'number',
@@ -350,7 +354,7 @@ if ( ! class_exists( 'PPW_Customizer_Service' ) ) {
 				'default' => PPW_Constants::DEFAULT_TEXT_FONT_WEIGHT,
 			) );
 			$wp_customize->add_control( 'ppwp_form_instructions_text_font_weight_control', array(
-				'label'    => __( 'Font Weight', PPW_Constants::DOMAIN ),
+				'label'    => __( 'Font Weight', 'password-protect-page' ),
 				'section'  => 'ppwp_form_instructions',
 				'settings' => 'ppwp_form_instructions_text_font_weight',
 				'type'     => 'number',
@@ -365,7 +369,7 @@ if ( ! class_exists( 'PPW_Customizer_Service' ) ) {
 				new \WP_Customize_Color_Control(
 					$wp_customize,
 					'ppwp_form_instructions_text_color_control', array(
-					'label'    => __( 'Text Color', PPW_Constants::DOMAIN ),
+					'label'    => __( 'Text Color', 'password-protect-page' ),
 					'section'  => 'ppwp_form_instructions',
 					'settings' => 'ppwp_form_instructions_text_color',
 				) )
@@ -381,7 +385,7 @@ if ( ! class_exists( 'PPW_Customizer_Service' ) ) {
 				new PPW_Title_Group_Control(
 					$wp_customize,
 					'ppwp_form_instructions_label_title', array(
-					'label'			=> __( 'Password Field', PPW_Constants::DOMAIN ),
+					'label'			=> __( 'Password Field', 'password-protect-page' ),
 					'section'  		=> 'ppwp_form_instructions',
 					'settings' 		=> 'ppwp_form_instructions_label_title',
 					'type'     		=> 'control_title',
@@ -393,7 +397,7 @@ if ( ! class_exists( 'PPW_Customizer_Service' ) ) {
 			) );
 
 			$wp_customize->add_control( 'ppwp_form_instructions_password_label_control', array(
-				'label'    => __( 'Password Label', PPW_Constants::DOMAIN ),
+				'label'    => __( 'Password Label', 'password-protect-page' ),
 				'section'  => 'ppwp_form_instructions',
 				'settings' => 'ppwp_form_instructions_password_label',
 				'type'     => 'text',
@@ -404,8 +408,8 @@ if ( ! class_exists( 'PPW_Customizer_Service' ) ) {
 				'default' => PPW_Constants::DEFAULT_TEXT_FONT_SIZE,
 			) );
 			$wp_customize->add_control( 'ppwp_form_instructions_password_label_font_size_control', array(
-				'label'       => __( 'Font Size', PPW_Constants::DOMAIN ),
-				'description' => __( 'Font size in px', PPW_Constants::DOMAIN ),
+				'label'       => __( 'Font Size', 'password-protect-page' ),
+				'description' => __( 'Font size in px', 'password-protect-page' ),
 				'section'     => 'ppwp_form_instructions',
 				'settings'    => 'ppwp_form_instructions_password_label_font_size',
 				'type'        => 'number',
@@ -416,7 +420,7 @@ if ( ! class_exists( 'PPW_Customizer_Service' ) ) {
 				'default' => PPW_Constants::DEFAULT_TEXT_FONT_WEIGHT,
 			) );
 			$wp_customize->add_control( 'ppwp_form_instructions_password_label_font_weight_control', array(
-				'label'    => __( 'Font Weight', PPW_Constants::DOMAIN ),
+				'label'    => __( 'Font Weight', 'password-protect-page' ),
 				'section'  => 'ppwp_form_instructions',
 				'settings' => 'ppwp_form_instructions_password_label_font_weight',
 				'type'     => 'number',
@@ -431,7 +435,7 @@ if ( ! class_exists( 'PPW_Customizer_Service' ) ) {
 				new \WP_Customize_Color_Control(
 					$wp_customize,
 					'ppwp_form_instructions_password_label_color_control', array(
-					'label'    => __( 'Text Color', PPW_Constants::DOMAIN ),
+					'label'    => __( 'Text Color', 'password-protect-page' ),
 					'section'  => 'ppwp_form_instructions',
 					'settings' => 'ppwp_form_instructions_password_label_color',
 				) )
@@ -439,10 +443,10 @@ if ( ! class_exists( 'PPW_Customizer_Service' ) ) {
 
 			/* placeholder text */
 			$wp_customize->add_setting( 'ppwp_form_instructions_placeholder', array(
-				'default' => __( PPW_Constants::DEFAULT_PLACEHOLDER, PPW_Constants::DOMAIN ),
+				'default' => __( PPW_Constants::DEFAULT_PLACEHOLDER, 'password-protect-page' ),
 			) );
 			$wp_customize->add_control( 'ppwp_form_instructions_placeholder_control', array(
-				'label'    => __( 'Placeholder', PPW_Constants::DOMAIN ),
+				'label'    => __( 'Placeholder', 'password-protect-page' ),
 				'section'  => 'ppwp_form_instructions',
 				'settings' => 'ppwp_form_instructions_placeholder',
 				'type'     => 'text',
@@ -453,7 +457,7 @@ if ( ! class_exists( 'PPW_Customizer_Service' ) ) {
 				new PPW_Title_Group_Control(
 					$wp_customize,
 					'ppwp_form_instructions_show_password_title', array(
-					'label'			=> __( 'Show Password', PPW_Constants::DOMAIN ),
+					'label'			=> __( 'Show Password', 'password-protect-page' ),
 					'section'  		=> 'ppwp_form_instructions',
 					'settings' 		=> 'ppwp_form_instructions_show_password_title',
 					'type'     		=> 'control_title',
@@ -469,7 +473,7 @@ if ( ! class_exists( 'PPW_Customizer_Service' ) ) {
 				new PPW_Toggle_Control(
 					$wp_customize,
 					'ppwp_form_instructions_is_show_password_control', array(
-					'label'       => __( 'Show Password Reveal Button', PPW_Constants::DOMAIN ),
+					'label'       => __( 'Show Password Reveal Button', 'password-protect-page' ),
 					'section'     => 'ppwp_form_instructions',
 					'type'        => 'toggle',
 					'settings'    => 'ppwp_form_instructions_is_show_password',
@@ -482,7 +486,7 @@ if ( ! class_exists( 'PPW_Customizer_Service' ) ) {
 			) );
 
 			$wp_customize->add_control( 'ppwp_form_instructions_show_password_text_control', array(
-				'label'			=> __( 'Button Text', PPW_Constants::DOMAIN ),
+				'label'			=> __( 'Button Text', 'password-protect-page' ),
 				'section'  		=> 'ppwp_form_instructions',
 				'settings' 		=> 'ppwp_form_instructions_show_password_text',
 				'type'     		=> 'text',
@@ -492,14 +496,14 @@ if ( ! class_exists( 'PPW_Customizer_Service' ) ) {
 
 			/* form error message section */
 			$wp_customize->add_section( 'ppwp_form_error_message', array(
-				'title'    => __( 'Error Messages', PPW_Constants::DOMAIN ),
+				'title'    => __( 'Error Messages', 'password-protect-page' ),
 				'panel'    => 'ppwp',
 				'priority' => 200,
 			) );
 
 			/* error message text */
 			$wp_customize->add_setting( 'ppwp_form_error_message_text', array(
-				'default' => __( apply_filters( PPW_Constants::HOOK_MESSAGE_ENTERING_WRONG_PASSWORD, PPW_Constants::DEFAULT_WRONG_PASSWORD_MESSAGE ), PPW_Constants::DOMAIN ),
+				'default' => __( apply_filters( PPW_Constants::HOOK_MESSAGE_ENTERING_WRONG_PASSWORD, PPW_Constants::DEFAULT_WRONG_PASSWORD_MESSAGE ), 'password-protect-page' ),
 			) );
 
 			$wp_customize->add_control(
@@ -507,7 +511,7 @@ if ( ! class_exists( 'PPW_Customizer_Service' ) ) {
 					$wp_customize,
 					'ppwp_form_error_message_text',
 					array(
-						'label'    => __( 'Wrong Password Message', PPW_Constants::DOMAIN ),
+						'label'    => __( 'Wrong Password Message', 'password-protect-page' ),
 						'section'  => 'ppwp_form_error_message',
 						'settings' => 'ppwp_form_error_message_text',
 						'type'     => 'textarea',
@@ -518,14 +522,14 @@ if ( ! class_exists( 'PPW_Customizer_Service' ) ) {
 
 			/* error message text */
 			$wp_customize->add_setting( 'ppwp_form_error_recaptcha_message_text', array(
-				'default' => __( PPW_Constants::DEFAULT_ERROR_RECAPTCHA_MESSAGE, PPW_Constants::DOMAIN ),
+				'default' => __( PPW_Constants::DEFAULT_ERROR_RECAPTCHA_MESSAGE, 'password-protect-page' ),
 			) );
 			$wp_customize->add_control(
 				new PPW_Text_Editor_Custom_Control(
 					$wp_customize,
 					'ppwp_form_error_recaptcha_message_text',
 					array(
-						'label'    => __( 'Failed reCAPTCHA Message', PPW_Constants::DOMAIN ),
+						'label'    => __( 'Failed reCAPTCHA Message', 'password-protect-page' ),
 						'section'  => 'ppwp_form_error_message',
 						'settings' => 'ppwp_form_error_recaptcha_message_text',
 						'type'     => 'textarea',
@@ -540,8 +544,8 @@ if ( ! class_exists( 'PPW_Customizer_Service' ) ) {
 			) );
 
 			$wp_customize->add_control( 'ppwp_form_error_message_text_font_size_control', array(
-				'label'       => __( 'Font Size', PPW_Constants::DOMAIN ),
-				'description' => __( 'Font size in px', PPW_Constants::DOMAIN ),
+				'label'       => __( 'Font Size', 'password-protect-page' ),
+				'description' => __( 'Font size in px', 'password-protect-page' ),
 				'section'     => 'ppwp_form_error_message',
 				'settings'    => 'ppwp_form_error_message_text_font_size',
 				'type'        => 'number',
@@ -553,7 +557,7 @@ if ( ! class_exists( 'PPW_Customizer_Service' ) ) {
 				'default' => PPW_Constants::DEFAULT_ERROR_TEXT_FONT_WEIGHT,
 			) );
 			$wp_customize->add_control( 'ppwp_form_error_message_text_font_weight_control', array(
-				'label'    => __( 'Font Weight', PPW_Constants::DOMAIN ),
+				'label'    => __( 'Font Weight', 'password-protect-page' ),
 				'section'  => 'ppwp_form_error_message',
 				'settings' => 'ppwp_form_error_message_text_font_weight',
 				'type'     => 'number',
@@ -569,7 +573,7 @@ if ( ! class_exists( 'PPW_Customizer_Service' ) ) {
 				new \WP_Customize_Color_Control(
 					$wp_customize,
 					'ppwp_form_error_message_text_color_control', array(
-					'label'    => __( 'Text Color', PPW_Constants::DOMAIN ),
+					'label'    => __( 'Text Color', 'password-protect-page' ),
 					'section'  => 'ppwp_form_error_message',
 					'settings' => 'ppwp_form_error_message_text_color',
 					'priority' => 30,
@@ -585,7 +589,7 @@ if ( ! class_exists( 'PPW_Customizer_Service' ) ) {
 				new \WP_Customize_Color_Control(
 					$wp_customize,
 					'ppwp_form_error_message_background_color_control', array(
-					'label'    => __( 'Background Color', PPW_Constants::DOMAIN ),
+					'label'    => __( 'Background Color', 'password-protect-page' ),
 					'section'  => 'ppwp_form_error_message',
 					'settings' => 'ppwp_form_error_message_background_color',
 					'priority' => 35,
@@ -594,17 +598,17 @@ if ( ! class_exists( 'PPW_Customizer_Service' ) ) {
 
 			/* form button */
 			$wp_customize->add_section( 'ppwp_form_button', array(
-				'title'    => __( 'Button', PPW_Constants::DOMAIN ),
+				'title'    => __( 'Button', 'password-protect-page' ),
 				'panel'    => 'ppwp',
 				'priority' => 300,
 			) );
 
 			/* button label */
 			$wp_customize->add_setting( 'ppwp_form_button_label', array(
-				'default' => __( PPW_Constants::DEFAULT_SUBMIT_LABEL, PPW_Constants::DOMAIN ),
+				'default' => __( PPW_Constants::DEFAULT_SUBMIT_LABEL, 'password-protect-page' ),
 			) );
 			$wp_customize->add_control( 'ppwp_form_button_label_control', array(
-				'label'    => __( 'Button Label', PPW_Constants::DOMAIN ),
+				'label'    => __( 'Button Label', 'password-protect-page' ),
 				'section'  => 'ppwp_form_button',
 				'settings' => 'ppwp_form_button_label',
 				'type'     => 'text',
@@ -619,7 +623,7 @@ if ( ! class_exists( 'PPW_Customizer_Service' ) ) {
 				new \WP_Customize_Color_Control(
 					$wp_customize,
 					'ppwp_form_button_text_color_control', array(
-					'label'    => __( 'Text Color', PPW_Constants::DOMAIN ),
+					'label'    => __( 'Text Color', 'password-protect-page' ),
 					'section'  => 'ppwp_form_button',
 					'settings' => 'ppwp_form_button_text_color',
 				) )
@@ -634,7 +638,7 @@ if ( ! class_exists( 'PPW_Customizer_Service' ) ) {
 				new \WP_Customize_Color_Control(
 					$wp_customize,
 					'ppwp_form_button_text_hover_color_control', array(
-					'label'    => __( 'Text Color (Hover)', PPW_Constants::DOMAIN ),
+					'label'    => __( 'Text Color (Hover)', 'password-protect-page' ),
 					'section'  => 'ppwp_form_button',
 					'settings' => 'ppwp_form_button_text_hover_color',
 				) )
@@ -649,7 +653,7 @@ if ( ! class_exists( 'PPW_Customizer_Service' ) ) {
 				new \WP_Customize_Color_Control(
 					$wp_customize,
 					'ppwp_form_button_background_color_control', array(
-					'label'    => __( 'Background Color', PPW_Constants::DOMAIN ),
+					'label'    => __( 'Background Color', 'password-protect-page' ),
 					'section'  => 'ppwp_form_button',
 					'settings' => 'ppwp_form_button_background_color',
 				) )
@@ -664,12 +668,12 @@ if ( ! class_exists( 'PPW_Customizer_Service' ) ) {
 				new \WP_Customize_Color_Control(
 					$wp_customize,
 					'ppwp_form_button_background_hover_color_control', array(
-					'label'    => __( 'Background Color (Hover)', PPW_Constants::DOMAIN ),
+					'label'    => __( 'Background Color (Hover)', 'password-protect-page' ),
 					'section'  => 'ppwp_form_button',
 					'settings' => 'ppwp_form_button_background_hover_color',
 				) )
 			);
-
+			// phpcs:enable
 		}
 
 		/**
@@ -728,7 +732,7 @@ if ( ! class_exists( 'PPW_Customizer_Service' ) ) {
 			// compress $ppw_custom_css.
 			$ppw_custom_css = preg_replace( "/\s{2,}/", " ", str_replace( "\n", "", str_replace( ', ', ",", $ppw_custom_css ) ) );
 
-			echo $ppw_custom_css;
+			echo $ppw_custom_css; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- custom CSS already sanitized
 		}
 
 		/**

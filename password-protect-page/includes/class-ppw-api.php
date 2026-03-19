@@ -1,4 +1,7 @@
 <?php
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
 /**
  * Registered PPW API
  */
@@ -31,17 +34,17 @@ if ( ! class_exists( 'PPW_API' ) ) {
 					),
 					'args'                => array(
 						'id' => array(
-							'description'       => __( 'Post ID' ),
+							'description'       => __( 'Post ID', 'password-protect-page'  ),
 							'sanitize_callback' => 'absint',
 							'type'              => 'integer',
 						),
 						'page' => array(
-							'description'       => __( 'Page index' ),
+							'description'       => __( 'Page index', 'password-protect-page'  ),
 							'sanitize_callback' => 'absint',
 							'type'              => 'integer',
 						),
 						'idx' => array(
-							'description'       => __( 'Form index' ),
+							'description'       => __( 'Form index', 'password-protect-page'  ),
 							'sanitize_callback' => 'absint',
 							'type'              => 'integer',
 						),
@@ -59,7 +62,7 @@ if ( ! class_exists( 'PPW_API' ) ) {
 						$this,
 						'ppwp_get_master_passwords',
 					),
-					'permission_callback' => array( $this, 'can_access' ),
+					'permission_callback' => array( $this, 'can_access_master_passwords' ),
 				)
 			);
 
@@ -72,7 +75,7 @@ if ( ! class_exists( 'PPW_API' ) ) {
 						$this,
 						'delete_password',
 					),
-					'permission_callback' => array( $this, 'can_access' ),
+					'permission_callback' => array( $this, 'can_access_master_passwords' ),
 				)
 			);
 
@@ -85,7 +88,7 @@ if ( ! class_exists( 'PPW_API' ) ) {
 						$this,
 						'update_password',
 					),
-					'permission_callback' => array( $this, 'can_access' ),
+					'permission_callback' => array( $this, 'can_access_master_passwords' ),
 				)
 			);
 
@@ -98,7 +101,7 @@ if ( ! class_exists( 'PPW_API' ) ) {
 						$this,
 						'change_status',
 					),
-					'permission_callback' => array( $this, 'can_access' ),
+					'permission_callback' => array( $this, 'can_access_master_passwords' ),
 				)
 			);
 
@@ -111,7 +114,7 @@ if ( ! class_exists( 'PPW_API' ) ) {
 						$this,
 						'add_new_master_password',
 					),
-					'permission_callback' => array( $this, 'can_access' ),
+					'permission_callback' => array( $this, 'can_access_master_passwords' ),
 				)
 			);
 
@@ -124,7 +127,7 @@ if ( ! class_exists( 'PPW_API' ) ) {
 						$this,
 						'bulk_delete_master_passwords',
 					),
-					'permission_callback' => array( $this, 'can_access' ),
+					'permission_callback' => array( $this, 'can_access_master_passwords' ),
 				)
 			);
 
@@ -137,7 +140,7 @@ if ( ! class_exists( 'PPW_API' ) ) {
 						$this,
 						'all_expired_delete_master_passwords',
 					),
-					'permission_callback' => array( $this, 'can_access' ),
+					'permission_callback' => array( $this, 'can_access_master_passwords' ),
 				)
 			);
 
@@ -188,7 +191,10 @@ if ( ! class_exists( 'PPW_API' ) ) {
 		public function can_access() {
 			return ppw_allow_manage_passwords();
 		}
-
+		
+		public function can_access_master_passwords() {
+            return ppw_allow_manage_master_passwords();
+        }
 		/**
 		 * Get Master Passwords.
 		 */
@@ -480,13 +486,14 @@ if ( ! class_exists( 'PPW_API' ) ) {
 		 * @return bool
 		 */
 		public function ppwp_check_content_password( $data ) {
+			// phpcs:disable
 			do_action( PPW_Constants::HOOK_RESTRICT_CONTENT_BEFORE_CHECK_PWD, $data );
-
+			// phpcs:ignore WordPress.WP.I18n.NonSingularStringLiteralText,WordPress.WP.I18n.NonSingularStringLiteralDomain, WordPress.WP.I18n.NonSingularStringLiteralContext,WordPress.NamingConventions.PrefixAllGlobals.DynamicHookname
 			$result = array(
 				'isValid' => false,
-				'message' => _x( apply_filters( PPW_Constants::HOOK_RESTRICT_CONTENT_ERROR_MESSAGE, PPW_Constants::DEFAULT_WRONG_PASSWORD_MESSAGE ), PPW_Constants::CONTEXT_PCP_PASSWORD_FORM, PPW_Constants::DOMAIN ),
+				'message' => _x( apply_filters( PPW_Constants::HOOK_RESTRICT_CONTENT_ERROR_MESSAGE, PPW_Constants::DEFAULT_WRONG_PASSWORD_MESSAGE ), PPW_Constants::CONTEXT_PCP_PASSWORD_FORM, 'password-protect-page' ),
 			);
-
+			// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.DynamicHookname, WordPress.WP.I18n.NonSingularStringLiteralDomain
 			$is_valid_data = apply_filters( PPW_Constants::HOOK_SHORT_CODE_VALID_POST_DATA, $this->is_valid_data_content_password( $data ) );
 
 			if ( ! $is_valid_data ) {
@@ -503,7 +510,7 @@ if ( ! class_exists( 'PPW_API' ) ) {
 					400
 				);
 			}
-
+			// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.DynamicHookname
 			$content = apply_filters( PPW_Constants::HOOK_SHORTCODE_CONTENT_SOURCE, $post->post_content, $post, $data );
 			if ( false === $content ) {
 				return wp_send_json(
@@ -549,6 +556,7 @@ if ( ! class_exists( 'PPW_API' ) ) {
 				$result['cookie_expired_time'] = $atts['cookie'];
 				$result['isValid']             = true;
 				$result['message']             = '';
+				// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.DynamicHookname
 				do_action( PPW_Constants::HOOK_RESTRICT_CONTENT_AFTER_VALID_PWD, $post, $data['pss'] );
 
 				if ( ppw_core_get_setting_type_bool_by_option_name( PPW_Constants::NO_RELOAD_PAGE, PPW_Constants::MISC_OPTIONS ) ) {
@@ -561,7 +569,8 @@ if ( ! class_exists( 'PPW_API' ) ) {
 
 			// Allow custom error message from error_msg shortcode's attribute.
 			if ( isset( $array_values['message'] ) ) {
-				$result['message'] = _x( wp_kses_post( $array_values['message'] ), PPW_Constants::CONTEXT_PCP_PASSWORD_FORM, PPW_Constants::DOMAIN );
+				// phpcs:ignore WordPress.WP.I18n.NonSingularStringLiteralText,WordPress.WP.I18n.NonSingularStringLiteralContext,WordPress.WP.I18n.NonSingularStringLiteralDomain,WordPress.NamingConventions.PrefixAllGlobals.DynamicHookname
+				$result['message'] = _x( wp_kses_post( $array_values['message'] ), PPW_Constants::CONTEXT_PCP_PASSWORD_FORM, 'password-protect-page' );
 			}
 
 			$result = apply_filters( 'ppw_pcp_api_result', $result, $data['pss'], $post );
@@ -570,6 +579,7 @@ if ( ! class_exists( 'PPW_API' ) ) {
 				$result,
 				200
 			);
+			// phpcs:enable
 		}
 
 		/**
@@ -618,6 +628,7 @@ if ( ! class_exists( 'PPW_API' ) ) {
 			$parsed_atts = shortcode_parse_atts( trim( $shortcode[3] ) );
 
 			// Get attributes from shortcode.
+			// phpcs:disable
 			$atts      = PPW_Shortcode::get_instance()->get_attributes( $parsed_atts );
 			$passwords = apply_filters( PPW_Constants::HOOK_SHORTCODE_PASSWORDS, array_filter( $atts['passwords'], 'strlen' ), $parsed_atts );
 
@@ -630,7 +641,7 @@ if ( ! class_exists( 'PPW_API' ) ) {
 			if ( isset( $parsed_atts['error_msg'] ) ) {
 				$default_args['message'] = wp_kses_post( $parsed_atts['error_msg'] );
 			}
-
+			// phpcs:enable
 			return $default_args;
 		}
 
@@ -744,6 +755,7 @@ if ( ! class_exists( 'PPW_API' ) ) {
 			 * @since 4.4.0
 			 *
 			 */
+			// phpcs:disable
 			$pages = apply_filters( 'content_pagination', $pages, $post );
 
 			$numpages = count( $pages );
@@ -758,7 +770,7 @@ if ( ! class_exists( 'PPW_API' ) ) {
 			}
 
 			$elements = compact( 'id', 'authordata', 'currentday', 'currentmonth', 'page', 'pages', 'multipage', 'more', 'numpages' );
-
+			// phpcs:enable
 			return $elements;
 		}
 
@@ -793,7 +805,7 @@ if ( ! class_exists( 'PPW_API' ) ) {
 					400
 				);
 			}
-
+			// phpcs:disable
 			$post_content     = apply_filters( 'the_content', $post->post_content );
 			$password_service = new PPW_Password_Services();
 			$is_valid         = $password_service->is_valid_password_from_request( $post_id, $password );
@@ -819,6 +831,7 @@ if ( ! class_exists( 'PPW_API' ) ) {
 				),
 				200
 			);
+			// phpcs:enable
 		}
 
 		public function get_pcp_settings( $request ) {

@@ -1,4 +1,8 @@
 <?php
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
 /**
  * Abstract Class PPWP Migration Manager
  */
@@ -135,9 +139,11 @@ if ( ! class_exists( 'PPW_Migration_Manager' ) ) {
 		 */
 		public function admin_notice_upgrade_is_running() {
 			$upgrade_link = $this->get_continue_action_url();
-			$message      = '<p>' . sprintf( __( '%s To keep password protecting your private content, we have to <a href="https://passwordprotectwp.com/password-migration/" target="_blank"  rel="noopener noreferrer">migrate your passwords</a> to our plugin. The migration process is running in the background.', PPW_Constants::DOMAIN ), $this->get_updater_label() ) . '</p>';
+			/* translators: %s is the updater label (e.g., "Important:") */
+			$message      = '<p>' . sprintf( __( '%s To keep password protecting your private content, we have to <a href="https://passwordprotectwp.com/password-migration/" target="_blank"  rel="noopener noreferrer">migrate your passwords</a> to our plugin. The migration process is running in the background.', 'password-protect-page' ), $this->get_updater_label() ) . '</p>';
+			 /* translators: %s is the URL to run migration manually */
 			$message      .= '<p>' . sprintf( 'Taking a while? <a href="%s" class="button-primary">Click here to run it now</a>', $upgrade_link ) . '</p>';
-			echo '<div class="notice notice-warning">' . $message . '</div>'; // phpcs:ignore -- we don’t need to escape for this
+			echo '<div class="notice notice-warning">' . $message . '</div>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Admin notice HTML is intentional
 		}
 
 		/**
@@ -147,7 +153,7 @@ if ( ! class_exists( 'PPW_Migration_Manager' ) ) {
 			$this->delete_flag( 'completed' );
 			$message = $this->get_success_message();
 			if ( ! empty( $message ) ) {
-				echo '<div class="notice notice-success">' . $message . '</div>'; // phpcs:ignore -- we don’t need to escape for this
+				echo '<div class="notice notice-success">' . $message . '</div>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Admin notice HTML is intentional
 			}
 		}
 

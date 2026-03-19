@@ -1,8 +1,12 @@
 <?php
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
 /**
  * PPWP Partial Protection Settings
  */
-
+// phpcs:disable WordPress.NamingConventions.PrefixAllGlobals
+// phpcs:disable
 if ( ! class_exists( 'PPW_Partial_Protection_Settings' ) ) {
 	class PPW_Partial_Protection_Settings {
 
@@ -10,11 +14,19 @@ if ( ! class_exists( 'PPW_Partial_Protection_Settings' ) ) {
 		 * Render UI for Partial Protection page.
 		 */
 		public function render_ui() {
+			
 			$_get       = wp_unslash( $_GET ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- We no need to handle nonce verfication for render UI.
-			$head_title = is_pro_active_and_valid_license() ? 'PPWP Pro' : 'PPWP Lite';
+			$head_title = is_pro_active_and_valid_license()	? __( 'PPWP Pro', 'password-protect-page' ) : __( 'PPWP Lite', 'password-protect-page' );
+
 			?>
 			<div class="wrap">
-				<h2><?php echo esc_html__( $head_title . ': Partial Protection', PPW_Constants::DOMAIN ) ?></h2>
+				<h2><?php 
+					printf(
+							esc_html__( '%s: Partial Protection', 'password-protect-page' ),
+			   				esc_html( $head_title )
+						); 
+					?>
+				</h2>
 				<?php
 				$default_tab = apply_filters( PPW_Constants::HOOK_PCP_TAB, 'general' );
 				$active_tab  = isset( $_get['tab'] ) ? $_get['tab'] : $default_tab;
@@ -22,7 +34,7 @@ if ( ! class_exists( 'PPW_Partial_Protection_Settings' ) ) {
 				$this->render_content( $active_tab );
 				?>
 			</div>
-			<?php
+			<?php			
 		}
 
 		/**
@@ -36,10 +48,11 @@ if ( ! class_exists( 'PPW_Partial_Protection_Settings' ) ) {
 				array(
 					array(
 						'tab'      => 'general',
-						'tab_name' => 'General',
+						'tab_name' => __( 'General', 'password-protect-page' ),
 					),
 				)
 			);
+
 			?>
 			<h2 class="ppwp_wrap_tab_title nav-tab-wrapper">
 				<?php
@@ -64,7 +77,7 @@ if ( ! class_exists( 'PPW_Partial_Protection_Settings' ) ) {
 
 					?>
 					<a href="<?php echo esc_url( $link ); ?>"
-					   class="nav-tab <?php echo $active_tab === $tab['tab'] ? 'nav-tab-active' : ''; ?>"><?php esc_attr_e( $tab['tab_name'], PPW_Constants::DOMAIN ); ?></a>
+					   class="nav-tab <?php echo esc_attr( $active_tab === $tab['tab'] ? 'nav-tab-active' : '' ); ?>"><?php echo esc_html( $tab['tab_name'] ); ?></a>
 				<?php } ?>
 			</h2>
 			<?php

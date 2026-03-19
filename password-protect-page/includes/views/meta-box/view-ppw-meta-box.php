@@ -1,8 +1,11 @@
 <?php
-
+if ( ! defined( 'ABSPATH' ) ) {
+    exit;
+}
+// phpcs:disable WordPress.NamingConventions.PrefixAllGlobals
 add_meta_box(
 	'ppw_add_meta_box',
-	__( 'Password Protect WordPress', PPW_Constants::DOMAIN ),
+	__( 'Password Protect WordPress', 'password-protect-page' ),
 	apply_filters( PPW_Constants::HOOK_FUNCTION_HANDLE_META_BOX, 'ppw_free_feature_set_password_in_meta_box' ),
 	apply_filters( PPW_Constants::HOOK_META_BOX_POSITION, array( 'page', 'post' ) ),
 	'side',
@@ -39,11 +42,11 @@ function ppw_free_feature_set_password_in_meta_box( $post ) {
 	<div id="passwords-roles-map" class="ppwp-post-protection">
 		<input type="hidden" id="ppw_meta_box_nonce"
 		       value="<?php echo esc_attr( wp_create_nonce( PPW_Constants::META_BOX_NONCE ) ); ?>">
-		<span id="post-protection-status"> Password protected by
+		<span id="post-protection-status"> <?php esc_html_e( 'Password protected by', 'password-protect-page' ); ?>
                 <span id="number_roles"><?php echo esc_html( $no_roles ); ?></span>
             </span><a href="#protection" class="edit-post-protection hide-if-no-js pup-tooltip" role="button"
 		              style="display: inline;">
-			<span class="roles" aria-hidden="true">Edit</span>
+			<span class="roles" aria-hidden="true"><?php esc_html_e( 'Edit', 'password-protect-page' ); ?></span>
 		</a>
 		<div style="display: none" id="post-protection">
 			<p id="all_roles_select">
@@ -58,9 +61,9 @@ function ppw_free_feature_set_password_in_meta_box( $post ) {
 				<?php endforeach; ?>
 			</div>
 			<div>
-				<label for="post-protection-role">Role</label>
+				<label for="post-protection-role"><?php esc_html_e( 'Role', 'password-protect-page' ); ?></label>
 				<select class="pda-selected-role-select2" name="post-protection-role" id="is_role_selected">
-					<option value="global">global</option>
+					<option value="global"><?php esc_html_e( 'Global', 'password-protect-page' ); ?></option>
 					<?php foreach ( $roles as $role_name => $role_info ): ?>
 						<option <?php echo esc_attr( in_array( $role_name, array() ) ? 'selected="selected"' : '' ); ?>" value="<?php echo esc_attr( $role_name ); ?>">
 						<?php echo esc_html( $role_name ); ?>
@@ -79,18 +82,18 @@ function ppw_free_feature_set_password_in_meta_box( $post ) {
 			<!-- Region Data Save in HTML Tag END-->
 
 			<div class="ppwp_wrap_role_password">
-				<label id="label-password-post">Passwords</label>
+				<label id="label-password-post"><?php esc_html_e( 'Passwords', 'password-protect-page' ); ?></label>
 				<input autocomplete="off" type="text" class="password post-protection-password"
 				       placeholder="Enter password"
 				       name="post-protection-password"
 				       id="post-protection-password"/>
 				<textarea rows="3" id="ppwp_multiple_password" class="ppwp_multiple_password"
-				          placeholder="<?php echo esc_attr__( 'Enter one password per line', PPW_Constants::DOMAIN ); ?>', '<?php echo esc_html__('PPWP Lite', PPW_Constants::DOMAIN ); ?>"><?php echo esc_html( $password, PPW_Constants::DOMAIN ); ?></textarea>
+				          placeholder="<?php echo esc_attr__( 'Enter one password per line', 'password-protect-page' ); ?>', '<?php echo esc_html__('PPWP Lite', 'password-protect-page' ); ?>"><?php echo esc_html( $password, 'password-protect-page' ); ?></textarea>
 			</div>
 			<p class="ppwp-wrap-submit-hide">
 				<input type="hidden" value="<?php echo esc_attr( $post->ID ); ?>" id="id_page_post">
-				<button href="#protection" id="save_password" class="ppwp-button-submit">Submit</button>
-				<a class="cancel-pda-protection-map button-cancel ppwp-button-hide">Hide</a>
+				<button href="#protection" id="save_password" class="ppwp-button-submit"><?php esc_html_e( 'Submit', 'password-protect-page' ); ?></button>
+				<a class="cancel-pda-protection-map button-cancel ppwp-button-hide"><?php esc_html_e( 'Hide', 'password-protect-page' ); ?></a>
 			</p>
 		</div>
 	</div>

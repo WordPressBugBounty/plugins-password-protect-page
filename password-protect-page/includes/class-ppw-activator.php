@@ -1,5 +1,8 @@
 <?php
-
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+// phpcs:ignoreFile WordPress.NamingConventions.PrefixAllGlobals
 /**
  * Fired during plugin activation
  *
@@ -32,12 +35,12 @@ class PPW_Activator {
 	public static function activate() {
 		if ( ! version_compare( PHP_VERSION, '5.6', '>=' ) ) {
 			/* translators: %s: PHP version */
-			$message      = sprintf( esc_html__( 'Password Protect WordPress requires PHP version %s+, plugin cannot be activated.', PPW_Constants::DOMAIN ), '5.6' );
+			$message      = sprintf( esc_html__( 'Password Protect WordPress requires PHP version %s+, plugin cannot be activated.', 'password-protect-page' ), '5.6' );
 			$html_message = sprintf( '<div class="error">%s</div>', wpautop( $message ) );
 			wp_die( wp_kses_post( $html_message ) );
 		} elseif ( ! version_compare( get_bloginfo( 'version' ), '4.7', '>=' ) ) {
 			/* translators: %s: PHP version */
-			$message      = sprintf( esc_html__( 'Password Protect WordPress requires WordPress version %s+. Because you are using an earlier version, the plugin cannot be activated.', PPW_Constants::DOMAIN ), '4.7' );
+			$message      = sprintf( esc_html__( 'Password Protect WordPress requires WordPress version %s+. Because you are using an earlier version, the plugin cannot be activated.', 'password-protect-page' ), '4.7' );
 			$html_message = sprintf( '<div class="error">%s</div>', wpautop( $message ) );
 			wp_die( wp_kses_post( $html_message ) );
 		}
@@ -46,7 +49,7 @@ class PPW_Activator {
 			$installed_plugins = get_plugins();
 			$version           = $installed_plugins[ PPW_Constants::PRO_DIRECTORY ]['Version'];
 			if ( - 1 === version_compare( $version, '1.1.0' ) ) {
-				wp_die( wp_kses_post( __( 'You need to <a target="_blank" rel="noreferrer noopener" href="https://passwordprotectwp.com/docs/ppwp-pro-free/">update our Pro to its latest version</a> for our Password Protect WordPress plugins to work properly. You <b>must NOT delete</b> the current Free version. Otherwise, you’ll lose all your current settings data.', PPW_Constants::DOMAIN ) ) );
+				wp_die( wp_kses_post( __( 'You need to <a target="_blank" rel="noreferrer noopener" href="https://passwordprotectwp.com/docs/ppwp-pro-free/">update our Pro to its latest version</a> for our Password Protect WordPress plugins to work properly. You <b>must NOT delete</b> the current Free version. Otherwise, you’ll lose all your current settings data.', 'password-protect-page' ) ) );
 			}
 		}
 	}

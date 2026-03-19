@@ -1,3 +1,8 @@
+<?php 
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+?>
 body.ppwp-sitewide-protection {
 background: #2a2c2e url("<?php echo esc_url( ppw_get_background_image( 'sw-default1.jpg' ) ); ?>") no-repeat center/cover !important;
 }

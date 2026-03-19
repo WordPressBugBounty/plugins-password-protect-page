@@ -1,5 +1,7 @@
 <?php
-
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
 class PPW_Beaver_Loader {
 	/**
 	 * Instance of PPW_Beaver_Loader class.

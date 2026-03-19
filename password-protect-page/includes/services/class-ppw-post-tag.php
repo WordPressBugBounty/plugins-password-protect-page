@@ -1,9 +1,12 @@
 <?php
-
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
 /**
  *
  * Class PPW_Tag
  */
+// phpcs:disable WordPress.NamingConventions.PrefixAllGlobals
 class PPW_Tag_Service {
 	const COOKIE_NAME = 'ppw_tag-';
 	const OPTION_NAME = 'ppwp_tag_options';
@@ -253,12 +256,12 @@ class PPW_Tag_Service {
 		}
 
 		$referer = wp_get_referer();
+		// phpcs:disable
 		if ( $referer ) {
 			$secure = ( 'https' === parse_url( $referer, PHP_URL_SCHEME ) );
 		} else {
 			$secure = false;
 		}
-
 		if ( $password_id ) {
 			$password_hashed = $password_id . '|' . $password_hashed;
 		}

@@ -3,7 +3,7 @@
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
-
+// phpcs:disable WordPress.NamingConventions.PrefixAllGlobals
 if ( class_exists( 'WP_Customize_Section' ) && ! class_exists( 'PPW_Customize_Link_Section' ) ) {
 
 	/**
