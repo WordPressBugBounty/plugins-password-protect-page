@@ -7,6 +7,7 @@ jQuery(function ($) {
     let deactivateUrl = '';
     let pluginType = ''; // 'free' or 'pro'
     var slug = ''; // 'free' or 'pro'
+    var pluginName = ''; 
 
     /* ===============================
        Capture deactivate click
@@ -24,9 +25,11 @@ jQuery(function ($) {
              if (id === 'deactivate-password-protect-page') {
                 pluginType = 'free';
                 slug = 'password-protect-page';
+                pluginName = 'Password Protect WordPress Lite';
             } else if (id === 'deactivate-password-protect-wordpress-pro') {
                 pluginType = 'pro';
                 slug = 'password-protect-wordpress-pro';
+                pluginName = 'Password Protect WordPress Pro';
             } else {
                 return; // Not our plugin
             }
@@ -37,6 +40,7 @@ jQuery(function ($) {
                 e.preventDefault();
             }
 
+            $('#ppw-feedback-overlay .ppw-plugin-name').text(pluginName);
             // Open modal (flex-safe)
             $('#ppw-feedback-overlay').data('plugin', pluginType).addClass('is-open');
         }
