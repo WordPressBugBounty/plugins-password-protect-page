@@ -1,4 +1,8 @@
 <?php
+if ( ! defined( 'ABSPATH' ) ) {
+    exit;
+}
+
 // phpcs:disable WordPress.NamingConventions.PrefixAllGlobals
 // translators: %s: Link to documentation.
 $page_builder_link = sprintf(

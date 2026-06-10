@@ -1,10 +1,10 @@
 === PPWP - Password Protect Pages ===
 Contributors: gaupoit, rexhoang, ppwp, buildwps, yuryonfolio
 Tags: password protect, password, restrict content, sitewide, password protection
-Requires at least: 4.7
+Requires at least: 5.2
 Requires PHP: 5.6
-Tested up to: 6.9.4
-Stable tag: 1.9.18
+Tested up to: 7.0
+Stable tag: 1.9.19
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -279,6 +279,11 @@ Yes, the Pro version enables you to [automatically password protect child pages]
 N/A
 
 == Changelog ==
+
+= 1.9.19 =
+
+* [BugFix] Fixed a potential PHP Object Injection vulnerability in protected post metadata handling.
+* [Improvement] Improved data validation and serialization processing to enhance overall plugin security and reliability.
 
 = 1.9.18 =
 

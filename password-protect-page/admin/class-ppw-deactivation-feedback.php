@@ -111,7 +111,7 @@ class PPW_Deactivation_Feedback {
 
         wp_send_json_success([
             'success' => true,
-            'message' => __('Feedback sent successfully','prevent-direct-access')
+            'message' => __('Feedback sent successfully','password-protect-page')
         ]);
 
         

@@ -266,11 +266,14 @@ function ppw_free_fix_serialize_data( $raw_data, $is_un_slashed = true ) {
 		return array();
 	}
 
-
-	$serialize_raw_data = @unserialize( $raw_data );
+	$serialize_raw_data = @unserialize( $raw_data, array( 'allowed_classes' => false ) );
 	if ( false === $serialize_raw_data ) {
 		return $raw_data;
 	}
+
+	if ( ! is_array( $serialize_raw_data ) ) {
+        return array();
+    }
 
 	return $is_un_slashed ? wp_unslash( $serialize_raw_data ) : $serialize_raw_data;
 }

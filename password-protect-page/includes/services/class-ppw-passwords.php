@@ -653,7 +653,7 @@ if ( ! class_exists( 'PPW_Password_Services' ) ) {
 					$meta_value       = ppw_free_fix_serialize_data( $val->meta_value );
 					$result['global'] = array_merge( $result['global'], $meta_value );
 				} elseif ( PPW_Constants::POST_PROTECTION_ROLES === $val->meta_key ) {
-					$meta_value     = ppw_free_fix_serialize_data( @unserialize( $val->meta_value ) );
+					$meta_value     = ppw_free_fix_serialize_data( $val->meta_value );
 					$result['role'] = $this->massage_pw_for_roles_from_post_meta( $meta_value );
 				}
 			}
@@ -699,7 +699,7 @@ if ( ! class_exists( 'PPW_Password_Services' ) ) {
 		public function get_protected_post_ids() {
 			$role_key = PPW_Constants::POST_PROTECTION_ROLES;
 			$results  = array_filter( $this->get_pw_meta(), function ( $value ) use ( $role_key ) {
-				$meta_value          = ppw_free_fix_serialize_data( @unserialize( $value->meta_value ) );
+				$meta_value = ppw_free_fix_serialize_data( $value->meta_value );
 				$is_valid_meta_value = is_array( $meta_value );
 				if ( $is_valid_meta_value && $role_key === $value->meta_key ) {
 					foreach ( $meta_value as $meta ) {
