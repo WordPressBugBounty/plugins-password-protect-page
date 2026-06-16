@@ -134,7 +134,8 @@ class PPW_Admin {
 	 */
 	public function ppw_free_set_password() {
 		$setting_keys = array( 'save_password', 'id_page_post', 'is_role_selected', 'ppwp_multiple_password' );
-		if ( ppw_free_error_before_create_password( $_REQUEST, $setting_keys ) ) {  // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- We handle nonce verification in this function
+		// phpcs:disable
+		if ( ppw_free_error_before_create_password( $_REQUEST, $setting_keys ) ) { 
 			wp_send_json(
 				array(
 					'is_error' => true,
@@ -144,11 +145,8 @@ class PPW_Admin {
 			);
 			wp_die();
 		}
-		// phpcs:disable WordPress.Security.NonceVerification.Recommended
-		// phpcs:disable WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
-		// phpcs:disable WordPress.Security.ValidatedSanitizedInput.MissingUnslash
 
-		if ( ! isset( $_REQUEST['settings'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- We handle nonce verification above.
+		if ( ! isset( $_REQUEST['settings'] ) ) { 
 			wp_send_json(
 				array(
 					'is_error' => true,
@@ -163,9 +161,20 @@ class PPW_Admin {
 	    $data_settings = wp_unslash( $_REQUEST['settings'] );
 
 		$new_role_password    = $data_settings['save_password'];
-		$id                   = $data_settings['id_page_post'];
+		$id                   = absint( $data_settings['id_page_post'] );
 		$role_selected        = $data_settings['is_role_selected'];
 		$new_global_passwords = is_array( $data_settings['ppwp_multiple_password'] ) ? $data_settings['ppwp_multiple_password'] : array();
+
+		if ( ! current_user_can( 'edit_post', $id ) ) {
+			wp_send_json(
+				array(
+					'is_error' => true,
+					'message'  => PPW_Constants::BAD_REQUEST_MESSAGE,
+				),
+				403
+			);
+			wp_die();
+		}
 
 		$free_services          = new PPW_Password_Services();
 		$current_roles_password = $free_services->create_new_password( $id, $role_selected, $new_global_passwords, $new_role_password );
@@ -277,6 +286,17 @@ class PPW_Admin {
 					'message'  => PPW_Constants::BAD_REQUEST_MESSAGE,
 				),
 				400
+			);
+			wp_die();
+		}
+		$post_id = isset( $_request['postId'] ) ? absint( $_request['postId'] ) : 0;
+		if ( ! $post_id || ! current_user_can( 'edit_post', $post_id ) ) {
+			wp_send_json(
+				array(
+					'is_error' => true,
+					'message'  => PPW_Constants::BAD_REQUEST_MESSAGE,
+				),
+				403
 			);
 			wp_die();
 		}

@@ -836,7 +836,10 @@ if ( ! class_exists( 'PPW_API' ) ) {
 
 		public function get_pcp_settings( $request ) {
 			$ppwp_db   = new PPW_Repository_Passwords();
-			$post_id   = $request->get_param( 'id' );
+			$post_id   = absint( $request->get_param( 'id' ) );
+			if ( ! $post_id || ! current_user_can( 'edit_post', $post_id ) ) {
+	       	 	return new WP_REST_Response( array( 'success' => false ), 403 );
+   		    }
 			$passwords = $ppwp_db->get_passwords_with_type_and_post_id( PPW_Content_Protection::PASSWORD_GLOBAL_TYPE, $post_id, 'password' );
 			$setting   = array();
 			if ( count( $passwords ) > 0 ) {
@@ -860,9 +863,11 @@ if ( ! class_exists( 'PPW_API' ) ) {
 		public function update_pcp_settings( $request ) {
 			$ppwp_db   = new PPW_Repository_Passwords();
 			$ppwp_area = new PPW_Content_Protection();
-			$post_id   = $request->get_param( 'id' );
+			$post_id   = absint( $request->get_param( 'id' ) );
 			$passwords = $request->get_param( 'passwords' );
-
+			if ( ! $post_id || ! current_user_can( 'edit_post', $post_id ) ) {
+		        return new WP_REST_Response( array( 'success' => false ), 403 );
+		    }
 			$post = get_post( $post_id );
 			if ( ! $ppwp_area->check_area_exist( $post ) ) {
 				return new WP_REST_Response(
