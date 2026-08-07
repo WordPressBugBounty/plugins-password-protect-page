@@ -494,7 +494,7 @@ class PPW_Recaptcha {
 			case PPW_Recaptcha::RECAPTCHA_V2_CHECKBOX_TYPE:
 				$site_key = $this->get_recaptcha_v2_api_key();
 
-				return '<div class="ppw-recaptcha g-recaptcha" data-sitekey="' . $site_key . '"></div>';
+				return '<div class="ppw-recaptcha g-recaptcha" data-sitekey="' . esc_attr( $site_key ) . '"></div>';
 			default:
 				return '<input type="hidden" name="g-recaptcha-response" id="ppwRecaptchaResponse" />';
 		}

@@ -3,7 +3,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 // phpcs:ignoreFile WordPress.NamingConventions.PrefixAllGlobals
-$shortcode = '[ppwp passwords="' . $settings->ppwp_passwords . '"';
+$shortcode = '[ppwp passwords="' . esc_attr( $settings->ppwp_passwords ) . '"';
 
 if ( ! empty( $settings->ppwp_headline ) ) {
 	$shortcode .= ' headline="' . esc_attr($settings->ppwp_headline) . '"';

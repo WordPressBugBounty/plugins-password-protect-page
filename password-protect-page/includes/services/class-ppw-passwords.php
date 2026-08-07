@@ -340,7 +340,11 @@ if ( ! class_exists( 'PPW_Password_Services' ) ) {
 
 			// Validate global password(empty and duplicate).
 			ppw_free_validate_password_type_global( $new_global_passwords, $current_global_passwords, $current_roles_password );
-			update_post_meta( $id, PPW_Constants::GLOBAL_PASSWORDS, $new_global_passwords );
+			if ( empty( $new_global_passwords ) ) {
+				delete_post_meta( $id, PPW_Constants::GLOBAL_PASSWORDS );
+			} else {
+				update_post_meta( $id, PPW_Constants::GLOBAL_PASSWORDS, $new_global_passwords );
+			}
 
 			// Clear cache for Cache plugin.
 			ppw_core_clear_cache_by_id( $id );

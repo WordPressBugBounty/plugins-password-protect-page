@@ -1329,7 +1329,7 @@ class PPW_Admin {
 		$query = $wpdb->prepare(
 		        "SELECT DISTINCT post_id 
 		         FROM {$wpdb->postmeta} 
-		         WHERE meta_key = %s", 
+		         WHERE meta_key = %s AND meta_value != '' AND meta_value != 'a:0:{}'", 
 		         PPW_Constants::GLOBAL_PASSWORDS
 		    );
 
@@ -1451,7 +1451,18 @@ class PPW_Admin {
 			wp_die();
 		}
 		$request = wp_unslash( $_REQUEST ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- We already verify nonce in above.
-		$result  = $this->subscribe_services->handle_subscribe_request( $request['settings']['ppw_email'] );
+		$email   = isset( $request['settings']['ppw_email'] ) ? sanitize_email( $request['settings']['ppw_email'] ) : '';
+		if ( ! is_email( $email ) ) {
+			wp_send_json(
+				array(
+					'is_error' => true,
+					'message'  => __( 'Invalid email address', 'password-protect-page' ),
+				),
+				400
+			);
+			wp_die();
+		}
+		$result  = $this->subscribe_services->handle_subscribe_request( $email );
 		wp_send_json(
 			array(
 				'is_error' => isset( $result['error_message'] ) ? true : false,

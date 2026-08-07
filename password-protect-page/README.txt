@@ -3,8 +3,8 @@ Contributors: gaupoit, rexhoang, ppwp, buildwps, yuryonfolio
 Tags: password protect, password, restrict content, sitewide, password protection
 Requires at least: 5.2
 Requires PHP: 5.6
-Tested up to: 7.0
-Stable tag: 1.9.20
+Tested up to: 7.0.3
+Stable tag: 1.9.21
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -279,6 +279,12 @@ Yes, the Pro version enables you to [automatically password protect child pages]
 N/A
 
 == Changelog ==
+
+= 1.9.21 =
+
+* [BugFix] Resolve security bypass by disabling standalone direct URL querying for Section Protection templates.
+* [BugFix] Escape attributes in Elementor and Beaver Builder shortcode layouts to prevent HTML/attribute breakout.
+* [Improvement] Sanitize and escape theme customizer output settings to prevent CSS rule injections.
 
 = 1.9.20 =
 

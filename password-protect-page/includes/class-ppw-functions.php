@@ -651,7 +651,9 @@ function ppw_allowed_master_protection_type() {
 }
 
 function ppw_get_current_user_agent() {
-	return ! empty( $server_env['HTTP_USER_AGENT'] ) ? $server_env['HTTP_USER_AGENT'] : 'N/A';
+	$server = wp_unslash( $_SERVER );
+
+	return ! empty( $server['HTTP_USER_AGENT'] ) ? $server['HTTP_USER_AGENT'] : 'N/A';
 }
 
 function ppw_get_current_ip_address() {
@@ -766,4 +768,34 @@ function ppw_get_terms_with_all_lang( $args ) {
 	}
 
 	return $terms;
+}
+
+/**
+ * Sanitize a CSS hex color; preserve empty defaults.
+ *
+ * @param mixed $value Raw theme_mod value.
+ * @return string
+ */
+function ppw_sanitize_css_hex( $value ) {
+	if ( '' === $value || null === $value ) {
+		return '';
+	}
+
+	$sanitized = sanitize_hex_color( $value );
+
+	return $sanitized ? $sanitized : '';
+}
+
+/**
+ * Sanitize a CSS numeric value; preserve empty defaults.
+ *
+ * @param mixed $value Raw theme_mod value.
+ * @return string|int
+ */
+function ppw_sanitize_css_number( $value ) {
+	if ( '' === $value || null === $value ) {
+		return '';
+	}
+
+	return absint( $value );
 }

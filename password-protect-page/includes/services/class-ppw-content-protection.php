@@ -131,11 +131,6 @@ class PPW_Content_Protection {
 			'query_var'       => false,
 			'show_in_rest'    => true,
 		);
-
-		if ( current_user_can( 'administrator' ) ) { // phpcs:ignore WordPress.Security.Capabilities.Restricted
-			$args['public']             = true;
-			$args['publicly_queryable'] = true;
-		}
 		register_post_type( self::POST_TYPE, $args );
 	}
 

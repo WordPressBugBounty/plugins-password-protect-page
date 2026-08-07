@@ -280,17 +280,17 @@ if ( ! class_exists( 'PPW_Shortcode_Widget' ) ) {
 
 			$shortcode         = sprintf(
 				'[ppwp id="" class="" passwords="%1$s" cookie="%2$s" download_limit="%3$s" whitelisted_roles="%4$s" headline="%5$s" description="%6$s" placeholder="%7$s" button="%8$s" label="%9$s" error_msg="%10$s" loading="%11$s"',
-				$passwords,
-				$cookie,
-				$download_limit,
-				$whitelisted_roles,
-				esc_html( $headline ),
-				esc_html( $description ),
-				esc_html( $placeholder ),
-				esc_html( $button ),
-				esc_html( $label ),
-				esc_html( $error_msg ),
-				esc_html( $loading )
+				esc_attr( $passwords ),
+				esc_attr( $cookie ),
+				esc_attr( $download_limit ),
+				esc_attr( $whitelisted_roles ),
+				esc_attr( $headline ),
+				esc_attr( $description ),
+				esc_attr( $placeholder ),
+				esc_attr( $button ),
+				esc_attr( $label ),
+				esc_attr( $error_msg ),
+				esc_attr( $loading )
 			);
 
 			$shortcode = apply_filters( PPW_Constants::HOOK_SHORTCODE_ELEMENTOR_ATTRIBUTES, $shortcode, $settings );

@@ -679,24 +679,48 @@ if ( ! class_exists( 'PPW_Customizer_PCP' ) ) {
 		 * @return void
 		 */
 		public function dynamic_styles() {
+			$bg_color             = ppw_sanitize_css_hex( get_theme_mod( 'ppwp_pcp_form_background_color', PPW_Constants::DEFAULT_FORM_BACKGROUND_COLOR ) );
+			$padding              = ppw_sanitize_css_number( get_theme_mod( 'ppwp_pcp_form_padding', PPW_Constants::DEFAULT_FORM_PADDING ) );
+			$border_radius        = ppw_sanitize_css_number( get_theme_mod( 'ppwp_pcp_form_border_radius', PPW_Constants::DEFAULT_FORM_BORDER_RADIUS ) );
+			$headline_font_size   = ppw_sanitize_css_number( get_theme_mod( 'ppwp_pcp_form_headline_font_size', PPW_Constants::DEFAULT_HEADLINE_FONT_SIZE ) );
+			$headline_font_weight = ppw_sanitize_css_number( get_theme_mod( 'ppwp_pcp_form_headline_font_weight', PPW_Constants::DEFAULT_HEADLINE_FONT_WEIGHT ) );
+			$headline_color       = ppw_sanitize_css_hex( get_theme_mod( 'ppwp_pcp_form_headline_color', PPW_Constants::DEFAULT_HEADLINE_FONT_COLOR ) );
+			$text_font_size       = ppw_sanitize_css_number( get_theme_mod( 'ppwp_pcp_form_description_font_size', PPW_Constants::DEFAULT_TEXT_FONT_SIZE ) );
+			$text_font_weight     = ppw_sanitize_css_number( get_theme_mod( 'ppwp_pcp_form_description_font_weight', PPW_Constants::DEFAULT_TEXT_FONT_WEIGHT ) );
+			$text_color           = ppw_sanitize_css_hex( get_theme_mod( 'ppwp_pcp_form_description_color', PPW_Constants::DEFAULT_TEXT_FONT_COLOR ) );
+			$desc_below_font_size = ppw_sanitize_css_number( get_theme_mod( 'ppwp_pcp_form_description_below_form_font_size', PPW_Constants::DEFAULT_TEXT_FONT_SIZE ) );
+			$desc_below_font_wt   = ppw_sanitize_css_number( get_theme_mod( 'ppwp_pcp_form_description_below_form_font_weight', PPW_Constants::DEFAULT_TEXT_FONT_WEIGHT ) );
+			$desc_below_color     = ppw_sanitize_css_hex( get_theme_mod( 'ppwp_pcp_form_description_below_form_color', PPW_Constants::DEFAULT_TEXT_FONT_COLOR ) );
+			$label_font_size      = ppw_sanitize_css_number( get_theme_mod( 'ppwp_pcp_form_label_font_size', PPW_Constants::DEFAULT_TEXT_FONT_SIZE ) );
+			$label_font_weight    = ppw_sanitize_css_number( get_theme_mod( 'ppwp_pcp_form_label_font_weight', PPW_Constants::DEFAULT_TEXT_FONT_WEIGHT ) );
+			$label_color          = ppw_sanitize_css_hex( get_theme_mod( 'ppwp_pcp_form_label_color', PPW_Constants::DEFAULT_TEXT_FONT_COLOR ) );
+			$button_text_color    = ppw_sanitize_css_hex( get_theme_mod( 'ppwp_pcp_button_text_color', PPW_Constants::DEFAULT_BUTTON_TEXT_FONT_COLOR ) );
+			$button_bg_color      = ppw_sanitize_css_hex( get_theme_mod( 'ppwp_pcp_button_background_color', PPW_Constants::DEFAULT_BUTTON_BACKGROUND_COLOR ) );
+			$button_hover_color   = ppw_sanitize_css_hex( get_theme_mod( 'ppwp_pcp_button_text_hover_color', PPW_Constants::DEFAULT_BUTTON_TEXT_HOVER_COLOR ) );
+			$button_hover_bg      = ppw_sanitize_css_hex( get_theme_mod( 'ppwp_pcp_button_background_hover_color', PPW_Constants::DEFAULT_BUTTON_BACKGROUND_HOVER_COLOR ) );
+			$error_font_size      = ppw_sanitize_css_number( get_theme_mod( 'ppwp_pcp_err_msg_text_font_size', PPW_Constants::DEFAULT_ERROR_TEXT_FONT_SIZE ) );
+			$error_font_weight    = ppw_sanitize_css_number( get_theme_mod( 'ppwp_pcp_err_msg_text_font_weight', PPW_Constants::DEFAULT_ERROR_TEXT_FONT_WEIGHT ) );
+			$error_color          = ppw_sanitize_css_hex( get_theme_mod( 'ppwp_pcp_err_msg_text_color', PPW_Constants::DEFAULT_ERROR_TEXT_FONT_COLOR ) );
+			$error_bg_color       = ppw_sanitize_css_hex( get_theme_mod( 'ppwp_pcp_err_msg_background_color', PPW_Constants::DEFAULT_ERROR_TEXT_BACKGROUND_COLOR ) );
+
 			$ppw_custom_css = "
 			<style>
 			.ppw-form {
-				background-color: " . get_theme_mod( 'ppwp_pcp_form_background_color', PPW_Constants::DEFAULT_FORM_BACKGROUND_COLOR ) . "!important;
-				padding: " . get_theme_mod( 'ppwp_pcp_form_padding', PPW_Constants::DEFAULT_FORM_PADDING ) . "px!important;
-				border-radius: " . get_theme_mod( 'ppwp_pcp_form_border_radius', PPW_Constants::DEFAULT_FORM_BORDER_RADIUS ) . "px!important;
+				background-color: " . esc_attr( $bg_color ) . "!important;
+				padding: " . esc_attr( $padding ) . "px!important;
+				border-radius: " . esc_attr( $border_radius ) . "px!important;
 			}
 
 			.ppw-headline.ppw-pcp-pf-headline {
-				font-size: " . get_theme_mod( 'ppwp_pcp_form_headline_font_size', PPW_Constants::DEFAULT_HEADLINE_FONT_SIZE ) . "px!important;
-				font-weight: " . get_theme_mod( 'ppwp_pcp_form_headline_font_weight', PPW_Constants::DEFAULT_HEADLINE_FONT_WEIGHT ) . "!important;
-				color: " . get_theme_mod( 'ppwp_pcp_form_headline_color', PPW_Constants::DEFAULT_HEADLINE_FONT_COLOR ) . "!important;
+				font-size: " . esc_attr( $headline_font_size ) . "px!important;
+				font-weight: " . esc_attr( $headline_font_weight ) . "!important;
+				color: " . esc_attr( $headline_color ) . "!important;
 			}
 
 			.ppw-description.ppw-pcp-pf-desc {
-				font-size: " . get_theme_mod( 'ppwp_pcp_form_description_font_size', PPW_Constants::DEFAULT_TEXT_FONT_SIZE ) . "px!important;
-				font-weight: " . get_theme_mod( 'ppwp_pcp_form_description_font_weight', PPW_Constants::DEFAULT_TEXT_FONT_WEIGHT ) . "!important;
-				color: " . get_theme_mod( 'ppwp_pcp_form_description_color', PPW_Constants::DEFAULT_TEXT_FONT_COLOR ) . "!important;
+				font-size: " . esc_attr( $text_font_size ) . "px!important;
+				font-weight: " . esc_attr( $text_font_weight ) . "!important;
+				color: " . esc_attr( $text_color ) . "!important;
 			}
 
 			.ppw-pcp-pf-desc-above-btn {
@@ -704,32 +728,32 @@ if ( ! class_exists( 'PPW_Customizer_PCP' ) ) {
 			}
 
 			.ppw-pcp-pf-desc-below-form {
-				font-size: " . get_theme_mod( 'ppwp_pcp_form_description_below_form_font_size', PPW_Constants::DEFAULT_TEXT_FONT_SIZE ) . "px!important;
-				font-weight: " . get_theme_mod( 'ppwp_pcp_form_description_below_form_font_weight', PPW_Constants::DEFAULT_TEXT_FONT_WEIGHT ) . "!important;
-				color: " . get_theme_mod( 'ppwp_pcp_form_description_below_form_color', PPW_Constants::DEFAULT_TEXT_FONT_COLOR ) . "!important;
+				font-size: " . esc_attr( $desc_below_font_size ) . "px!important;
+				font-weight: " . esc_attr( $desc_below_font_wt ) . "!important;
+				color: " . esc_attr( $desc_below_color ) . "!important;
 			}
 
 			.ppw-input label.ppw-pcp-password-label {
-				font-size: " . get_theme_mod( 'ppwp_pcp_form_label_font_size', PPW_Constants::DEFAULT_TEXT_FONT_SIZE ) . "px!important;
-				font-weight: " . get_theme_mod( 'ppwp_pcp_form_label_font_weight', PPW_Constants::DEFAULT_TEXT_FONT_WEIGHT ) . "!important;
-				color: " . get_theme_mod( 'ppwp_pcp_form_label_color', PPW_Constants::DEFAULT_TEXT_FONT_COLOR ) . "!important;
+				font-size: " . esc_attr( $label_font_size ) . "px!important;
+				font-weight: " . esc_attr( $label_font_weight ) . "!important;
+				color: " . esc_attr( $label_color ) . "!important;
 			}
 
 			.ppw-form input[type='submit'] {
-				color: " . get_theme_mod( 'ppwp_pcp_button_text_color', PPW_Constants::DEFAULT_BUTTON_TEXT_FONT_COLOR ) . "!important;
-				background: " . get_theme_mod( 'ppwp_pcp_button_background_color', PPW_Constants::DEFAULT_BUTTON_BACKGROUND_COLOR ) . "!important;
+				color: " . esc_attr( $button_text_color ) . "!important;
+				background: " . esc_attr( $button_bg_color ) . "!important;
 			}
 
 			.ppw-form input[type='submit']:hover {
-				color: " . get_theme_mod( 'ppwp_pcp_button_text_hover_color', PPW_Constants::DEFAULT_BUTTON_TEXT_HOVER_COLOR ) . "!important;
-				background: " . get_theme_mod( 'ppwp_pcp_button_background_hover_color', PPW_Constants::DEFAULT_BUTTON_BACKGROUND_HOVER_COLOR ) . "!important;
+				color: " . esc_attr( $button_hover_color ) . "!important;
+				background: " . esc_attr( $button_hover_bg ) . "!important;
 			}
 			
 			div.ppw-error.ppw-pcp-pf-error-msg {
-				font-size: " . get_theme_mod( 'ppwp_pcp_err_msg_text_font_size', PPW_Constants::DEFAULT_ERROR_TEXT_FONT_SIZE ) . "px!important;
-				font-weight: " . get_theme_mod( 'ppwp_pcp_err_msg_text_font_weight', PPW_Constants::DEFAULT_ERROR_TEXT_FONT_WEIGHT ) . "!important;
-				color: " . get_theme_mod( 'ppwp_pcp_err_msg_text_color', PPW_Constants::DEFAULT_ERROR_TEXT_FONT_COLOR ) . "!important;
-				background: " . get_theme_mod( 'ppwp_pcp_err_msg_background_color', PPW_Constants::DEFAULT_ERROR_TEXT_BACKGROUND_COLOR ) . "!important;
+				font-size: " . esc_attr( $error_font_size ) . "px!important;
+				font-weight: " . esc_attr( $error_font_weight ) . "!important;
+				color: " . esc_attr( $error_color ) . "!important;
+				background: " . esc_attr( $error_bg_color ) . "!important;
 			}
 			
 			</style>
@@ -738,7 +762,7 @@ if ( ! class_exists( 'PPW_Customizer_PCP' ) ) {
 			// compress $ppw_custom_css.
 			$ppw_custom_css = preg_replace( "/\s{2,}/", " ", str_replace( "\n", "", str_replace( ', ', ",", $ppw_custom_css ) ) );
 
-			echo $ppw_custom_css; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- custom CSS already sanitized
+			echo $ppw_custom_css; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- values sanitized/escaped above
 		}
 
 		/*
