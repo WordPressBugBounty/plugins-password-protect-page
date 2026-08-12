@@ -584,9 +584,9 @@ if ( ! class_exists( 'PPW_Shortcode' ) ) {
 			$form_params = array(
 				PPW_Constants::SHORT_CODE_FORM_HEADLINE       => _x( $this->massage_attributes( $attrs['headline'] ), PPW_Constants::CONTEXT_PCP_PASSWORD_FORM, 'password-protect-page'),
 				PPW_Constants::SHORT_CODE_FORM_INSTRUCT       => _x( $this->massage_attributes( $attrs['description'] ), PPW_Constants::CONTEXT_PCP_PASSWORD_FORM, 'password-protect-page'),
-				PPW_Constants::SHORT_CODE_FORM_PLACEHOLDER    => _x( $this->massage_attributes( $attrs['placeholder'] ), PPW_Constants::CONTEXT_PCP_PASSWORD_FORM, 'password-protect-page'),
+				PPW_Constants::SHORT_CODE_FORM_PLACEHOLDER    => esc_attr( _x( $this->massage_attributes( $attrs['placeholder'] ), PPW_Constants::CONTEXT_PCP_PASSWORD_FORM, 'password-protect-page') ),
 				PPW_Constants::SHORT_CODE_FORM_AUTH           => $post_id,
-				PPW_Constants::SHORT_CODE_BUTTON              => _x( wp_kses_post( $attrs['button'] ), PPW_Constants::CONTEXT_PCP_PASSWORD_FORM, 'password-protect-page'),
+				PPW_Constants::SHORT_CODE_BUTTON              => esc_attr( _x( wp_kses_post( $attrs['button'] ), PPW_Constants::CONTEXT_PCP_PASSWORD_FORM, 'password-protect-page') ),
 				PPW_Constants::SHORT_CODE_FORM_CURRENT_URL    => $this->get_the_permalink_without_cache( wp_rand( 0, 100 ) ),
 				PPW_Constants::SHORT_CODE_FORM_ID             => esc_attr( '' === $attrs['id'] ? get_the_ID() . wp_rand( 0, 1000 ) : wp_kses_post( $attrs['id'] ) ),
 				PPW_Constants::SHORT_CODE_FORM_CLASS          => esc_attr( $className ),
