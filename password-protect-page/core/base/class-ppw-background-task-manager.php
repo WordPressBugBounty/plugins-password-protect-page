@@ -27,6 +27,10 @@ abstract class PPW_Background_Task_Manager extends PPW_Module {
 			return;
 		}
 
+		if ( ! current_user_can( ppw_get_allowed_capability() ) ) {
+			return;
+		}
+
 		if ( 'run' === $_GET[ $this->get_action() ] && check_admin_referer( $this->get_action() . 'run' ) ) {
 			$this->start_run();
 		}

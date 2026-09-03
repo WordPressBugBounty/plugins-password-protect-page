@@ -567,6 +567,17 @@ class PPW_Admin {
 	 * Update settings
 	 */
 	public function ppw_free_update_general_settings() {
+		if ( ! current_user_can( ppw_get_allowed_capability() ) ) {
+			wp_send_json(
+				array(
+					'is_error' => true,
+					'message'  => PPW_Constants::BAD_REQUEST_MESSAGE,
+				),
+				400
+			);
+			wp_die();
+		}
+
 		$setting_keys = array(
 			PPW_Constants::COOKIE_EXPIRED,
 			PPW_Constants::REMOVE_DATA,
@@ -602,6 +613,17 @@ class PPW_Admin {
 	 * Update settings
 	 */
 	public function ppw_free_update_external_settings() {
+		if ( ! current_user_can( ppw_get_allowed_capability() ) ) {
+			wp_send_json(
+				array(
+					'is_error' => true,
+					'message'  => PPW_Constants::BAD_REQUEST_MESSAGE,
+				),
+				400
+			);
+			wp_die();
+		}
+
 		if ( ! isset( $_REQUEST['settings'] ) || ! is_array( $_REQUEST['settings'] ) || ppw_free_is_setting_data_invalid( $_REQUEST, array(), false ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- We handle nonce verification in ppw_free_is_setting_data_invalid() function.
 			wp_send_json(
 				array(
@@ -651,6 +673,17 @@ class PPW_Admin {
 	 */
 	public function ppw_free_update_misc_settings() {
 		// phpcs:disable
+		if ( ! current_user_can( ppw_get_allowed_capability() ) ) {
+			wp_send_json(
+				array(
+					'is_error' => true,
+					'message'  => PPW_Constants::BAD_REQUEST_MESSAGE,
+				),
+				400
+			);
+			wp_die();
+		}
+
 		$setting_keys = apply_filters(
 			PPW_Constants::HOOK_ADVANCED_VALID_INPUT_DATA,
 			array(
@@ -695,6 +728,17 @@ class PPW_Admin {
 	 */
 	public function ppw_free_update_shortcode_settings() {
 		// phpcs:disable
+		if ( ! current_user_can( ppw_get_allowed_capability() ) ) {
+			wp_send_json(
+				array(
+					'is_error' => true,
+					'message'  => PPW_Constants::BAD_REQUEST_MESSAGE,
+				),
+				400
+			);
+			wp_die();
+		}
+
 		$setting_keys = apply_filters(
 			'ppw_shortcode_valid_input_data',
 			array(
@@ -736,9 +780,19 @@ class PPW_Admin {
 	 * Update category settings.
 	 */
 	public function ppw_free_update_category_settings() {
-		
-		$nonce_verification = check_ajax_referer( PPW_Constants::GENERAL_FORM_NONCE, 'security_check' );
 		// phpcs:disable
+		if ( ! current_user_can( ppw_get_allowed_capability() ) ) {
+			wp_send_json(
+				array(
+					'is_error' => true,
+					'message'  => PPW_Constants::BAD_REQUEST_MESSAGE,
+				),
+				400
+			);
+			wp_die();
+		}
+
+		$nonce_verification = check_ajax_referer( PPW_Constants::GENERAL_FORM_NONCE, 'security_check' );
 		if ( ! $nonce_verification ) {
 			wp_send_json(
 				array(
@@ -918,7 +972,17 @@ class PPW_Admin {
 	 * Update Tag settings.
 	 */
 	public function ppw_free_update_tag_settings() {
-	
+		if ( ! current_user_can( ppw_get_allowed_capability() ) ) {
+			wp_send_json(
+				array(
+					'is_error' => true,
+					'message'  => PPW_Constants::BAD_REQUEST_MESSAGE,
+				),
+				400
+			);
+			wp_die();
+		}
+
 		$nonce_verification = check_ajax_referer( PPW_Constants::GENERAL_FORM_NONCE, 'security_check' );
 
 		if ( ! $nonce_verification ) {
@@ -1074,6 +1138,17 @@ class PPW_Admin {
 	}
 
 	public function ppw_free_update_entire_site_settings() {
+		if ( ! current_user_can( ppw_get_allowed_capability() ) ) {
+			wp_send_json(
+				array(
+					'is_error' => true,
+					'message'  => PPW_Constants::BAD_REQUEST_MESSAGE,
+				),
+				400
+			);
+			wp_die();
+		}
+
 		$request = wp_unslash( $_REQUEST );
 		if ( ppw_free_is_entire_site_settings_data_invalid( $request ) ) {
 			wp_send_json(
@@ -1531,6 +1606,17 @@ class PPW_Admin {
 	 * Restore WP Passwords.
 	 */
 	public function ppw_free_restore_wp_passwords() {
+		if ( ! current_user_can( ppw_get_allowed_capability() ) ) {
+			wp_send_json(
+				array(
+					'is_error' => true,
+					'message'  => PPW_Constants::BAD_REQUEST_MESSAGE,
+				),
+				400
+			);
+			wp_die();
+		}
+
 		if ( ! isset( $_POST['security_check'] ) ) {
 			wp_send_json(
 				array(

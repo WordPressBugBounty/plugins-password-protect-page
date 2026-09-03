@@ -108,10 +108,7 @@ if ( ! class_exists( 'PPW_Entire_Site_Services' ) ) {
 				$current_url = add_query_arg( $wp->query_string, '', home_url( $wp->request ) );
 			}
 
-			// TODO: consider to user wp_safe_redirect.
-			// phpcs:disable
-			wp_redirect( $current_url );
-			// phpcs:enable
+			wp_safe_redirect( $current_url );
 		}
 
 		/**
