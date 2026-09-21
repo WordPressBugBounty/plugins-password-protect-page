@@ -17,6 +17,8 @@ class PPW_Text_Editor_Custom_Control extends WP_Customize_Control {
 
 	/**
 	 * Render the content on the theme customizer page.
+	 *
+	 * Setting sync is handled by admin/js/customizer.js.
 	 */
 	public function render_content() {
 		$input_id = $this->id;
@@ -25,7 +27,7 @@ class PPW_Text_Editor_Custom_Control extends WP_Customize_Control {
 			<span class="customize-control-title"><?php echo esc_html( $this->label ); ?></span>
 			<span class="description customize-control-description"><?php echo esc_html( $this->description ); ?></span>
 		</label>
-		<input type="hidden" <?php echo esc_url( $this->get_link() ); ?> value="<?php echo esc_attr( $this->value() ); ?>">
+		<input type="hidden" <?php $this->link(); ?> value="<?php echo esc_attr( $this->value() ); ?>">
 		<?php
 		wp_editor( $this->value(), $input_id, array(
 			'textarea_name' => $input_id,

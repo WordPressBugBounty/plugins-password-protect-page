@@ -762,7 +762,7 @@ if ( ! class_exists( 'PPW_Customizer_Service' ) ) {
 		 * Enqueue script for customizer control
 		 */
 		public function enqueue() {
-			wp_enqueue_script( 'ppwp-customizer', PPW_DIR_URL . 'admin/js/customizer.js', array( 'jquery' ), PPW_VERSION, true  );
+			wp_enqueue_script( 'ppwp-customizer', PPW_DIR_URL . 'admin/js/customizer.js', array( 'jquery', 'customize-controls' ), PPW_VERSION, true  );
 			wp_localize_script(
 				"ppwp-customizer",
 				'ppw_data',
