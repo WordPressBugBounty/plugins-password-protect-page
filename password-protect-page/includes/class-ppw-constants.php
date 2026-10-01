@@ -320,6 +320,8 @@ if ( ! class_exists( 'PPW_Constants' ) ) {
 
 		const COOKIE_NAME = 'wp-postpass-role_';
 
+		const PASSWORD_HINT_COOKIE_NAME = 'ppw_pwd_hint-';
+
 		const ENTIRE_SITE_FORM_NONCE = 'ppw_entire_site_form_nonce';
 
 		const GENERAL_FORM_NONCE = 'ppw_general_form_nonce';

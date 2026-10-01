@@ -19,6 +19,13 @@ if ( ! class_exists( 'PPW_Password_Services' ) ) {
 		private $passwords_repository;
 
 		/**
+		 * Single password cookie results already checked in this request.
+		 *
+		 * @var array
+		 */
+		private static $valid_cookie_cache = array();
+
+		/**
 		 * PPW_Password_Services constructor.
 		 *
 		 * @param PPW_Repository_Passwords $repo The password repository class help to interact with DB.
@@ -59,6 +66,7 @@ if ( ! class_exists( 'PPW_Password_Services' ) ) {
 		public function is_valid_password( $password, $post_id, $current_roles ) {
 			if ( $this->check_password_type_is_global( $post_id, $password ) ) {
 				$this->set_cookie_bypass_cache( $password . $post_id, PPW_Constants::COOKIE_NAME . $post_id );
+				$this->set_password_hint_cookie( $post_id, $password );
 
 				return true;
 			}
@@ -167,21 +175,179 @@ if ( ! class_exists( 'PPW_Password_Services' ) ) {
 
 			$cookie  = sanitize_text_field( $_cookie[ $cookie_name . $post_id . COOKIEHASH ] );
 			$hash    = wp_unslash( $cookie );
-			
+
 			$roles = ppw_core_get_current_role();
-			foreach ( $passwords as $password ) {
-				if ( wp_check_password( $password . $post_id, $hash ) ) {
-					return true;
+
+			// Other cookies (master passwords, Pro) keep the original check.
+			if ( PPW_Constants::COOKIE_NAME !== $cookie_name ) {
+				return null !== $this->find_matched_cookie_password( $post_id, $passwords, $roles, $hash );
+			}
+
+			// WordPress may call post_password_required() several times per page.
+			$cache_key = md5( $post_id . '|' . $hash . '|' . wp_json_encode( $passwords ) . '|' . implode( ',', $roles ) );
+			if ( isset( self::$valid_cookie_cache[ $cache_key ] ) ) {
+				return self::$valid_cookie_cache[ $cache_key ];
+			}
+
+			$hint     = $this->get_password_hint( $post_id );
+			$is_valid = null !== $hint && $this->is_valid_password_hint( $hint, $post_id, $passwords, $roles, $hash );
+			if ( ! $is_valid ) {
+				$matched_hint = $this->find_matched_cookie_password( $post_id, $passwords, $roles, $hash, $hint );
+				$is_valid     = null !== $matched_hint;
+				if ( $is_valid ) {
+					$this->set_hint_cookie( $post_id, $matched_hint );
+				}
+			}
+
+			self::$valid_cookie_cache[ $cache_key ] = $is_valid;
+
+			return $is_valid;
+		}
+
+		/**
+		 * Find which password matches the cookie hash, checking each password in order.
+		 *
+		 * @param int         $post_id   The post ID.
+		 * @param array       $passwords The passwords.
+		 * @param array       $roles     Current user roles.
+		 * @param string      $hash      The hash stored in the cookie.
+		 * @param string|null $skip_hint Hint already checked, skipped to avoid checking it twice.
+		 *
+		 * @return string|null Hint of the matched password, null if nothing matches.
+		 */
+		private function find_matched_cookie_password( $post_id, $passwords, $roles, $hash, $skip_hint = null ) {
+			foreach ( $passwords as $index => $password ) {
+				if ( (string) $index !== $skip_hint && wp_check_password( $password . $post_id, $hash ) ) {
+					return (string) $index;
 				}
 
-				foreach ( $roles as $role ) {
-					if ( wp_check_password( $password . $role . $post_id, $hash ) ) {
-						return true;
+				foreach ( $roles as $role_index => $role ) {
+					$hint = $index . '-' . $role_index;
+					if ( $hint !== $skip_hint && wp_check_password( $password . $role . $post_id, $hash ) ) {
+						return $hint;
 					}
 				}
 			}
 
-			return false;
+			return null;
+		}
+
+		/**
+		 * Check the password the hint points to.
+		 *
+		 * @param string $hint      Password index, or "index-role_index" for role passwords.
+		 * @param int    $post_id   The post ID.
+		 * @param array  $passwords The passwords.
+		 * @param array  $roles     Current user roles.
+		 * @param string $hash      The hash stored in the cookie.
+		 *
+		 * @return bool
+		 */
+		private function is_valid_password_hint( $hint, $post_id, $passwords, $roles, $hash ) {
+			if ( ! preg_match( '/^(\d{1,5})(?:-(\d{1,3}))?$/', $hint, $matches ) || ! isset( $passwords[ (int) $matches[1] ] ) ) {
+				return false;
+			}
+
+			$role = '';
+			if ( isset( $matches[2] ) ) {
+				if ( ! isset( $roles[ (int) $matches[2] ] ) ) {
+					return false;
+				}
+				$role = $roles[ (int) $matches[2] ];
+			}
+
+			return wp_check_password( $passwords[ (int) $matches[1] ] . $role . $post_id, $hash );
+		}
+
+		/**
+		 * Get the password hint from cookie.
+		 *
+		 * @param int $post_id The post ID.
+		 *
+		 * @return string|null
+		 */
+		private function get_password_hint( $post_id ) {
+			$cookie_name = PPW_Constants::PASSWORD_HINT_COOKIE_NAME . $post_id . COOKIEHASH;
+			if ( ! isset( $_COOKIE[ $cookie_name ] ) ) {
+				return null;
+			}
+
+			return sanitize_text_field( wp_unslash( $_COOKIE[ $cookie_name ] ) );
+		}
+
+		/**
+		 * Remember which password the visitor entered, so the next page load checks it first.
+		 *
+		 * @param int    $post_id  The post ID.
+		 * @param string $password The valid password.
+		 * @param string $role     The role for role passwords, empty for global passwords.
+		 */
+		public function set_password_hint_cookie( $post_id, $password, $role = '' ) {
+			$result = $this->get_passwords( $post_id );
+			$index  = array_search( $password, $result['passwords'], true );
+			if ( false === $index ) {
+				return;
+			}
+
+			$hint = (string) $index;
+			if ( '' !== $role ) {
+				$role_index = array_search( $role, ppw_core_get_current_role(), true );
+				if ( false === $role_index ) {
+					return;
+				}
+				$hint .= '-' . $role_index;
+			}
+
+			$this->set_hint_cookie( $post_id, $hint );
+		}
+
+		/**
+		 * Set the password hint cookie with the same expiry as the password cookie.
+		 *
+		 * @param int    $post_id The post ID.
+		 * @param string $hint    The password hint.
+		 */
+		private function set_hint_cookie( $post_id, $hint ) {
+			if ( headers_sent() || $this->get_password_hint( $post_id ) === $hint ) {
+				return;
+			}
+
+			$expire                  = apply_filters( PPW_Constants::HOOK_COOKIE_EXPIRED, time() + 7 * DAY_IN_SECONDS );
+			$password_cookie_expired = ppw_core_get_setting_type_string( PPW_Constants::COOKIE_EXPIRED );
+			if ( ! empty( $password_cookie_expired ) ) {
+				$time = explode( ' ', $password_cookie_expired )[0];
+				$unit = ppw_core_get_unit_time( $password_cookie_expired );
+				if ( 0 !== $unit ) {
+					$expire = apply_filters( PPW_Constants::HOOK_COOKIE_EXPIRED, time() + (int) $time * $unit );
+				}
+			}
+
+			$referer = wp_get_referer();
+			$secure  = $referer ? 'https' === parse_url( $referer, PHP_URL_SCHEME ) : false;
+
+			$expire = apply_filters( 'ppw_cookie_expire', $expire );
+			$expire = apply_filters( 'ppwp_cookie_expiry', $expire );
+
+			setcookie( PPW_Constants::PASSWORD_HINT_COOKIE_NAME . $post_id . COOKIEHASH, $hint, $expire, COOKIEPATH, COOKIE_DOMAIN, $secure, true );
+		}
+
+		/**
+		 * Check the single password cookie of the current page before any output,
+		 * so an old cookie gets its password hint while cookies can still be set.
+		 *
+		 * @param int $post_id The post ID.
+		 */
+		public function prepare_single_cookie_validation( $post_id ) {
+			if ( ! isset( $_COOKIE[ PPW_Constants::COOKIE_NAME . $post_id . COOKIEHASH ] ) ) {
+				return;
+			}
+
+			$result = $this->is_protected_content( $post_id );
+			if ( false === $result ) {
+				return;
+			}
+
+			$this->is_valid_cookie( $post_id, $result['passwords'], PPW_Constants::COOKIE_NAME );
 		}
 
 		/**
@@ -525,6 +691,7 @@ if ( ! class_exists( 'PPW_Password_Services' ) ) {
 				}
 
 				$this->set_cookie_bypass_cache( $password . $role . $post_id, PPW_Constants::COOKIE_NAME . $post_id );
+				$this->set_password_hint_cookie( $post_id, $password, $role );
 
 				return true;
 			}
@@ -748,7 +915,7 @@ if ( ! class_exists( 'PPW_Password_Services' ) ) {
 		 */
 		public function protect_page_post( $post_id ) {
 			$password = array(
-				uniqid( '', false )
+				wp_generate_password( 12, false, false )
 			);
 
 			$this->create_new_password( $post_id, 'global', $password, null );

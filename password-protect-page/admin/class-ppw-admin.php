@@ -1457,6 +1457,26 @@ class PPW_Admin {
 	}
 
 	/**
+	 * Check the single password cookie of the current page before output starts.
+	 */
+	public function ppw_prepare_single_cookie_validation() {
+		if ( ! is_singular() ) {
+			return;
+		}
+
+		$post = get_queried_object();
+		if ( ! $post instanceof WP_Post || empty( $post->post_type ) || ! ppw_is_post_type_selected_in_setting( $post->post_type ) ) {
+			return;
+		}
+
+		if ( ppw_free_has_bypass_single_protection() ) {
+			return;
+		}
+
+		$this->free_services->prepare_single_cookie_validation( $post->ID );
+	}
+
+	/**
 	 * Handle content shortcode for multiple pages.
 	 *
 	 * @param string $content The post content.

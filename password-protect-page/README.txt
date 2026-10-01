@@ -4,7 +4,7 @@ Tags: password protect, password, restrict content, sitewide, password protectio
 Requires at least: 5.2
 Requires PHP: 5.6
 Tested up to: 7.1
-Stable tag: 1.9.25
+Stable tag: 1.9.26
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -279,6 +279,11 @@ Yes, the Pro version enables you to [automatically password protect child pages]
 N/A
 
 == Changelog ==
+
+= 1.9.26 =
+
+* [BugFix] Auto-generated passwords now use a cryptographically secure random generator instead of a predictable time-based value.
+* [Improvement] Significantly faster page loads for protected pages with many passwords by verifying returning visitors with a single password check.
 
 = 1.9.25 =
 

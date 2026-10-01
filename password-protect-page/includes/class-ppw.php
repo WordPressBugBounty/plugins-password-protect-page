@@ -329,6 +329,7 @@ class Password_Protect_Page {
 			$this->loader->add_action( 'ppw_render_content_entire_site', $plugin_admin, 'ppw_free_render_content_entire_site', 11 );
 
 			$this->loader->add_filter( 'post_password_required', $plugin_admin, 'ppw_handle_post_password_required', 10, 2 );
+			$this->loader->add_action( 'template_redirect', $plugin_admin, 'ppw_prepare_single_cookie_validation', 11 );
 			$this->loader->add_filter( PPW_Constants::HOOK_CUSTOM_TAB, $plugin_admin, 'ppw_handle_custom_tab', 50 );
 			$this->loader->add_filter( PPW_Constants::HOOK_ADD_NEW_TAB, $plugin_admin, 'ppw_handle_add_new_tab', 50 );
 			$this->loader->add_filter( PPW_Constants::HOOK_CUSTOM_TAB, $plugin_admin, 'ppw_handle_hide_shortcode_content', 50 );
