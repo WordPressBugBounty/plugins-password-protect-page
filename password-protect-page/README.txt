@@ -3,8 +3,8 @@ Contributors: gaupoit, rexhoang, ppwp, buildwps, yuryonfolio
 Tags: password protect, password, restrict content, sitewide, password protection
 Requires at least: 5.2
 Requires PHP: 5.6
-Tested up to: 7.1
-Stable tag: 1.9.26
+Tested up to: 7.1.4
+Stable tag: 1.9.27
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -279,6 +279,11 @@ Yes, the Pro version enables you to [automatically password protect child pages]
 N/A
 
 == Changelog ==
+
+= 1.9.27 =
+
+* [BugFix] Fixed a Stored Cross-Site Scripting (XSS) vulnerability in the `[ppwp]` shortcode password form.
+* [Improvement] Updated password form field processing to prevent shortcode attribute values from interfering with other form fields.
 
 = 1.9.26 =
 

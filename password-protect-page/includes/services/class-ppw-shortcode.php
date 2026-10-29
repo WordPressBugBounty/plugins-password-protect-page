@@ -603,10 +603,7 @@ if ( ! class_exists( 'PPW_Shortcode' ) ) {
 				'[PPW_RECAPTCHA_INPUT]'                       => $this->massage_attributes( $recaptcha_input ),
 			);
 			
-
-			foreach ( $form_params as $key => $value ) {
-				$form_template = str_replace( $key, $value, $form_template );
-			}
+			$form_template = strtr( $form_template, $form_params );
 
 			return $form_template;
 			
