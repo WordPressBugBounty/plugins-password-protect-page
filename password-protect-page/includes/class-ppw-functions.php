@@ -799,3 +799,152 @@ function ppw_sanitize_css_number( $value ) {
 
 	return absint( $value );
 }
+
+/**
+ * Check WPML is active.
+ *
+ * Its own function so the callers stay testable: a constant cannot be undefined
+ * once it is set.
+ *
+ * @return bool
+ */
+function ppw_free_is_wpml_active() {
+	return defined( 'ICL_SITEPRESS_VERSION' );
+}
+
+/**
+ * Check the post is the one WPML treats as the original.
+ *
+ * Only the original drives the passwords of its translations, so a change made
+ * on a translation is left alone. An unknown language is left alone as well:
+ * skipping the sync is safer than risking the passwords of the original.
+ *
+ * The original is the post of the translation group that has no source
+ * language, whatever its language. Comparing the post's language with the
+ * site's default language is not the same test: a page written in a language
+ * other than the default is still the original of its group, and its
+ * translations have to follow it.
+ *
+ * @param int $post_id The post ID.
+ *
+ * @return bool
+ */
+function ppw_free_is_wpml_original_post( $post_id ) {
+	$post_type = get_post_type( $post_id );
+	if ( ! $post_type ) {
+		return false;
+	}
+
+	// This filter takes the plain post type, unlike the trid filters below.
+	$details = apply_filters(
+		'wpml_element_language_details',
+		null,
+		array(
+			'element_id'   => $post_id,
+			'element_type' => $post_type,
+		)
+	);
+
+	// Anything other than a group with a source language is left alone.
+	if ( ! is_object( $details ) || empty( $details->trid ) ) {
+		return false;
+	}
+
+	return empty( $details->source_language_code );
+}
+
+/**
+ * Get the IDs of the WPML translations of a post, the post itself excluded.
+ *
+ * @param int $post_id The post ID of the original.
+ *
+ * @return int[] Translation post IDs, empty when there are none.
+ */
+function ppw_free_get_wpml_translation_ids( $post_id ) {
+	$post_type = get_post_type( $post_id );
+	if ( ! $post_type ) {
+		return array();
+	}
+
+	// These two filters take the post type with a post_ prefix.
+	$element_type = 'post_' . $post_type;
+	$trid         = apply_filters( 'wpml_element_trid', null, $post_id, $element_type );
+	if ( empty( $trid ) ) {
+		return array();
+	}
+
+	$translations = apply_filters( 'wpml_get_element_translations', null, $trid, $element_type );
+	if ( ! is_array( $translations ) ) {
+		return array();
+	}
+
+	$translation_ids = array();
+	foreach ( $translations as $translation ) {
+		if ( ! is_object( $translation ) || ! isset( $translation->element_id ) ) {
+			continue;
+		}
+
+		$translation_id = (int) $translation->element_id;
+		if ( ! $translation_id || (int) $post_id === $translation_id ) {
+			continue;
+		}
+
+		$translation_ids[] = $translation_id;
+	}
+
+	return $translation_ids;
+}
+
+/**
+ * Push the protection of a post to its WPML translations.
+ *
+ * wpml-config.xml marks the passwords as copy, but WPML acts on that when the
+ * post is saved. Protecting a page writes the meta without saving the post, so
+ * WPML has to be told about the change.
+ *
+ * Does nothing when WPML is not active or the post has no translations.
+ *
+ * @param int $post_id The post ID the passwords belong to.
+ */
+function ppw_free_sync_protection_to_translations( $post_id ) {
+	if ( ! ppw_free_is_wpml_active() ) {
+		return;
+	}
+
+	if ( ! ppw_free_is_wpml_original_post( $post_id ) ) {
+		return;
+	}
+
+	$translation_ids = ppw_free_get_wpml_translation_ids( $post_id );
+	if ( empty( $translation_ids ) ) {
+		return;
+	}
+
+	$meta_keys = array(
+		PPW_Constants::GLOBAL_PASSWORDS,
+		PPW_Constants::POST_PROTECTION_ROLES,
+	);
+
+	foreach ( $meta_keys as $meta_key ) {
+		do_action( 'wpml_sync_custom_field', $post_id, $meta_key );
+
+		if ( metadata_exists( 'post', $post_id, $meta_key ) ) {
+			continue;
+		}
+
+		// WPML copies a value across, so a password removed on the original has
+		// to be cleared on the translations here.
+		foreach ( $translation_ids as $translation_id ) {
+			delete_post_meta( $translation_id, $meta_key );
+		}
+	}
+
+	// Each translation is its own URL, with its own cached output.
+	if ( ! function_exists( 'ppw_core_clear_cache_by_id' ) ) {
+		return;
+	}
+
+	foreach ( $translation_ids as $translation_id ) {
+		ppw_core_clear_cache_by_id( $translation_id );
+	}
+}

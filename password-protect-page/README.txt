@@ -4,7 +4,7 @@ Tags: password protect, password, restrict content, sitewide, password protectio
 Requires at least: 5.2
 Requires PHP: 5.6
 Tested up to: 7.1.4
-Stable tag: 1.9.27
+Stable tag: 1.9.28
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -280,9 +280,14 @@ N/A
 
 == Changelog ==
 
+= 1.9.28 =
+
+* [Improvement] Added WPML compatibility. Protecting or unprotecting a page now applies the same passwords and role protection to all of its translations, including pages written in a language other than the site default.
+* [Improvement] The password form texts set in the WordPress Customizer are now available for translation in WPML String Translation.
+
 = 1.9.27 =
 
-* [BugFix] Fixed a Stored Cross-Site Scripting (XSS) vulnerability in the `[ppwp]` shortcode password form.
+* [BugFix] Fixed a Stored Cross-Site Scripting (XSS) vulnerability in the `[ppwp]` shortcode password form. Thanks to the Wordfence team for reporting this issue.
 * [Improvement] Updated password form field processing to prevent shortcode attribute values from interfering with other form fields.
 
 = 1.9.26 =

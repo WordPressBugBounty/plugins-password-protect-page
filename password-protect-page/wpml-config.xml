@@ -1,0 +1,50 @@
+<wpml-config>
+	<!--
+	Tells WPML how to handle Password Protect WordPress on multilingual sites.
+
+	custom-fields: the passwords are copied from the original page to every
+	translation, so a protected page stays protected in all languages and the
+	password is the same everywhere.
+
+	admin-texts: the password form texts are stored as theme mods, in the option
+	theme_mods_<active theme>. The theme_mods_* pattern matches whatever theme
+	the site runs; only the ppwp_ keys listed below are picked up. These are the
+	keys that hold text. Colors, sizes and other style settings are left out
+	because they do not need translating.
+	-->
+	<custom-fields>
+		<custom-field action="copy">wp_protect_password_multiple_passwords</custom-field>
+		<custom-field action="copy">post_protection_roles</custom-field>
+	</custom-fields>
+	<admin-texts>
+		<key name="theme_mods_*">
+			<key name="ppwp_form_instructions_headline" />
+			<key name="ppwp_form_instructions_text" />
+			<key name="ppwp_form_instructions_password_label" />
+			<key name="ppwp_form_instructions_placeholder" />
+			<key name="ppwp_form_instructions_show_password_text" />
+			<key name="ppwp_form_instructions_below_text" />
+			<key name="ppwp_form_button_label" />
+			<key name="ppwp_form_error_message_text" />
+			<key name="ppwp_form_error_recaptcha_message_text" />
+			<key name="ppwp_pcp_form_headline" />
+			<key name="ppwp_pcp_form_description" />
+			<key name="ppwp_pcp_form_label" />
+			<key name="ppwp_pcp_form_placeholder" />
+			<key name="ppwp_pcp_form_show_password_text" />
+			<key name="ppwp_pcp_description_above_btn" />
+			<key name="ppwp_pcp_description_below_form" />
+			<key name="ppwp_pcp_button_text" />
+			<key name="ppwp_pcp_button_loading_text" />
+			<key name="ppwp_pcp_err_msg_text" />
+			<key name="ppwp_sitewide_above_countdown" />
+			<key name="ppwp_sitewide_below_countdown" />
+			<key name="ppwp_countdown_day_text" />
+			<key name="ppwp_countdown_hour_text" />
+			<key name="ppwp_countdown_minute_text" />
+			<key name="ppwp_countdown_second_text" />
+			<key name="ppwp_pro_form_button_label" />
+			<key name="ppwp_pro_form_instructions_placeholder" />
+		</key>
+	</admin-texts>
+</wpml-config>

@@ -512,6 +512,9 @@ if ( ! class_exists( 'PPW_Password_Services' ) ) {
 				update_post_meta( $id, PPW_Constants::GLOBAL_PASSWORDS, $new_global_passwords );
 			}
 
+			// Keep the WPML translations on the same passwords.
+			ppw_free_sync_protection_to_translations( $id );
+
 			// Clear cache for Cache plugin.
 			ppw_core_clear_cache_by_id( $id );
 
@@ -572,6 +575,9 @@ if ( ! class_exists( 'PPW_Password_Services' ) ) {
 			$current_roles_password[ $role_selected ] = $new_role_password;
 			delete_post_meta( $id, PPW_Constants::POST_PROTECTION_ROLES );
 			add_post_meta( $id, PPW_Constants::POST_PROTECTION_ROLES, $current_roles_password );
+
+			// Keep the WPML translations on the same passwords.
+			ppw_free_sync_protection_to_translations( $id );
 
 			// Clear cache for Cache plugin.
 			ppw_core_clear_cache_by_id( $id );
@@ -929,6 +935,9 @@ if ( ! class_exists( 'PPW_Password_Services' ) ) {
 		public function unprotect_page_post( $post_id ) {
 			delete_post_meta( $post_id, PPW_Constants::POST_PROTECTION_ROLES );
 			delete_post_meta( $post_id, PPW_Constants::GLOBAL_PASSWORDS );
+
+			// Unprotect the WPML translations as well.
+			ppw_free_sync_protection_to_translations( $post_id );
 		}
 
 		/**
