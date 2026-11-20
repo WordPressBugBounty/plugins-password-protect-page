@@ -3,8 +3,8 @@ Contributors: gaupoit, rexhoang, ppwp, buildwps, yuryonfolio
 Tags: password protect, password, restrict content, sitewide, password protection
 Requires at least: 5.2
 Requires PHP: 5.6
-Tested up to: 7.1.4
-Stable tag: 1.9.28
+Tested up to: 7.1.5
+Stable tag: 1.9.29
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -279,6 +279,12 @@ Yes, the Pro version enables you to [automatically password protect child pages]
 N/A
 
 == Changelog ==
+
+= 1.9.29 =
+
+* [BugFix] Fixed a security vulnerability that allowed password-protected Partial Content Protection section content to be accessed through the WordPress REST API without providing the required password.
+* [BugFix] Fixed the sitewide cookie expiration time accepting invalid values such as zero or negative numbers.
+* [Improvement] Restricted REST API access to Partial Content Protection sections to users with the appropriate permissions to edit them.
 
 = 1.9.28 =
 

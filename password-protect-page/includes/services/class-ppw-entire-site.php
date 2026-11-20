@@ -80,7 +80,7 @@ if ( ! class_exists( 'PPW_Entire_Site_Services' ) ) {
 			if ( ! empty( $cookie_expired ) ) {
 				$time = explode( ' ', $cookie_expired )[0];
 				$unit = ppw_core_get_unit_time( $cookie_expired );
-				if ( 0 !== $unit ) {
+				if ( 0 !== $unit && (int) $time > 0 ) {
 					$expiration = time() + (int) $time * $unit;
 				}
 			}

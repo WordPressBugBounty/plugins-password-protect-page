@@ -1172,7 +1172,28 @@ class PPW_Admin {
 			);
 			wp_die();
 		}
-		$data_settings        = $request['settings'];
+		$data_settings = $request['settings'];
+
+		// Validate the sitewide cookie expiration time on the server, using the same rules as the general setting.
+		if (
+			is_array( $data_settings ) &&
+			isset( $data_settings[ PPW_Constants::IS_PROTECT_ENTIRE_SITE ], $data_settings[ PPW_Constants::COOKIE_EXPIRED_SITEWIDE ] ) &&
+			'true' === $data_settings[ PPW_Constants::IS_PROTECT_ENTIRE_SITE ] &&
+			(
+				! is_string( $data_settings[ PPW_Constants::COOKIE_EXPIRED_SITEWIDE ] ) ||
+				ppw_core_validate_cookie_expiry( $data_settings[ PPW_Constants::COOKIE_EXPIRED_SITEWIDE ] )
+			)
+		) {
+			wp_send_json(
+				array(
+					'is_error' => true,
+					'message'  => PPW_Constants::BAD_REQUEST_MESSAGE,
+				),
+				400
+			);
+			wp_die();
+		}
+
 		$entire_site_services = new PPW_Entire_Site_Services();
 		$entire_site_services->handle_before_update_settings( $data_settings );
 		wp_die( true );
@@ -1270,6 +1291,32 @@ class PPW_Admin {
 
 	public function ppwp_restrict_rest_api_id( $result, $server, $request ) {
 
+		// Partial Content Protection sections are only password-checked in the [ppwp section=""] shortcode,
+		// so their REST routes must not expose content to users who cannot edit sections.
+		// OPTIONS requests only describe the route schema (no content), so they are left to core as before.
+		if ( 'OPTIONS' !== $request->get_method() && $this->is_ppwp_section_rest_route( $request->get_route() ) ) {
+			$section_post_type = get_post_type_object( PPW_Content_Protection::POST_TYPE );
+			$edit_capability   = $section_post_type ? $section_post_type->cap->edit_posts : 'edit_posts';
+
+			/**
+			 * Filters whether the current user may read Partial Content Protection sections via the REST API.
+			 *
+			 * @since 1.9.29
+			 *
+			 * @param bool            $can_access Whether access is allowed. Default: the user can edit sections.
+			 * @param WP_REST_Request $request    Current REST request.
+			 */
+			$can_access = (bool) apply_filters( 'ppwp_can_access_rest_section', current_user_can( $edit_capability ), $request );
+
+			if ( ! $can_access ) {
+				return new WP_Error(
+					'rest_forbidden',
+					__( 'Sorry, you are not allowed to access this content.', 'password-protect-page' ),
+					array( 'status' => rest_authorization_required_code() )
+				);
+			}
+		}
+
 	    if ( is_admin() || is_user_logged_in() ) {
 	        return $result;
 	    }
@@ -1344,6 +1391,28 @@ class PPW_Admin {
 	    }
 
 	    return $result;
+	}
+
+	/**
+	 * Check whether a REST route belongs to the Partial Content Protection section post type.
+	 *
+	 * @param string $route REST route, e.g. /wp/v2/ppwp-section/123.
+	 *
+	 * @return bool
+	 */
+	private function is_ppwp_section_rest_route( $route ) {
+		$section_post_type = get_post_type_object( PPW_Content_Protection::POST_TYPE );
+		if ( ! $section_post_type || empty( $section_post_type->show_in_rest ) ) {
+			return false;
+		}
+
+		$rest_namespace = ! empty( $section_post_type->rest_namespace ) ? $section_post_type->rest_namespace : 'wp/v2';
+		$rest_base      = ! empty( $section_post_type->rest_base ) ? $section_post_type->rest_base : $section_post_type->name;
+		$section_route  = '/' . trim( $rest_namespace, '/' ) . '/' . trim( $rest_base, '/' );
+
+		// Match the way core matches REST routes (case-insensitive, "$" also accepts a trailing newline),
+		// so every request core would serve from a section route is checked.
+		return 1 === preg_match( '@^' . preg_quote( $section_route, '@' ) . '(?:/|$)@i', (string) $route );
 	}
 
 	public function ppwp_exclude_protected_items_from_qry( $query ) {
